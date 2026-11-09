@@ -1,50 +1,53 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Varodd Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Single Shared Codebase
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+All Varodd features — including `001-job-matching-marketplace` and `002-shared-knowledge-base`,
+and any future features — MUST be implemented in one shared codebase/prototype rather than
+separate repositories. A feature MAY be structured internally as a distinct service or module,
+but every feature MUST share one codebase, one set of technology-stack decisions, and one
+coordinated deployment unit for the prototype. A concept used by more than one feature (for
+example, "partner business" eligibility) MUST be implemented once and reused by every feature
+that needs it, rather than being reimplemented separately per feature.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: Varodd's features are different facets of one product, built with limited
+resources. Separate repositories or duplicated implementations of shared concepts would multiply
+maintenance cost and let the features drift out of sync with each other.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Sandboxed/Fake Data Only
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+This codebase is a prototype. All external data it has access to or interacts with — NAV
+referrals/integration, crawled partner-business data, and any customer or business data — MUST be
+fake/simulated, not real. The system MUST NOT make real NAV API calls, MUST NOT crawl real
+business websites, and MUST NOT ingest or store real customer or business data. Every feature's
+plan and tests MUST use fixtures, mocks, or seed data to stand in for these external sources.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: As a prototype, the system has not been through the legal, security, or data-
+protection review real NAV, customer, or business data would require. Faking all external data
+keeps the prototype safe to build and demo without that review, and without risk to real people
+or businesses.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Test-Driven Development
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The project MUST be test-driven. Tests for a piece of functionality MUST be written before, or
+alongside and gating, its implementation. A task or user story MUST NOT be considered done until
+its tests pass.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: Test-first development catches regressions early and keeps each user story's
+"independently testable" acceptance scenarios (as defined in each feature's spec) verifiable by an
+actual automated check, not just a claim.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution governs cross-feature architectural decisions and supersedes conflicting
+guidance elsewhere in the repository on those decisions. Amendments MUST be made via
+`/speckit-constitution`, with the version bumped per semantic versioning: MAJOR for
+backward-incompatible removal or redefinition of a principle, MINOR for a new or materially
+expanded principle, PATCH for wording clarifications. Every `/speckit-plan` run MUST complete its
+Constitution Check against the principles in this document before Phase 0 research begins; any
+violation MUST either be resolved within the plan or explicitly justified in that plan's
+Complexity Tracking section.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.1.0 | **Ratified**: 2026-11-09 | **Last Amended**: 2026-11-09
