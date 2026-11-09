@@ -9,7 +9,7 @@ and any future features — MUST be implemented in one shared codebase/prototype
 separate repositories. A feature MAY be structured internally as a distinct service or module,
 but every feature MUST share one codebase, one set of technology-stack decisions, and one
 coordinated deployment unit for the prototype. A concept used by more than one feature (for
-example, "partner business" eligibility) MUST be implemented once and reused by every feature
+example, the simulated business records) MUST be implemented once and reused by every feature
 that needs it, rather than being reimplemented separately per feature.
 
 **Rationale**: Varodd's features are different facets of one product, built with limited
@@ -19,7 +19,7 @@ maintenance cost and let the features drift out of sync with each other.
 ### II. Sandboxed/Fake Data Only
 
 This codebase is a prototype. All external data it has access to or interacts with — NAV
-referrals/integration, crawled partner-business data, and any customer or business data — MUST be
+referrals/integration, crawled business data, and any customer or business data — MUST be
 fake/simulated, not real. The system MUST NOT make real NAV API calls, MUST NOT crawl real
 business websites, and MUST NOT ingest or store real customer or business data. Every feature's
 plan and tests MUST use fixtures, mocks, or seed data to stand in for these external sources.
@@ -50,4 +50,4 @@ Constitution Check against the principles in this document before Phase 0 resear
 violation MUST either be resolved within the plan or explicitly justified in that plan's
 Complexity Tracking section.
 
-**Version**: 1.1.0 | **Ratified**: 2026-11-09 | **Last Amended**: 2026-11-09
+**Version**: 1.1.1 | **Ratified**: 2026-11-09 | **Last Amended**: 2026-11-09

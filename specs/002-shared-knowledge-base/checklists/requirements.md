@@ -31,5 +31,6 @@
 
 ## Notes
 
-- All three clarification questions (visibility scope, participation eligibility, answer moderation) were resolved with the user and encoded into FR-010, FR-011, and FR-012: Varodd-network-only visibility, eligibility limited to Varodd and/or E-Waves partners, and immediate publication with post-hoc flagging.
-- All checklist items pass. Spec is ready for `/speckit-clarify` (optional further refinement) or `/speckit-plan`.
+- Re-checked on 2026-11-09 after a full review with the project owner. The spec now describes a simulated prototype, with a members-only forum for E-Waves, immediate publication with flagging afterward, and a simulated chatbot that always shows a trust notice.
+- Every functional requirement is now covered by an acceptance scenario or edge case.
+- All checklist items pass. Spec is ready for `/speckit-plan`.

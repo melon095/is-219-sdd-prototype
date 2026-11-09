@@ -31,5 +31,7 @@
 
 ## Notes
 
-- All three clarification questions (NAV integration depth, post-match scope, crawler targeting scope) were resolved with the user and encoded into FR-014, FR-015, and FR-016. FR-015 intentionally leaves open whether Varodd will facilitate full engagement management (contracts/hours/payment) beyond basic status tracking in a future iteration; this is documented as an Assumption, not a blocking marker.
-- All checklist items pass. Spec is ready for `/speckit-clarify` (optional further refinement) or `/speckit-plan`.
+- Re-checked on 2026-11-09 after a full review with the project owner. The spec now describes a simulated prototype, with an owner-chosen shortlist, a request page with a permanent log, and crawl suggestions for opted-in businesses only.
+- Every functional requirement is now covered by an acceptance scenario or edge case.
+- Who employs the worker is an open question for Varodd, and employment is explicitly out of scope for the prototype.
+- All checklist items pass. Spec is ready for `/speckit-plan`.

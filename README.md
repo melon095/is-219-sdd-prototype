@@ -18,11 +18,13 @@ og oppdatere disse dokumentene; du kan se bort fra dem med mindre du selv kjøre
    ligge i én delt kodebase, all ekstern data (NAV, skannede bedriftsnettsider, kunder) må være
    fiktiv/simulert siden dette er en prototype, og prosjektet er testdrevet.
 2. **`specs/001-job-matching-marketplace/spec.md`** — funksjonen for å matche bedriftseiere med
-   arbeidssøkere (en bedrift ber om kortvarig hjelp, en arbeidstaker matches mot den). Filen
+   arbeidssøkere (en bedrift ber om kortvarig hjelp, får en kortliste over aktuelle arbeidstakere
+   og velger selv hvem den vil jobbe med). Filen
    `checklists/requirements.md` like ved siden er en godkjent/ikke-godkjent kvalitetskontroll av
    selve spesifikasjonen.
-3. **`specs/002-shared-knowledge-base/spec.md`** — det delte spørsmål-og-svar-kunnskapsarkivet der
-   små bedrifter kan hjelpe hverandre, med en valgfri chatbot på toppen. Samme sjekkliste-mønster.
+3. **`specs/002-shared-knowledge-base/spec.md`** — det delte spørsmål-og-svar-forumet der
+   medlemmer av E-Waves kan hjelpe hverandre, med en simulert chatbot på toppen. Samme
+   sjekkliste-mønster.
 
 Hver spesifikasjon forklarer funksjonen i vanlige forretningstermer (hvem gjør hva, og hvorfor),
 lister opp konkret hva systemet må gjøre, og beskriver hvilke antakelser som er gjort der den
@@ -30,10 +32,12 @@ opprinnelige beskrivelsen ikke var tydelig.
 
 ## Status nå
 
-Begge spesifikasjonene er skrevet og klargjort (uklare punkter er avklart med prosjekteier), og
-begge består sine kvalitetssjekklister. Ingenting er ennå tatt videre til implementeringsplanlegging
-— det finnes ingen arkitektur, oppgaveliste eller kode. Det er neste skritt, og det skjer gjennom
-den samme AI-assisterte prosessen som produserte disse spesifikasjonene.
+Begge spesifikasjonene er utkast som er gjennomgått og oppdatert sammen med prosjekteier, og begge
+består sine kvalitetssjekklister. Hvem som skal være arbeidsgiver for arbeidstakerne er fortsatt et
+åpent spørsmål for Varodd, men det er utenfor det prototypen skal vise. Ingenting er ennå tatt
+videre til implementeringsplanlegging — det finnes ingen arkitektur, oppgaveliste eller kode. Det
+er neste skritt, og det skjer gjennom den samme AI-assisterte prosessen som produserte disse
+spesifikasjonene.
 
 ## Gi tilbakemelding
 

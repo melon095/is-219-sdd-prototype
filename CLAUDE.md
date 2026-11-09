@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This repository currently contains **only the GitHub Spec Kit (speckit) scaffold** — no application code has been written yet. The only commit is `dev: Initialiser specify`. There is no `specs/` directory, no build system, no test suite, and no source tree. Everything here supports **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
+This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two draft feature specs under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`). No application code has been written yet, and there is no build system, test suite, or source tree. Everything here supports **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
 
 Don't assume a tech stack, test runner, or lint command exists — check `plan.md` for the feature you're working on (once one exists) for the chosen stack, since none is fixed at the repo level yet.
 
@@ -14,7 +14,7 @@ Work happens through a fixed pipeline of slash commands (implemented as Claude C
 
 Typical order for a new feature:
 
-1. `/speckit-constitution` — establish/update project-wide principles in `.specify/memory/constitution.md` (this file is still the unfilled template — fill it in before relying on constitution gates elsewhere).
+1. `/speckit-constitution` — establish/update project-wide principles in `.specify/memory/constitution.md`.
 2. `/speckit-specify <description>` — creates a new feature directory under `specs/` (`specs/NNN-short-name/spec.md`) and writes the spec from the description. Also generates `specs/NNN-short-name/checklists/requirements.md` to validate spec quality.
 3. `/speckit-clarify` — asks up to 5 targeted clarification questions and encodes answers back into the spec.
 4. `/speckit-checklist` — optional, generates a custom reviewer checklist.
