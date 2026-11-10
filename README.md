@@ -16,13 +16,15 @@ og oppdatere disse dokumentene; du kan se bort fra dem med mindre du selv kjøre
 
 1. **`.specify/memory/constitution.md`** — grunnreglene alle funksjoner må følge. Per nå: alt må
    ligge i én delt kodebase, all ekstern data (NAV, skannede bedriftsnettsider, kunder) må være
-   fiktiv/simulert siden dette er en prototype, og prosjektet er testdrevet.
+   fiktiv/simulert siden dette er en prototype, prosjektet er testdrevet, og alle funksjoner bruker
+   det samme visuelle uttrykket som nettsiden til Varodd (https://varodd.no/).
 2. **`specs/001-job-matching-marketplace/spec.md`** — funksjonen for å matche bedriftseiere med
    arbeidssøkere (en bedrift ber om kortvarig hjelp, får en kortliste over aktuelle arbeidstakere
    og velger selv hvem den vil jobbe med). Siden denne bygges først, beskriver den også rammen som
    er felles for hele prototypen: én felles forside med aktivitetsstrøm, knapper i toppen for å
-   bytte mellom funksjonene, bytte mellom simulerte brukere, tilbakestilling av demodata og
-   feilsøkingsknapper for å simulere at tid går. Filen `checklists/requirements.md` like ved
+   bytte mellom funksjonene, bytte mellom simulerte brukere, tilbakestilling av demodata,
+   feilsøkingsknapper for å simulere at tid går, og designet (farger, skrifttyper, knapper og
+   tone) hentet fra nettsiden til Varodd. Filen `checklists/requirements.md` like ved
    siden er en godkjent/ikke-godkjent kvalitetskontroll av selve spesifikasjonen.
 3. **`specs/002-shared-knowledge-base/spec.md`** — det delte spørsmål-og-svar-forumet der
    medlemmer av E-Waves kan hjelpe hverandre, med en simulert chatbot på toppen. Den bruker den

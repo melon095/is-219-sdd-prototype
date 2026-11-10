@@ -8,7 +8,7 @@ This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in con
 
 Don't assume a tech stack, test runner, or lint command exists — check `plan.md` for the feature you're working on (once one exists) for the chosen stack, since none is fixed at the repo level yet.
 
-`001-job-matching-marketplace` is built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, and time debug buttons. `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
+`001-job-matching-marketplace` is built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, time debug buttons, and the shared design language taken from https://varodd.no/ (see the Design Language section of its spec and constitution principle IV). `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
 
 ## Spec-Driven Development workflow
 

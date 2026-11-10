@@ -39,6 +39,19 @@ its tests pass.
 "independently testable" acceptance scenarios (as defined in each feature's spec) verifiable by an
 actual automated check, not just a claim.
 
+### IV. Shared Varodd Design Language
+
+Every feature's user interface MUST use the visual design language of the Varodd website
+(https://varodd.no/): its colours, typography, button and link styles, layout widths, and its warm
+tone of voice that addresses the reader as "du" and Varodd as "vi". The design language MUST be
+defined once, as part of the shared frame in `001-job-matching-marketplace`, and reused by every
+feature. A feature MUST NOT introduce its own colours, fonts, or component styles outside that
+shared definition; a needed addition MUST be made to the shared definition instead.
+
+**Rationale**: The prototype is shown as part of Varodd's product. Matching the existing website
+makes it feel like a real Varodd service to the people evaluating it, and defining the design once
+keeps every feature visually consistent with each other.
+
 ## Governance
 
 This constitution governs cross-feature architectural decisions and supersedes conflicting
@@ -50,4 +63,4 @@ Constitution Check against the principles in this document before Phase 0 resear
 violation MUST either be resolved within the plan or explicitly justified in that plan's
 Complexity Tracking section.
 
-**Version**: 1.1.1 | **Ratified**: 2026-11-09 | **Last Amended**: 2026-11-09
+**Version**: 1.2.0 | **Ratified**: 2026-11-09 | **Last Amended**: 2026-11-10

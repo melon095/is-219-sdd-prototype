@@ -12,7 +12,7 @@
 
 This feature is a high-fidelity, clickable prototype. All businesses, questions, answers, and chatbot responses are fictional seed data, and the chatbot is a visible simulation. There is no login; a button switches between simulated users. The user interface is in Norwegian Bokmål. The knowledge base is a membership benefit for E-Waves, a network of online stores.
 
-This feature is shown inside the shared frame defined in `001-job-matching-marketplace`: its home page, header, user switcher, activity feed, demo reset, and seed data.
+This feature is shown inside the shared frame defined in `001-job-matching-marketplace`: its home page, header, user switcher, activity feed, demo reset, seed data, and design language.
 
 ## Clarifications
 
@@ -27,6 +27,7 @@ This feature is shown inside the shared frame defined in `001-job-matching-marke
 - Q: Which written form of Norwegian is used? → A: Norwegian Bokmål.
 - Q: Where do the prepared chatbot questions and near-duplicate test questions come from? → A: They are fictional and created by the same seed data step as the rest of the demo data.
 - Q: How many prepared near-duplicate questions must show the existing question, instead of the earlier 70% target? → A: Every one, because they are written to match on purpose.
+- Q: What visual design should the knowledge base use? → A: The shared design language of the Varodd website, defined in the Design Language section of `001-job-matching-marketplace`. This feature adds no colours, fonts, or styles of its own.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -134,6 +135,7 @@ A member asks a question in their own words to a chatbot, which gives a short an
 - **FR-020**: System MUST present its user interface in Norwegian Bokmål.
 - **FR-021**: System MUST use only fictional seed data.
 - **FR-022**: System MUST add knowledge base activity, such as questions posted, answered, flagged, and reviewed, to the shared activity feed, shown only to users who can access the knowledge base.
+- **FR-023**: System MUST use the shared design language from `001-job-matching-marketplace`, including for the forum, the simulated chatbot, flag warnings, and the trust notice, without adding its own colours, fonts, or styles.
 
 ### Key Entities
 

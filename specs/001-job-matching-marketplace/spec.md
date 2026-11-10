@@ -12,7 +12,7 @@
 
 This feature is a high-fidelity, clickable prototype. All businesses, workers, NAV referrals, and crawl results are fictional seed data. NAV referrals and crawling are shown as visible simulations. There is no login; a button switches between simulated users. The user interface is in Norwegian Bokmål.
 
-This feature is built first, so it also defines the shared frame of the whole prototype: the home page, header, user switcher, activity feed, demo reset, and seed data. Feature `002-shared-knowledge-base` and any later features are shown inside this frame.
+This feature is built first, so it also defines the shared frame of the whole prototype: the home page, header, user switcher, activity feed, demo reset, seed data, and design language. Feature `002-shared-knowledge-base` and any later features are shown inside this frame.
 
 ## Clarifications
 
@@ -32,6 +32,7 @@ This feature is built first, so it also defines the shared frame of the whole pr
 - Q: Should hours per week, remote or on-site work, or location affect matching? → A: No.
 - Q: Should experience level affect ranking? → A: No. It is shown to the owner only.
 - Q: Who maintains the shared skill list? → A: Undecided. Assumed to be fixed in the seed data, with no editing in the prototype.
+- Q: What visual design should the prototype use? → A: The design language of the Varodd website (https://varodd.no/), defined once in this spec's Design Language section and reused by every feature.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -52,6 +53,7 @@ Everyone using the prototype starts on one home page shared by every Varodd feat
 5. **Given** changes made during a demo, **When** the user resets the prototype, **Then** all data returns to the seed data.
 6. **Given** an object with a time-based rule, such as an Offered request, **When** the user presses its debug button, **Then** the prototype behaves as if the relevant time had passed.
 7. **Given** a desktop screen or a mobile screen, **When** the prototype is opened, **Then** the layout designed for that screen size is shown.
+8. **Given** any page in any feature, **When** it is shown, **Then** it uses the colours, fonts, button and link styles, and tone of voice described in the Design Language section.
 
 ---
 
@@ -184,6 +186,7 @@ A business that has opted in receives skill suggestions from a simulated crawl o
 - **FR-032**: System MUST create its seed data through a separate, repeatable step that generates a seed data file.
 - **FR-033**: System MUST provide a debug button on each object that has a time-based rule, which simulates that the relevant time has passed.
 - **FR-034**: System MUST provide separate layouts designed for desktop and for mobile screens. The desktop layout MUST NOT be an enlarged mobile layout.
+- **FR-035**: System MUST use the design language described in the Design Language section on every page of every feature, defined once in the shared frame and reused by later features.
 
 ### Key Entities
 
@@ -197,6 +200,19 @@ A business that has opted in receives skill suggestions from a simulated crawl o
 - **Activity Entry**: Something that happened in any feature, shown in the activity feed on the home page and linked to the page of the item it concerns.
 - **Simulated User**: A fictional person the user switcher can select, such as a business owner, a worker, or a Varodd administrator. There is one set of simulated users for the whole prototype.
 - **Varodd Administrator**: Varodd staff who can see all requests, review rejected shortlists, and cancel requests.
+
+## Design Language
+
+The whole prototype follows the design language of the Varodd website (https://varodd.no/), as read from the site on 2026-11-10. These values are defined once in the shared frame and reused by every feature.
+
+- **Colours**: Main colour deep navy `#000082`, used for buttons, links, and the header. Lighter navy tints for backgrounds and highlights: `#F6F6FF`, `#E5E5F8`, `#D0D0EA`, `#9999D9`. Darker navy for hover `#000070` and pressed `#000090`. Text near-black `#1e1e1e` on a white `#ffffff` background. Greys `#FAFAFA`, `#EEEEEE`, `#D5D5D5`, `#BDBDBD`, `#8B8B8B`, `#737373` for borders, dividers, and secondary text. Status colours: success green `#77AC94`, warning orange `#FF8C00`, error red `#F04438`, information blue `#0000A0`.
+- **Typography**: Headings in Bree Serif, normal weight, with tight line height (1.2). Body text in Barlow with relaxed line height (1.7). Body text is about 16–18 px, headings scale from about 18 px (smallest) to 30–36 px (page title).
+- **Buttons**: Solid navy with white, semi-bold text and 8 px rounded corners. They turn a darker navy on hover and when pressed. Secondary buttons have a navy outline on a transparent background.
+- **Links**: Navy text, darker navy on hover.
+- **Form fields**: White with a light grey `#BDBDBD` border, 8 px rounded corners, and a soft shadow.
+- **Layout**: Reading text is at most about 650 px wide, and full page content at most about 1300 px wide. Generous white space between sections. Content is grouped in sections or cards with a heading, a short text, and one clear action, like the image-and-text blocks on the Varodd website.
+- **Navigation**: The header follows the Varodd website's header: the Varodd name on the left and a navy navigation bar with the feature buttons, the user switcher, and the demo controls. On mobile the navigation collapses behind a "Meny" button.
+- **Tone of voice**: Warm, encouraging, and plain Norwegian Bokmål. The reader is addressed as "du" and Varodd as "vi", with short and positive sentences.
 
 ## Success Criteria *(mandatory)*
 
