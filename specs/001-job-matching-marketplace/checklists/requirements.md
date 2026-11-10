@@ -34,4 +34,5 @@
 - Re-checked on 2026-11-09 after a full review with the project owner. The spec now describes a simulated prototype, with an owner-chosen shortlist, a request page with a permanent log, and crawl suggestions for opted-in businesses only.
 - Every functional requirement is now covered by an acceptance scenario or edge case.
 - Who employs the worker is an open question for Varodd, and employment is explicitly out of scope for the prototype.
+- Re-checked on 2026-11-10 after further clarifications on access rules, matching rules, demo data, and the Varodd design language. All checklist items still pass.
 - All checklist items pass. Spec is ready for `/speckit-plan`.

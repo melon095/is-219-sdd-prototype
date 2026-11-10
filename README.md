@@ -45,8 +45,9 @@ Noen spørsmål er bevisst latt stå åpne til senere, fordi de ikke påvirker d
 - Hvem som skal være arbeidsgiver for arbeidstakerne.
 - Hvem som vedlikeholder listen over ferdigheter og listen over emner i forumet. Inntil videre er
   begge faste i demodataene.
-- Om forfattere skal kunne slette egne spørsmål og svar. Ingenting er ennå tatt
-videre til implementeringsplanlegging — det finnes ingen arkitektur, oppgaveliste eller kode. Det
+- Om forfattere skal kunne slette egne spørsmål og svar.
+
+Ingenting er ennå tatt videre til implementeringsplanlegging — det finnes ingen arkitektur, oppgaveliste eller kode. Det
 er neste skritt, og det skjer gjennom den samme AI-assisterte prosessen som produserte disse
 spesifikasjonene.
 
