@@ -8,6 +8,8 @@ This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in con
 
 Don't assume a tech stack, test runner, or lint command exists — check `plan.md` for the feature you're working on (once one exists) for the chosen stack, since none is fixed at the repo level yet.
 
+`001-job-matching-marketplace` is built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, and time debug buttons. `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
+
 ## Spec-Driven Development workflow
 
 Work happens through a fixed pipeline of slash commands (implemented as Claude Code skills under `.claude/skills/`, one directory per command). The invoke separator for this project is `-`, so commands are `/speckit-<name>`, not `/speckit.<name>`.
@@ -29,6 +31,7 @@ Each command's full behavior (pre/post-execution extension hooks, validation rul
 ## Feature state and paths
 
 - The **active feature** is tracked in `.specify/feature.json` (`{"feature_directory": "specs/NNN-short-name"}`), written by `/speckit-specify` and read by every later command. There's no reliance on git branch naming — the spec directory name and git branch are independent.
+- `.specify/feature.json` is ignored by git (see `.specify/.gitignore`), so a fresh clone has no active feature. Set it, or `SPECIFY_FEATURE_DIRECTORY`, to the feature you're working on before running `/speckit-plan` or any later command.
 - `SPECIFY_FEATURE_DIRECTORY` (env var) overrides the stored feature directory when set; `SPECIFY_FEATURE_NO_PERSIST=1` prevents scripts from writing `.specify/feature.json` (used by multi-agent/CI orchestration).
 - Feature numbering is `sequential` (3-digit prefix, e.g. `003-user-auth`) per `.specify/init-options.json`; it can be switched to `timestamp` (`YYYYMMDD-HHMMSS-name`) prefixes instead.
 
