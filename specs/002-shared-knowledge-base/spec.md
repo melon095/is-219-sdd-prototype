@@ -10,7 +10,23 @@
 
 ## Prototype Scope
 
-This feature is a high-fidelity, clickable prototype. All businesses, questions, answers, and chatbot responses are fictional seed data, and the chatbot is a visible simulation. There is no login; a button switches between simulated users. The user interface is in Norwegian. The knowledge base is a membership benefit for E-Waves, a network of online stores.
+This feature is a high-fidelity, clickable prototype. All businesses, questions, answers, and chatbot responses are fictional seed data, and the chatbot is a visible simulation. There is no login; a button switches between simulated users. The user interface is in Norwegian Bokmål. The knowledge base is a membership benefit for E-Waves, a network of online stores.
+
+This feature is shown inside the shared frame defined in `001-job-matching-marketplace`: its home page, header, user switcher, activity feed, demo reset, and seed data.
+
+## Clarifications
+
+### Session 2026-11-10
+
+- Q: Is the member business in this feature the same as the business in `001-job-matching-marketplace`? → A: Yes. There is one list of businesses, and E-Waves membership is a yes/no on each business.
+- Q: Where are the user switcher and other shared parts specified? → A: In `001-job-matching-marketplace`. This feature uses its home page, header, user switcher, activity feed, demo reset, and seed data.
+- Q: Can authors delete their own questions and answers? → A: Not needed in the prototype. It is an open question for later.
+- Q: If a question's only answer is removed, does the question return to open? → A: Yes.
+- Q: Who maintains the list of topics? → A: Undecided. Assumed to be fixed in the seed data, with no editing in the prototype.
+- Q: What does the simulated chatbot say to a question that is not one of its prepared questions? → A: It must never make up an answer. Any question without a prepared response gets the no-answer response.
+- Q: Which written form of Norwegian is used? → A: Norwegian Bokmål.
+- Q: Where do the prepared chatbot questions and near-duplicate test questions come from? → A: They are fictional and created by the same seed data step as the rest of the demo data.
+- Q: How many prepared near-duplicate questions must show the existing question, instead of the earlier 70% target? → A: Every one, because they are written to match on purpose.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -24,12 +40,12 @@ An E-Waves member who is stuck on a problem — improving their webstore, a tech
 
 **Acceptance Scenarios**:
 
-1. **Given** the prototype is open, **When** the user switches between an E-Waves member, a non-member, and a Varodd administrator, **Then** the prototype shows that user's view in Norwegian, using only fictional seed data.
+1. **Given** the prototype is open, **When** the user switches between an E-Waves member, a non-member, and a Varodd administrator with the shared user switcher, **Then** the prototype shows that user's view in Norwegian, using only fictional seed data.
 2. **Given** a simulated non-member, **When** they open the knowledge base, **Then** no questions or answers are shown and they are told it is an E-Waves membership benefit.
 3. **Given** a simulated member, **When** they post a question with a description and topic, **Then** it is published immediately with status open, shows the business name, and is visible to other members.
-4. **Given** a published question, **When** another member submits an answer, **Then** the answer is published immediately, attributed to the answering business, the question is marked answered, and the asker is notified.
+4. **Given** a published question, **When** another member submits an answer, **Then** the answer is published immediately, attributed to the answering business, the question is marked answered, and the asker is notified in the activity feed.
 5. **Given** a question that already has an answer, **When** a different member submits another answer, **Then** both answers remain visible.
-6. **Given** a member's own question or answer, **When** they edit or delete it, **Then** the change is applied; there are no comments on questions or answers.
+6. **Given** a member's own question or answer, **When** they edit it, **Then** the change is applied; there are no comments on questions or answers.
 
 ---
 
@@ -61,7 +77,7 @@ Questions and answers are published immediately, so members can flag problems af
 
 1. **Given** a published question or answer, **When** a member flags it and gives a reason, **Then** it stays visible with a warning and is added to the review list.
 2. **Given** flagged content, **When** a Varodd administrator clears it, **Then** the warning is removed; **When** the administrator removes it, **Then** it is no longer shown.
-3. **Given** a question whose only answer is flagged, **When** the flag is added, **Then** the question returns to open; **When** the answer is cleared, **Then** the question returns to answered.
+3. **Given** a question whose only answer is flagged, **When** the flag is added, **Then** the question returns to open; **When** the answer is cleared, **Then** the question returns to answered; **When** the answer is removed, **Then** the question stays open.
 
 ---
 
@@ -77,7 +93,7 @@ A member asks a question in their own words to a chatbot, which gives a short an
 
 1. **Given** the forum contains content relevant to a prepared question, **When** a member asks the chatbot, **Then** the chatbot gives a short written answer with links to its source questions.
 2. **Given** any chatbot answer, **When** it is shown, **Then** a visible notice tells the member that the answer cannot be entirely trusted and should be checked against its sources.
-3. **Given** no relevant content or only a weak match exists, **When** a member asks the chatbot, **Then** the chatbot says it has no answer, links the closest questions if any exist, and offers to help post the question.
+3. **Given** no relevant content, only a weak match, or no prepared response exists, **When** a member asks the chatbot, **Then** the chatbot says it has no answer, links the closest questions if any exist, and offers to help post the question.
 4. **Given** flagged content that has not been cleared, **When** the chatbot answers, **Then** it does not use that content.
 
 ---
@@ -89,6 +105,8 @@ A member asks a question in their own words to a chatbot, which gives a short an
 - A flagged answer stays visible with a warning until a Varodd administrator reviews it.
 - Spam and off-topic posts are handled through the same flagging process.
 - A chatbot question with only a weak match is treated as having no answer.
+- A chatbot question that is not one of the prepared questions gets the no-answer response; the chatbot never makes up an answer.
+- Knowledge base activity is not shown in the activity feed to users who cannot access the knowledge base.
 
 ## Requirements *(mandatory)*
 
@@ -100,30 +118,31 @@ A member asks a question in their own words to a chatbot, which gives a short an
 - **FR-004**: System MUST provide a forum where members can search questions and browse them by topic, including both open and answered questions.
 - **FR-005**: System MUST show existing questions that closely match a question a member is about to post, and MUST still allow the member to post.
 - **FR-006**: System MUST provide a simulated chatbot that gives short written answers based on stored content and links to its source questions.
-- **FR-007**: The simulated chatbot MUST say when it has no answer, treat a weak match as no answer, and link the closest questions if any exist.
+- **FR-007**: The simulated chatbot MUST say when it has no answer, treat a weak match or a question without a prepared response as no answer, and link the closest questions if any exist. It MUST NOT make up an answer.
 - **FR-008**: The simulated chatbot MUST show a visible notice with every answer that it cannot be entirely trusted and should be checked against its sources.
 - **FR-009**: The simulated chatbot SHOULD offer to help post a question it cannot answer.
 - **FR-010**: The simulated chatbot MUST NOT use flagged content unless a Varodd administrator has cleared it.
 - **FR-011**: System MUST show the name of the business that posted each question and answer.
 - **FR-012**: System MUST allow any member to flag a question or answer with a reason, including outdated, incorrect, spam, or off-topic content.
 - **FR-013**: System MUST keep flagged content visible with a warning until a Varodd administrator clears or removes it.
-- **FR-014**: System MUST return a question to open while its only answer is flagged, and to answered if that answer is cleared.
+- **FR-014**: System MUST return a question to open while its only answer is flagged, keep it open if that answer is removed, and return it to answered if that answer is cleared.
 - **FR-015**: System MUST make the knowledge base available only to E-Waves members.
 - **FR-016**: System MUST publish questions and answers immediately, without review before publication.
-- **FR-017**: System MUST notify the asker when their question receives an answer.
-- **FR-018**: System MUST allow authors to edit or delete their own questions and answers.
-- **FR-019**: System MUST provide a button for switching between simulated E-Waves members, non-members, and Varodd administrators, instead of login.
-- **FR-020**: System MUST present its user interface in Norwegian.
+- **FR-017**: System MUST notify the asker in the activity feed when their question receives an answer.
+- **FR-018**: System MUST allow authors to edit their own questions and answers.
+- **FR-019**: System MUST use the shared user switcher from `001-job-matching-marketplace`, instead of login, for switching between simulated E-Waves members, non-members, and Varodd administrators.
+- **FR-020**: System MUST present its user interface in Norwegian Bokmål.
 - **FR-021**: System MUST use only fictional seed data.
+- **FR-022**: System MUST add knowledge base activity, such as questions posted, answered, flagged, and reviewed, to the shared activity feed, shown only to users who can access the knowledge base.
 
 ### Key Entities
 
-- **Member Business**: A small online-selling business that is a member of E-Waves.
+- **Business**: The shared business defined in `001-job-matching-marketplace`. A business that is an E-Waves member can use the knowledge base (formerly referred to as "Member Business").
 - **Question**: A problem posted by a member, including its description, topic, business name, and status (open/answered).
-- **Answer**: A response to a Question, attributed to a member business, with a status (current or flagged).
+- **Answer**: A response to a Question, attributed to a business, with a status (current or flagged).
 - **Topic**: A forum category, such as webstore, technical task, or AI adoption.
 - **Flag**: A member's report on a question or answer, including its reason and review outcome.
-- **Varodd Administrator**: Varodd staff who review flagged content.
+- **Varodd Administrator**: Varodd staff who review flagged content. The same role as in `001-job-matching-marketplace`.
 
 ## Success Criteria *(mandatory)*
 
@@ -131,7 +150,7 @@ A member asks a question in their own words to a chatbot, which gives a short an
 
 - **SC-001**: A person trying the prototype can find an existing relevant answer, through search or the simulated chatbot, in under 2 minutes.
 - **SC-002**: Every prepared chatbot question with stored content gets an answer with a source link and trust notice, and every prepared question without stored content gets a no-answer response.
-- **SC-003**: At least 70% of the prepared near-duplicate questions show the existing question before posting.
+- **SC-003**: Every prepared near-duplicate question shows the existing question before posting.
 
 ## Assumptions
 
@@ -139,4 +158,7 @@ A member asks a question in their own words to a chatbot, which gives a short an
 - An answer may come from any member, not just Varodd staff or designated experts.
 - There is no reward for answering in the prototype.
 - The prepared test questions define what counts as relevant or closely matching.
-- Simulated businesses are shared with feature `001-job-matching-marketplace`.
+- The seed data step from `001-job-matching-marketplace` also creates the fictional forum questions and answers, the prepared chatbot questions and responses (some with stored content, some without), and the prepared near-duplicate questions.
+- Businesses and simulated users are shared with feature `001-job-matching-marketplace`. A member is a simulated user whose business is an E-Waves member; anyone else is a non-member.
+- The list of topics is fixed in the seed data and cannot be edited in the prototype. Who maintains it is an open question for later.
+- Whether authors can delete their own questions and answers is an open question for later.
