@@ -1,0 +1,11 @@
+.request-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.request-actions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

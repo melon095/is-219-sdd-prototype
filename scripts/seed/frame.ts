@@ -78,8 +78,8 @@ const people: Person[] = [
     id: "person-6",
     name: "Silje Moen",
     isVaroddAdmin: false,
-    seeksWork: false,
-    description: "Jobber hos Kvadraturen Kaffebrenneri",
+    seeksWork: true,
+    description: "Søker oppdrag innen annonsering og video",
   },
   {
     id: "person-7",
@@ -186,7 +186,7 @@ const businesses: Business[] = [
     description:
       "Lite kaffebrenneri med nettbutikk og kaffeabonnement til hele landet.",
     ownerId: "person-5",
-    employeeIds: ["person-6"],
+    employeeIds: [],
     isEWavesMember: true,
     crawlOptIn: true,
     crawlSuggestions: [],

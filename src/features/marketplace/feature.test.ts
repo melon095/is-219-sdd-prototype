@@ -24,14 +24,17 @@ function personOf(id: string) {
 }
 
 describe("marketplace feature", () => {
-  it("registers every US2 and US3 command", () => {
+  it("registers every US2, US3 and US4 command", () => {
     expect(Object.keys(marketplaceFeature.commandHandlers).sort()).toEqual([
       "acceptOffer",
+      "cancelRequest",
+      "completeRequest",
       "declineOffer",
       "editRequest",
       "inviteToInterview",
       "makeOffer",
       "publishRequest",
+      "recordStart",
       "registerWorkerProfile",
       "rejectShortlist",
       "returnToOpen",
@@ -39,6 +42,7 @@ describe("marketplace feature", () => {
       "simulateNavReferral",
       "simulateOfferExpiry",
       "updateWorkerProfile",
+      "withdraw",
     ]);
   });
 

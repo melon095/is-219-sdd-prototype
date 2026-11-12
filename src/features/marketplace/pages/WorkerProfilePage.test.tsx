@@ -269,7 +269,7 @@ describe("WorkerProfilePage med ferdig profil", () => {
 
     const list = screen.getByRole("list", { name: "Kortlister og tilbud" });
     const items = within(list).getAllByRole("listitem");
-    expect(items).toHaveLength(3);
+    expect(items).toHaveLength(4);
     expect(
       within(list)
         .getByRole("link", { name: "Lansere ny nettbutikk med kampanje" })

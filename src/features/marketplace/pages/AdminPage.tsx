@@ -3,6 +3,7 @@ import { DialogTrigger } from "react-aria-components";
 import { isAdmin, workerProfileOf } from "../../../domain/frame/people";
 import type { Command } from "../../../domain/frame/types";
 import {
+  canCancelRequest,
   canReturnToOpen,
   canSimulateNavReferral,
 } from "../../../domain/marketplace/permissions";
@@ -82,26 +83,28 @@ function AdminContent() {
                       Gjør åpen igjen
                     </Button>
                   )}
-                  <DialogTrigger>
-                    <Button variant="secondary">Avlys</Button>
-                    <AlertDialog
-                      title="Avlys oppdraget?"
-                      text="Eieren og de som er på kortlisten får beskjed."
-                      reasonLabel="Hvorfor avlyses oppdraget?"
-                      confirmLabel="Avlys oppdraget"
-                      cancelLabel="Avbryt"
-                      onConfirm={(reason) =>
-                        run(
-                          {
-                            type: "cancelRequest",
-                            requestId: request.id,
-                            reason: reason ?? "",
-                          },
-                          "Oppdraget er avlyst",
-                        )
-                      }
-                    />
-                  </DialogTrigger>
+                  {canCancelRequest(person, request, state) && (
+                    <DialogTrigger>
+                      <Button variant="secondary">Avlys</Button>
+                      <AlertDialog
+                        title="Avlys oppdraget?"
+                        text="Eieren og de som er på kortlisten får beskjed."
+                        reasonLabel="Hvorfor avlyses oppdraget?"
+                        confirmLabel="Avlys oppdraget"
+                        cancelLabel="Avbryt"
+                        onConfirm={(reason) =>
+                          run(
+                            {
+                              type: "cancelRequest",
+                              requestId: request.id,
+                              reason: reason ?? "",
+                            },
+                            "Oppdraget er avlyst",
+                          )
+                        }
+                      />
+                    </DialogTrigger>
+                  )}
                 </div>
               </li>
             ))}

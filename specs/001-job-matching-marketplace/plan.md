@@ -30,7 +30,7 @@ Technical approach: a static React 19 + TypeScript single-page app built with Vi
 
 **Constraints**: WCAG 2.1 AA. Norwegian Bokmål interface. No runtime network requests except the app's own static files: no third-party fonts, analytics, or APIs (constitution principle II). Separate desktop and mobile layouts (FR-034). Every colour, font, and component style comes from the shared design tokens (principle IV). Content reflows down to 320 px wide.
 
-**Scale/Scope**: About 5 businesses, 10–15 people, 5–8 worker profiles, 8–10 seeded requests. 9 pages (see [contracts/routes.md](./contracts/routes.md)), 19 domain commands (see [contracts/commands.md](./contracts/commands.md)), about 24 shared UI components.
+**Scale/Scope**: About 5 businesses, 10–15 people, 5–8 worker profiles, 8–14 seeded requests. 9 pages (see [contracts/routes.md](./contracts/routes.md)), 19 domain commands (see [contracts/commands.md](./contracts/commands.md)), about 24 shared UI components.
 
 No item is left as NEEDS CLARIFICATION; every open technical question is settled in [research.md](./research.md).
 

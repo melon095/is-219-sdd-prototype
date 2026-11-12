@@ -86,7 +86,7 @@ describe("RequestListPage for eiere", () => {
         screen.getByRole("heading", { level: 2, name: title }),
       ).toBeTruthy();
     }
-    expect(screen.getAllByText("Fjordlys Keramikk")).toHaveLength(2);
+    expect(screen.getAllByText("Fjordlys Keramikk")).toHaveLength(3);
     expect(screen.getByRole("button", { name: "Nytt oppdrag" })).toBeTruthy();
     expect(
       screen
@@ -103,7 +103,7 @@ describe("RequestListPage for administratorer", () => {
     open("person-15");
 
     const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows).toHaveLength(11);
+    expect(rows).toHaveLength(15);
     expect(rows[1]?.textContent).toContain(
       "Markedsføring av vinterkolleksjonen",
     );

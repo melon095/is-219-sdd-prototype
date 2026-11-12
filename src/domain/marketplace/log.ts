@@ -254,6 +254,67 @@ export function returnedToOpenLog(
   );
 }
 
+export function startedLog(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  workerId?: Id,
+): LogEvent {
+  return event(
+    context,
+    actor,
+    "started",
+    `${personName(state, actor)} registrerte oppstart av oppdraget`,
+    workerId === undefined ? {} : { workerId },
+  );
+}
+
+export function withdrewLog(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  workerId: Id,
+): LogEvent {
+  return event(
+    context,
+    actor,
+    "withdrew",
+    `${personName(state, workerId)} trakk seg fra oppdraget`,
+    { workerId },
+  );
+}
+
+export function completedLog(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  outcome: Outcome,
+  workerId?: Id,
+): LogEvent {
+  return event(
+    context,
+    actor,
+    "completed",
+    `${personName(state, actor)} markerte oppdraget som fullført: ${outcomeLabel(outcome)}`,
+    workerId === undefined ? {} : { workerId },
+  );
+}
+
+export function cancelledLog(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  workerId?: Id,
+): LogEvent {
+  return event(
+    context,
+    actor,
+    "cancelled",
+    `${personName(state, actor)} avlyste oppdraget`,
+    workerId === undefined ? {} : { workerId },
+  );
+}
+
 export function messageSentLog(
   state: DemoState,
   context: CommandContext,
@@ -498,6 +559,97 @@ export function returnedToOpenActivity(
       personIds: ownerId === undefined ? [] : [ownerId],
       groups: [workersGroup],
     },
+  );
+}
+
+function ownerAnd(
+  state: DemoState,
+  request: TaskRequest,
+  ...personIds: Id[]
+): Audience {
+  const ownerId = ownerIdOf(state, request);
+  const ids = [...(ownerId === undefined ? [] : [ownerId]), ...personIds];
+  return people(...new Set(ids));
+}
+
+export function startedActivity(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  request: TaskRequest,
+): ActivityEntry {
+  return activity(
+    context,
+    actor,
+    request,
+    `Oppdraget «${request.title}» er i gang`,
+    ownerAnd(
+      state,
+      request,
+      ...(request.agreement === undefined ? [] : [request.agreement.workerId]),
+    ),
+  );
+}
+
+export function withdrewActivity(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  request: TaskRequest,
+  workerId: Id,
+): ActivityEntry {
+  return activity(
+    context,
+    actor,
+    request,
+    `${personName(state, workerId)} har trukket seg fra «${request.title}»`,
+    ownerAnd(state, request, workerId),
+  );
+}
+
+export function completedActivity(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  request: TaskRequest,
+  outcome: Outcome,
+): ActivityEntry {
+  return activity(
+    context,
+    actor,
+    request,
+    `Oppdraget «${request.title}» er fullført: ${outcomeLabel(outcome)}`,
+    ownerAnd(
+      state,
+      request,
+      ...(request.agreement === undefined ? [] : [request.agreement.workerId]),
+    ),
+  );
+}
+
+export function cancelledActivity(
+  state: DemoState,
+  context: CommandContext,
+  actor: Actor,
+  request: TaskRequest,
+): ActivityEntry {
+  const activeWorkerIds = request.shortlist
+    .filter((item) => item.state === "active")
+    .map((item) => item.workerId);
+  return activity(
+    context,
+    actor,
+    request,
+    `Oppdraget «${request.title}» er avlyst`,
+    ownerAnd(
+      state,
+      request,
+      ...activeWorkerIds,
+      ...(request.offeredWorkerId === undefined
+        ? []
+        : [request.offeredWorkerId]),
+      ...(request.agreement === undefined ? [] : [request.agreement.workerId]),
+    ),
   );
 }
 

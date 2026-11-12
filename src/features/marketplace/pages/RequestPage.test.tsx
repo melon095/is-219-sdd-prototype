@@ -564,6 +564,344 @@ describe("RequestPage for andre", () => {
   });
 });
 
+function withStatus(
+  requestId: string,
+  status: TaskRequest["status"],
+  extra: Partial<TaskRequest> = {},
+): DemoState {
+  return changeRequest(testSeedState(), requestId, (request) => ({
+    ...request,
+    status,
+    ...extra,
+  }));
+}
+
+function storedRequest(store: { getState: () => DemoState }, id: string) {
+  return store.getState().marketplace.requests.find((item) => item.id === id);
+}
+
+describe("RequestPage livssyklus for eieren", () => {
+  it("viser Registrer oppstart til eieren mens oppdraget er avtalt", () => {
+    open("oppdrag-2", "person-5");
+
+    expect(
+      screen.getByRole("button", { name: "Registrer oppstart" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Marker som fullført" })).toBe(
+      null,
+    );
+    expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+  });
+
+  it("skjuler Registrer oppstart for alle andre enn eieren", () => {
+    for (const userId of ["person-12", "person-10", "person-15", "person-3"]) {
+      const view = open("oppdrag-2", userId);
+      expect(screen.queryByRole("button", { name: "Registrer oppstart" })).toBe(
+        null,
+      );
+      view.unmount();
+    }
+  });
+
+  it("registrerer oppstart i en dialog med datovelger", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-2", "person-5");
+
+    await user.click(
+      screen.getByRole("button", { name: "Registrer oppstart" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Registrer oppstart",
+    });
+    expect(within(dialog).getByText("Faktisk startdato")).toBeTruthy();
+    expect(within(dialog).getAllByRole("spinbutton").length).toBe(3);
+    await user.click(within(dialog).getByRole("button", { name: "Registrer" }));
+
+    await waitFor(() =>
+      expect(storedRequest(store, "oppdrag-2")?.status).toBe("in-progress"),
+    );
+    expect(storedRequest(store, "oppdrag-2")?.actualStartDate).toBe(
+      "2026-11-23",
+    );
+    expect(await screen.findByText("Pågår")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Registrer oppstart" })).toBe(
+      null,
+    );
+  });
+
+  it("viser Marker som fullført mens oppdraget pågår", () => {
+    open("oppdrag-2", "person-5", {
+      state: withStatus("oppdrag-2", "in-progress", {
+        actualStartDate: "2026-11-23",
+      }),
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Marker som fullført" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Registrer oppstart" })).toBe(
+      null,
+    );
+    expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+  });
+
+  it("fullfører oppdraget med utfallet Ble fast ansettelse", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-2", "person-5", {
+      state: withStatus("oppdrag-2", "in-progress", {
+        actualStartDate: "2026-11-23",
+      }),
+    });
+
+    await user.click(
+      screen.getByRole("button", { name: "Marker som fullført" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Marker som fullført",
+    });
+    expect(
+      within(dialog)
+        .getAllByRole("radio")
+        .map((radio) => radio.closest("label")?.textContent),
+    ).toEqual(["Som planlagt", "Ble forlenget", "Ble fast ansettelse"]);
+    const confirm = within(dialog).getByRole("button", {
+      name: "Fullfør oppdraget",
+    });
+    expect(confirm.hasAttribute("disabled")).toBe(true);
+
+    await user.click(within(dialog).getByLabelText("Ble fast ansettelse"));
+    await user.click(confirm);
+
+    await waitFor(() =>
+      expect(storedRequest(store, "oppdrag-2")?.status).toBe("completed"),
+    );
+    expect(storedRequest(store, "oppdrag-2")?.outcome).toBe("permanent");
+    expect(await screen.findByText("Fullført")).toBeTruthy();
+  });
+
+  it("viser Avlys i alle statuser unntatt fullført og avlyst", () => {
+    const cases: [string, string, DemoState | undefined][] = [
+      ["oppdrag-7", "person-7", undefined],
+      ["oppdrag-4", "person-1", undefined],
+      ["oppdrag-5", "person-4", undefined],
+      ["oppdrag-2", "person-5", undefined],
+      ["oppdrag-1", "person-4", undefined],
+      [
+        "oppdrag-2",
+        "person-5",
+        withStatus("oppdrag-2", "in-progress", {
+          actualStartDate: "2026-11-23",
+        }),
+      ],
+    ];
+    for (const [requestId, userId, state] of cases) {
+      const view = open(
+        requestId,
+        userId,
+        state === undefined ? {} : { state },
+      );
+      expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+      view.unmount();
+    }
+    for (const status of ["completed", "cancelled"] as const) {
+      const view = open("oppdrag-4", "person-1", {
+        state: withStatus("oppdrag-4", status),
+      });
+      expect(screen.queryByRole("button", { name: "Avlys" })).toBe(null);
+      expect(screen.queryByRole("button", { name: "Registrer oppstart" })).toBe(
+        null,
+      );
+      expect(
+        screen.queryByRole("button", { name: "Marker som fullført" }),
+      ).toBe(null);
+      view.unmount();
+    }
+  });
+
+  it("avlyser med en begrunnelse og viser statusen Avlyst", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-4", "person-1");
+
+    await user.click(screen.getByRole("button", { name: "Avlys" }));
+    const dialog = await screen.findByRole("alertdialog");
+    const confirm = within(dialog).getByRole("button", {
+      name: "Avlys oppdraget",
+    });
+    expect(confirm.hasAttribute("disabled")).toBe(true);
+    await user.type(
+      within(dialog).getByRole("textbox", {
+        name: "Hvorfor avlyses oppdraget?",
+      }),
+      "Vi klarer oss selv.",
+    );
+    await user.click(confirm);
+
+    expect(await screen.findByText("Avlyst")).toBeTruthy();
+    expect(storedRequest(store, "oppdrag-4")?.cancellation).toMatchObject({
+      reason: "Vi klarer oss selv.",
+      by: "person-1",
+    });
+  });
+
+  it("har ingen tilgjengelighetsfeil med handlingene for et avtalt oppdrag", async () => {
+    const { container } = open("oppdrag-2", "person-5");
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe("RequestPage livssyklus for den avtalte arbeideren", () => {
+  it("viser Trekk deg til den avtalte arbeideren mens oppdraget er avtalt", () => {
+    open("oppdrag-2", "person-12");
+
+    expect(screen.getByRole("button", { name: "Trekk deg" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Avlys" })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Registrer oppstart" })).toBe(
+      null,
+    );
+  });
+
+  it("viser ikke Trekk deg til andre på kortlisten eller etter oppstart", () => {
+    const first = open("oppdrag-2", "person-10");
+    expect(screen.queryByRole("button", { name: "Trekk deg" })).toBe(null);
+    first.unmount();
+
+    open("oppdrag-2", "person-12", {
+      state: withStatus("oppdrag-2", "in-progress", {
+        actualStartDate: "2026-11-23",
+      }),
+    });
+    expect(screen.queryByRole("button", { name: "Trekk deg" })).toBe(null);
+  });
+
+  it("ber om bekreftelse og trekker arbeideren fra oppdraget", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-2", "person-12");
+
+    await user.click(screen.getByRole("button", { name: "Trekk deg" }));
+    const dialog = await screen.findByRole("alertdialog");
+    expect(storedRequest(store, "oppdrag-2")?.agreement?.workerId).toBe(
+      "person-12",
+    );
+    await user.click(
+      within(dialog).getByRole("button", { name: "Trekk deg fra oppdraget" }),
+    );
+
+    await waitFor(() =>
+      expect(storedRequest(store, "oppdrag-2")?.status).toBe("shortlisted"),
+    );
+    expect(storedRequest(store, "oppdrag-2")?.excludedWorkerIds).toContainEqual(
+      expect.objectContaining({ workerId: "person-12", reason: "withdrew" }),
+    );
+    expect(
+      await screen.findByText(
+        "Dette oppdraget er ikke lenger åpent for deg. Vi gir deg beskjed når vi finner nye oppdrag som passer deg.",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("avbryter uten å endre noe", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-2", "person-12");
+
+    await user.click(screen.getByRole("button", { name: "Trekk deg" }));
+    const dialog = await screen.findByRole("alertdialog");
+    await user.click(within(dialog).getByRole("button", { name: "Avbryt" }));
+
+    expect(storedRequest(store, "oppdrag-2")?.status).toBe("agreed");
+  });
+});
+
+describe("RequestPage livssyklus for administratoren", () => {
+  it("viser Avlys til administratoren i alle tillatte statuser", () => {
+    for (const requestId of [
+      "oppdrag-7",
+      "oppdrag-4",
+      "oppdrag-5",
+      "oppdrag-2",
+      "oppdrag-1",
+    ]) {
+      const view = open(requestId, "person-15");
+      expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+      view.unmount();
+    }
+    const view = open("oppdrag-4", "person-15", {
+      state: withStatus("oppdrag-4", "completed"),
+    });
+    expect(screen.queryByRole("button", { name: "Avlys" })).toBe(null);
+    view.unmount();
+  });
+
+  it("viser Gjør åpen igjen og Avlys for oppdrag til vurdering, men bare Avlys til eieren", () => {
+    const admin = open("oppdrag-1", "person-15");
+    expect(
+      screen.getByRole("button", { name: "Gjør åpen igjen" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+    admin.unmount();
+
+    open("oppdrag-1", "person-4");
+    expect(screen.queryByRole("button", { name: "Gjør åpen igjen" })).toBe(
+      null,
+    );
+    expect(screen.getByRole("button", { name: "Avlys" })).toBeTruthy();
+  });
+
+  it("åpner et oppdrag til vurdering igjen", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-1", "person-15");
+
+    await user.click(screen.getByRole("button", { name: "Gjør åpen igjen" }));
+
+    await waitFor(() =>
+      expect(storedRequest(store, "oppdrag-1")?.status).not.toBe(
+        "under-review",
+      ),
+    );
+  });
+
+  it("viser alle hendelser i loggen og alle samtaler uten skrivetilgang", () => {
+    open("oppdrag-4", "person-15");
+
+    const log = screen.getByRole("list", { name: "Logg" });
+    for (const name of ["Amina Yusuf", "Lena Eriksen", "Mats Johansen"]) {
+      expect(
+        within(log).getByText(new RegExp(`${name} ble lagt til på kortlisten`)),
+      ).toBeTruthy();
+    }
+    expect(within(log).getAllByText("System").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("tab")).toHaveLength(3);
+    expect(screen.queryByRole("textbox", { name: "Skriv en melding" })).toBe(
+      null,
+    );
+  });
+
+  it("viser System som aktør for hendelser som ikke har en person", () => {
+    const state = changeRequest(testSeedState(), "oppdrag-4", (request) => ({
+      ...request,
+      log: [
+        ...request.log,
+        {
+          id: "logg-test",
+          at: "2026-11-16T10:00:00+01:00",
+          actor: "system",
+          kind: "status-changed",
+          text: "Status endret fra Kortliste klar til Åpen",
+          fromStatus: "shortlisted",
+          toStatus: "open",
+        },
+      ],
+    }));
+    open("oppdrag-4", "person-15", { state });
+
+    const log = screen.getByRole("list", { name: "Logg" });
+    expect(
+      within(log).getByText("Status endret fra Kortliste klar til Åpen")
+        .parentElement?.textContent,
+    ).toContain("System");
+  });
+});
+
 describe("RequestPage oppsett", () => {
   it("viser to kolonner på skrivebord", () => {
     const { container } = open("oppdrag-4", "person-1");

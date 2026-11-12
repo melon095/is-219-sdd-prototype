@@ -63,6 +63,14 @@ function profile(
 
 const profileSpecs: ProfileSpec[] = [
   profile(
+    "person-6",
+    ["ferdighet-3", "ferdighet-11", "ferdighet-16"],
+    "mid",
+    "2026-10-05",
+    "2026-10-01T09:00:00+02:00",
+    "Jeg hjelper små nettbutikker med å bli funnet på nett, og lager korte videoer til kampanjer.",
+  ),
+  profile(
     "person-8",
     [
       "ferdighet-2",
@@ -138,6 +146,8 @@ const profileSpecs: ProfileSpec[] = [
   ),
 ];
 
+type Step = { at: string; order: number; exec: () => void };
+
 function createHistory(frame: FrameSeed) {
   let state: DemoState = {
     meta: {
@@ -164,8 +174,14 @@ function createHistory(frame: FrameSeed) {
     counter += 1;
     return `midlertidig-${counter}`;
   };
+  const requestIds = new Map<string, Id>();
+  const steps: Step[] = [];
 
-  function run(actorId: Id, at: string, command: Command): void {
+  function schedule(at: string, exec: () => void): void {
+    steps.push({ at, order: steps.length, exec });
+  }
+
+  function execute(actorId: Id, at: string, command: Command): void {
     const result = applyCommand(state, command, { actorId, now: at, newId });
     if (!result.ok) {
       throw new Error(
@@ -175,45 +191,86 @@ function createHistory(frame: FrameSeed) {
     state = result.state;
   }
 
+  function requestIdOf(key: string): Id {
+    const id = requestIds.get(key);
+    if (id === undefined) {
+      throw new Error(`Seed-oppdraget ${key} er ikke publisert ennå`);
+    }
+    return id;
+  }
+
+  function run(actorId: Id, at: string, command: Command): void {
+    schedule(at, () => execute(actorId, at, command));
+  }
+
+  function act(
+    actorId: Id,
+    at: string,
+    key: string,
+    type: string,
+    extra: Record<string, unknown> = {},
+  ): void {
+    schedule(at, () =>
+      execute(actorId, at, { type, requestId: requestIdOf(key), ...extra }),
+    );
+  }
+
   function publish(
+    key: string,
     actorId: Id,
     at: string,
     businessId: Id,
     fields: RequestFields,
-  ): Id {
-    run(actorId, at, { type: "publishRequest", businessId, ...fields });
-    const created = state.marketplace.requests.at(-1);
-    if (created === undefined) {
-      throw new Error("Seed-oppdraget ble ikke opprettet");
-    }
-    return created.id;
+  ): void {
+    schedule(at, () => {
+      execute(actorId, at, { type: "publishRequest", businessId, ...fields });
+      const created = state.marketplace.requests.at(-1);
+      if (created === undefined) {
+        throw new Error("Seed-oppdraget ble ikke opprettet");
+      }
+      requestIds.set(key, created.id);
+    });
   }
 
   function message(
-    requestId: Id,
+    key: string,
     workerId: Id,
     authorId: Id,
     at: string,
     text: string,
   ): void {
-    const conversation = state.marketplace.conversations.find(
-      (item) => item.requestId === requestId && item.workerId === workerId,
-    );
-    if (conversation === undefined) {
-      throw new Error("Seed-samtalen finnes ikke");
-    }
-    run(authorId, at, {
-      type: "sendMessage",
-      conversationId: conversation.id,
-      text,
+    schedule(at, () => {
+      const requestId = requestIdOf(key);
+      const conversation = state.marketplace.conversations.find(
+        (item) => item.requestId === requestId && item.workerId === workerId,
+      );
+      if (conversation === undefined) {
+        throw new Error("Seed-samtalen finnes ikke");
+      }
+      execute(authorId, at, {
+        type: "sendMessage",
+        conversationId: conversation.id,
+        text,
+      });
     });
+  }
+
+  function play(): void {
+    [...steps]
+      .sort((a, b) => Date.parse(a.at) - Date.parse(b.at) || a.order - b.order)
+      .forEach((step) => {
+        step.exec();
+      });
   }
 
   return {
     current: () => state,
+    requestIdOf,
     run,
+    act,
     publish,
     message,
+    play,
   };
 }
 
@@ -321,38 +378,112 @@ export function seedMarketplace(
   frame: FrameSeed,
 ): { key: "marketplace"; data: MarketplaceState; activity: ActivityEntry[] } {
   const history = createHistory(frame);
-  const { run, publish, message } = history;
+  const { run, act, publish, message } = history;
 
-  const profileSteps = profileSpecs.flatMap((spec) => {
-    const steps: { at: string; actorId: Id; command: Command }[] = [
-      {
-        at: spec.registeredAt,
-        actorId: spec.personId,
-        command: {
-          type: "registerWorkerProfile",
-          skillIds: spec.skillIds,
-          experienceLevel: spec.experienceLevel,
-          availableFrom: spec.availableFrom,
-          ...(spec.wishes === undefined ? {} : { wishes: spec.wishes }),
-        },
-      },
-    ];
+  profileSpecs.forEach((spec) => {
+    run(spec.personId, spec.registeredAt, {
+      type: "registerWorkerProfile",
+      skillIds: spec.skillIds,
+      experienceLevel: spec.experienceLevel,
+      availableFrom: spec.availableFrom,
+      ...(spec.wishes === undefined ? {} : { wishes: spec.wishes }),
+    });
     if (spec.navReferredAt !== undefined) {
-      steps.push({
-        at: spec.navReferredAt,
-        actorId: adminId,
-        command: { type: "simulateNavReferral", personId: spec.personId },
+      run(adminId, spec.navReferredAt, {
+        type: "simulateNavReferral",
+        personId: spec.personId,
       });
     }
-    return steps;
   });
-  profileSteps
-    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
-    .forEach((step) => {
-      run(step.actorId, step.at, step.command);
-    });
 
-  const vinter = publish("person-4", "2026-10-30T09:00:00+01:00", "bedrift-3", {
+  publish("annonser", "person-5", "2026-10-06T09:00:00+02:00", "bedrift-4", {
+    title: "Annonser og synlighet for kaffeabonnementet",
+    description:
+      "Vi vil nå flere nye kunder med kaffeabonnementet vårt. Du setter opp annonser på nett og gjør nettbutikken lettere å finne i søkeresultatene.",
+    requiredSkillIds: ["ferdighet-3", "ferdighet-16"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-10-12",
+    estimatedDuration: { amount: 3, unit: "weeks" },
+    hoursPerWeek: 12,
+    workLocation: "remote",
+  });
+  act(
+    "person-5",
+    "2026-10-07T09:00:00+02:00",
+    "annonser",
+    "inviteToInterview",
+    {
+      workerId: "person-6",
+    },
+  );
+  message(
+    "annonser",
+    "person-6",
+    "person-5",
+    "2026-10-07T09:10:00+02:00",
+    "Hei Silje! Vi trenger hjelp med annonser og søkemotoroptimalisering for kaffeabonnementet. Har du tid til en kort prat?",
+  );
+  message(
+    "annonser",
+    "person-6",
+    "person-6",
+    "2026-10-07T11:30:00+02:00",
+    "Hei Ola! Det høres spennende ut. Jeg kan starte allerede neste uke.",
+  );
+  act("person-5", "2026-10-08T10:00:00+02:00", "annonser", "makeOffer", {
+    workerId: "person-6",
+  });
+  act("person-6", "2026-10-09T08:30:00+02:00", "annonser", "acceptOffer");
+  act("person-5", "2026-10-12T08:00:00+02:00", "annonser", "recordStart", {
+    actualStartDate: "2026-10-12",
+  });
+
+  publish("opprydding", "person-3", "2026-10-21T10:00:00+02:00", "bedrift-2", {
+    title: "Rydde i nettbutikken og regnskapet",
+    description:
+      "Vi har fått mange nye produkter og trenger hjelp til å oppdatere nettsiden og få orden på regnskapet etter sommersesongen.",
+    requiredSkillIds: ["ferdighet-4", "ferdighet-18"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-11-23",
+    estimatedDuration: { amount: 5, unit: "weeks" },
+    hoursPerWeek: 10,
+    workLocation: "remote",
+  });
+  act(
+    "person-3",
+    "2026-10-22T09:00:00+02:00",
+    "opprydding",
+    "inviteToInterview",
+    { workerId: "person-10" },
+  );
+  message(
+    "opprydding",
+    "person-10",
+    "person-3",
+    "2026-10-22T09:10:00+02:00",
+    "Hei Henrik! Vi trenger hjelp med regnskapet og nettsiden vår. Kan du starte mandag 23. november?",
+  );
+  message(
+    "opprydding",
+    "person-10",
+    "person-10",
+    "2026-10-22T13:40:00+02:00",
+    "Hei Per! Ja, det passer fint. Jeg tar gjerne regnskapet først.",
+  );
+  act("person-3", "2026-10-23T10:00:00+02:00", "opprydding", "makeOffer", {
+    workerId: "person-10",
+  });
+  act("person-10", "2026-10-24T08:30:00+02:00", "opprydding", "acceptOffer");
+  message(
+    "opprydding",
+    "person-10",
+    "person-10",
+    "2026-10-27T16:20:00+01:00",
+    "Hei Per. Jeg har dessverre fått en fast jobb og må trekke meg fra oppdraget. Beklager at jeg sier fra så sent.",
+  );
+  act("person-10", "2026-10-28T09:00:00+01:00", "opprydding", "withdraw");
+
+  publish("vinter", "person-4", "2026-10-30T09:00:00+01:00", "bedrift-3", {
     title: "Markedsføring av vinterkolleksjonen",
     description:
       "Vi lanserer en ny kolleksjon med strikkeplagg til vinteren og trenger hjelp til å nå flere kunder. Oppgaven er å lage innhold til sosiale medier og sette opp et enkelt nyhetsbrev som følger kampanjen.",
@@ -365,85 +496,78 @@ export function seedMarketplace(
     workLocation: "remote",
   });
   message(
-    vinter,
+    "vinter",
     "person-8",
     "person-4",
     "2026-10-30T15:10:00+01:00",
     "Hei Mats! Vi lanserer en vinterkolleksjon og trenger hjelp med sosiale medier og nyhetsbrev. Når kan du starte?",
   );
 
-  const nyhetsbrev = publish(
-    "person-5",
-    "2026-10-31T10:00:00+01:00",
-    "bedrift-4",
-    {
-      title: "Nyhetsbrev med fin design til kaffeabonnentene",
-      description:
-        "Kaffeabonnentene våre trenger et ryddig nyhetsbrev hver måned. Du setter opp en mal med god design og skriver det første brevet sammen med oss.",
-      requiredSkillIds: ["ferdighet-12", "ferdighet-7"],
-      acceptedSuggestionIds: [],
-      desiredStartDate: "2026-12-14",
-      estimatedDuration: { amount: 6, unit: "weeks" },
-      hoursPerWeek: 6,
-      workLocation: "remote",
-    },
-  );
+  publish("nyhetsbrev", "person-5", "2026-10-31T10:00:00+01:00", "bedrift-4", {
+    title: "Nyhetsbrev med fin design til kaffeabonnentene",
+    description:
+      "Kaffeabonnentene våre trenger et ryddig nyhetsbrev hver måned. Du setter opp en mal med god design og skriver det første brevet sammen med oss.",
+    requiredSkillIds: ["ferdighet-12", "ferdighet-7"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-12-14",
+    estimatedDuration: { amount: 6, unit: "weeks" },
+    hoursPerWeek: 6,
+    workLocation: "remote",
+  });
   message(
-    vinter,
+    "vinter",
     "person-8",
     "person-8",
     "2026-10-31T10:30:00+01:00",
     "Hei Anne! Jeg kan starte 23. november og har jobbet mye med nyhetsbrev.",
   );
-  run("person-5", "2026-11-02T08:00:00+01:00", {
-    type: "inviteToInterview",
-    requestId: nyhetsbrev,
-    workerId: "person-8",
-  });
+  act(
+    "person-5",
+    "2026-11-02T08:00:00+01:00",
+    "nyhetsbrev",
+    "inviteToInterview",
+    {
+      workerId: "person-8",
+    },
+  );
   message(
-    nyhetsbrev,
+    "nyhetsbrev",
     "person-8",
     "person-5",
     "2026-11-02T08:10:00+01:00",
     "Hei Mats! Vi trenger hjelp med et månedlig nyhetsbrev til kaffeabonnentene. Kan du sette opp en mal og skrive det første brevet?",
   );
   message(
-    nyhetsbrev,
+    "nyhetsbrev",
     "person-8",
     "person-8",
     "2026-11-02T08:25:00+01:00",
     "Hei Ola! Det kan jeg gjerne. Jeg har laget nyhetsbrev for flere nettbutikker.",
   );
-  run("person-5", "2026-11-02T08:30:00+01:00", {
-    type: "makeOffer",
-    requestId: nyhetsbrev,
+  act("person-5", "2026-11-02T08:30:00+01:00", "nyhetsbrev", "makeOffer", {
     workerId: "person-8",
   });
-  run("person-4", "2026-11-02T14:20:00+01:00", {
-    type: "rejectShortlist",
-    requestId: vinter,
+  act("person-4", "2026-11-02T14:20:00+01:00", "vinter", "rejectShortlist", {
     reason:
       "Ingen av dem har erfaring med strikk og mote, og jeg trenger noen som kan skrive tekster som passer stilen vår.",
   });
+  act("person-5", "2026-11-02T15:00:00+01:00", "annonser", "completeRequest", {
+    outcome: "permanent",
+  });
 
-  const pakking = publish(
-    "person-5",
-    "2026-11-03T10:00:00+01:00",
-    "bedrift-4",
-    {
-      title: "Hjelp med pakking og sending før jul",
-      description:
-        "Kaffeabonnementene våre vokser fort, og vi trenger en ekstra hånd på lageret i førjulstiden. Du pakker og sender bestillinger, holder orden på lageret og svarer på enkle spørsmål fra kunder.",
-      requiredSkillIds: ["ferdighet-9", "ferdighet-15", "ferdighet-8"],
-      acceptedSuggestionIds: [],
-      additionalRequirements: "Du må kunne løfte opptil 15 kilo.",
-      desiredStartDate: "2026-11-23",
-      estimatedDuration: { amount: 6, unit: "weeks" },
-      hoursPerWeek: 15,
-      workLocation: "onsite",
-    },
-  );
-  publish("person-3", "2026-11-03T11:30:00+01:00", "bedrift-2", {
+  publish("pakking", "person-5", "2026-11-03T10:00:00+01:00", "bedrift-4", {
+    title: "Hjelp med pakking og sending før jul",
+    description:
+      "Kaffeabonnementene våre vokser fort, og vi trenger en ekstra hånd på lageret i førjulstiden. Du pakker og sender bestillinger, holder orden på lageret og svarer på enkle spørsmål fra kunder.",
+    requiredSkillIds: ["ferdighet-9", "ferdighet-15", "ferdighet-8"],
+    acceptedSuggestionIds: [],
+    additionalRequirements: "Du må kunne løfte opptil 15 kilo.",
+    desiredStartDate: "2026-11-23",
+    estimatedDuration: { amount: 6, unit: "weeks" },
+    hoursPerWeek: 15,
+    workLocation: "onsite",
+  });
+  publish("regnskap", "person-3", "2026-11-03T11:30:00+01:00", "bedrift-2", {
     title: "Regnskap og bilag før årsslutt",
     description:
       "Vi har samlet opp bilag gjennom hele sesongen og trenger hjelp til å få orden på regnskapet før årsslutt. Oppgaven er å registrere bilag og avstemme tallene mot nettbutikken.",
@@ -454,146 +578,176 @@ export function seedMarketplace(
     hoursPerWeek: 8,
     workLocation: "remote",
   });
-  run("person-5", "2026-11-04T09:15:00+01:00", {
-    type: "inviteToInterview",
-    requestId: pakking,
+  publish("video", "person-4", "2026-11-04T13:00:00+01:00", "bedrift-3", {
+    title: "Video og annonser til vinterkolleksjonen",
+    description:
+      "Vi vil lage korte videoer som viser frem vinterkolleksjonen, og trenger noen som setter opp enkle annonser og følger dem opp underveis.",
+    requiredSkillIds: ["ferdighet-11", "ferdighet-16"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-11-09",
+    estimatedDuration: { amount: 4, unit: "weeks" },
+    hoursPerWeek: 10,
+    workLocation: "remote",
+  });
+  act("person-4", "2026-11-04T14:00:00+01:00", "video", "inviteToInterview", {
+    workerId: "person-6",
+  });
+  message(
+    "video",
+    "person-6",
+    "person-4",
+    "2026-11-04T14:10:00+01:00",
+    "Hei Silje! Vi trenger korte videoer og annonser til vinterkolleksjonen vår. Kan du ta det på?",
+  );
+  message(
+    "video",
+    "person-6",
+    "person-6",
+    "2026-11-04T16:20:00+01:00",
+    "Hei Anne! Ja, det høres gøy ut. Jeg kan starte med en gang.",
+  );
+  act("person-5", "2026-11-04T09:15:00+01:00", "pakking", "inviteToInterview", {
     workerId: "person-12",
   });
   message(
-    pakking,
+    "pakking",
     "person-12",
     "person-5",
     "2026-11-04T09:20:00+01:00",
     "Hei Omar! Vi trenger hjelp med pakking og sending før jul. Kan du starte mandag 23. november?",
   );
   message(
-    pakking,
+    "pakking",
     "person-12",
     "person-12",
     "2026-11-04T11:05:00+01:00",
     "Hei Ola! Ja, det passer fint. Jeg har jobbet på lager før og kan ta 15 timer i uken.",
   );
   message(
-    pakking,
+    "pakking",
     "person-12",
     "person-5",
     "2026-11-04T12:50:00+01:00",
     "Flott, da sender jeg deg et tilbud nå.",
   );
-  run("person-5", "2026-11-04T13:00:00+01:00", {
-    type: "makeOffer",
-    requestId: pakking,
+  act("person-5", "2026-11-04T13:00:00+01:00", "pakking", "makeOffer", {
     workerId: "person-12",
   });
-  run("person-12", "2026-11-05T08:30:00+01:00", {
-    type: "acceptOffer",
-    requestId: pakking,
+  act("person-4", "2026-11-05T09:00:00+01:00", "video", "makeOffer", {
+    workerId: "person-6",
   });
+  act("person-12", "2026-11-05T08:30:00+01:00", "pakking", "acceptOffer");
   message(
-    pakking,
+    "pakking",
     "person-12",
     "person-12",
     "2026-11-05T08:40:00+01:00",
     "Takk for tilbudet, jeg gleder meg til å komme i gang!",
   );
+  act("person-6", "2026-11-05T11:00:00+01:00", "video", "acceptOffer");
 
-  const julesalg = publish(
+  publish("julesalg", "person-1", "2026-11-05T09:30:00+01:00", "bedrift-1", {
+    title: "Innhold og sosiale medier til julesalget",
+    description:
+      "Julesalget er det viktigste for keramikkbutikken vår. Vi trenger noen som kan lage gode innlegg, bilder og tekster til sosiale medier, slik at flere finner veien til nettbutikken.",
+    requiredSkillIds: ["ferdighet-6", "ferdighet-5"],
+    acceptedSuggestionIds: [],
+    additionalRequirements: "Vi vil gjerne ha et fast publiseringsprogram.",
+    desiredStartDate: "2026-12-10",
+    estimatedDuration: { amount: 8, unit: "weeks" },
+    hoursPerWeek: 8,
+    workLocation: "remote",
+  });
+  act(
     "person-1",
-    "2026-11-05T09:30:00+01:00",
-    "bedrift-1",
+    "2026-11-06T09:00:00+01:00",
+    "julesalg",
+    "inviteToInterview",
     {
-      title: "Innhold og sosiale medier til julesalget",
-      description:
-        "Julesalget er det viktigste for keramikkbutikken vår. Vi trenger noen som kan lage gode innlegg, bilder og tekster til sosiale medier, slik at flere finner veien til nettbutikken.",
-      requiredSkillIds: ["ferdighet-6", "ferdighet-5"],
-      acceptedSuggestionIds: [],
-      additionalRequirements: "Vi vil gjerne ha et fast publiseringsprogram.",
-      desiredStartDate: "2026-12-10",
-      estimatedDuration: { amount: 8, unit: "weeks" },
-      hoursPerWeek: 8,
-      workLocation: "remote",
+      workerId: "person-9",
     },
   );
-  run("person-1", "2026-11-06T09:00:00+01:00", {
-    type: "inviteToInterview",
-    requestId: julesalg,
-    workerId: "person-9",
-  });
   message(
-    julesalg,
+    "julesalg",
     "person-9",
     "person-1",
     "2026-11-06T09:05:00+01:00",
     "Hei Amina! Vi er en liten keramikkbutikk i Kristiansand og trenger hjelp med innhold til julesalget. Har du tid til en kort prat denne uken?",
   );
   message(
-    julesalg,
+    "julesalg",
     "person-9",
     "person-9",
     "2026-11-06T12:30:00+01:00",
     "Hei Kari! Det høres spennende ut. Torsdag formiddag passer fint for meg.",
   );
   message(
-    julesalg,
+    "julesalg",
     "person-9",
     "person-1",
     "2026-11-06T13:10:00+01:00",
     "Perfekt, da tar vi det torsdag klokken 10. Jeg sender en lenke i morgen.",
   );
 
-  const katalog = publish(
-    "person-7",
-    "2026-11-06T14:00:00+01:00",
-    "bedrift-5",
-    {
-      title: "Ny katalog for sjøutstyr",
-      description:
-        "Vi vil lage en enkel katalog over de mest solgte produktene våre, med gode tekster og ryddig grafisk design. Katalogen skal kunne lastes ned fra nettbutikken.",
-      requiredSkillIds: ["ferdighet-5", "ferdighet-13"],
-      acceptedSuggestionIds: [],
-      desiredStartDate: "2026-12-14",
-      estimatedDuration: { amount: 5, unit: "weeks" },
-      hoursPerWeek: 8,
-      workLocation: "remote",
-    },
-  );
-  run("person-7", "2026-11-06T14:30:00+01:00", {
-    type: "inviteToInterview",
-    requestId: katalog,
+  publish("katalog", "person-7", "2026-11-06T14:00:00+01:00", "bedrift-5", {
+    title: "Ny katalog for sjøutstyr",
+    description:
+      "Vi vil lage en enkel katalog over de mest solgte produktene våre, med gode tekster og ryddig grafisk design. Katalogen skal kunne lastes ned fra nettbutikken.",
+    requiredSkillIds: ["ferdighet-5", "ferdighet-13"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-12-14",
+    estimatedDuration: { amount: 5, unit: "weeks" },
+    hoursPerWeek: 8,
+    workLocation: "remote",
+  });
+  act("person-7", "2026-11-06T14:30:00+01:00", "katalog", "inviteToInterview", {
     workerId: "person-11",
   });
   message(
-    katalog,
+    "katalog",
     "person-11",
     "person-7",
     "2026-11-06T14:35:00+01:00",
     "Hei Lena! Vi skal lage en katalog over sjøutstyret vårt og vil gjerne snakke med deg om oppdraget.",
   );
   message(
-    katalog,
+    "katalog",
     "person-11",
     "person-11",
     "2026-11-06T16:10:00+01:00",
     "Hei Ingrid! Det høres interessant ut. Jeg har dessverre ikke så mye erfaring med utstyr til båt.",
   );
-  run("person-7", "2026-11-07T09:00:00+01:00", {
-    type: "makeOffer",
-    requestId: katalog,
+  publish("video-jul", "person-1", "2026-11-07T08:00:00+01:00", "bedrift-1", {
+    title: "Julevideo til nettbutikken",
+    description:
+      "Vi vil lage en kort video som viser hvordan keramikken blir til, og bruke den i nettbutikken og på sosiale medier før jul.",
+    requiredSkillIds: ["ferdighet-11", "ferdighet-1"],
+    acceptedSuggestionIds: [],
+    desiredStartDate: "2026-12-01",
+    estimatedDuration: { amount: 2, unit: "weeks" },
+    hoursPerWeek: 8,
+    workLocation: "remote",
+  });
+  act("person-7", "2026-11-07T09:00:00+01:00", "katalog", "makeOffer", {
     workerId: "person-11",
   });
   message(
-    katalog,
+    "katalog",
     "person-11",
     "person-11",
     "2026-11-07T14:50:00+01:00",
     "Takk for tilbudet, men jeg har ikke tid til å ta dette oppdraget nå.",
   );
-  run("person-11", "2026-11-07T15:00:00+01:00", {
-    type: "declineOffer",
-    requestId: katalog,
+  act("person-11", "2026-11-07T15:00:00+01:00", "katalog", "declineOffer");
+  act("person-1", "2026-11-10T09:00:00+01:00", "video-jul", "cancelRequest", {
+    reason:
+      "Vi fant ut at vi klarer julevideoen selv, så vi trenger ikke hjelp likevel.",
+  });
+  act("person-4", "2026-11-09T08:00:00+01:00", "video", "recordStart", {
+    actualStartDate: "2026-11-09",
   });
 
-  const design = publish("person-4", "2026-11-09T10:00:00+01:00", "bedrift-3", {
+  publish("design", "person-4", "2026-11-09T10:00:00+01:00", "bedrift-3", {
     title: "Lansere ny nettbutikk med kampanje",
     description:
       "Vi åpner en ny nettbutikk for vinterkolleksjonen og trenger noen som setter den opp i Shopify og lager en lanseringskampanje i sosiale medier.",
@@ -604,26 +758,24 @@ export function seedMarketplace(
     hoursPerWeek: 12,
     workLocation: "remote",
   });
-  run("person-4", "2026-11-10T15:00:00+01:00", {
-    type: "inviteToInterview",
-    requestId: design,
+  act("person-4", "2026-11-10T15:00:00+01:00", "design", "inviteToInterview", {
     workerId: "person-8",
   });
   message(
-    design,
+    "design",
     "person-8",
     "person-4",
     "2026-11-10T15:05:00+01:00",
     "Hei Mats! Vi åpner en ny nettbutikk og trenger hjelp med oppsett og lansering. Har du lyst til å ta en prat?",
   );
   message(
-    design,
+    "design",
     "person-8",
     "person-8",
     "2026-11-11T08:20:00+01:00",
     "Absolutt! Jeg har satt opp flere Shopify-butikker for små bedrifter og laget kampanjer i sosiale medier. Passer det torsdag?",
   );
-  publish("person-3", "2026-11-11T09:00:00+01:00", "bedrift-2", {
+  publish("honning", "person-3", "2026-11-11T09:00:00+01:00", "bedrift-2", {
     title: "Nye bilder av honningproduktene",
     description:
       "Vi har fått ny etikett på glassene og trenger profesjonelle produktbilder til nettbutikken. Bildene skal brukes på produktsidene og i sosiale medier.",
@@ -634,7 +786,7 @@ export function seedMarketplace(
     hoursPerWeek: 20,
     workLocation: "onsite",
   });
-  publish("person-7", "2026-11-12T13:20:00+01:00", "bedrift-5", {
+  publish("oversette", "person-7", "2026-11-12T13:20:00+01:00", "bedrift-5", {
     title: "Oversette produktbeskrivelser til engelsk",
     description:
       "Vi vil nå flere kunder i utlandet og trenger noen som kan oversette produktbeskrivelsene våre til engelsk, og gjøre teksten tydelig og salgsfremmende.",
@@ -646,13 +798,13 @@ export function seedMarketplace(
     workLocation: "remote",
   });
   message(
-    design,
+    "design",
     "person-8",
     "person-4",
     "2026-11-12T16:40:00+01:00",
     "Takk for praten i dag, Mats. Jeg sender deg et tilbud snart.",
   );
-  publish("person-1", "2026-11-13T09:10:00+01:00", "bedrift-1", {
+  publish("nettside", "person-1", "2026-11-13T09:10:00+01:00", "bedrift-1", {
     title: "Oppdatere nettsiden med nye produkter",
     description:
       "Vi har fått en ny serie med kopper og skåler og trenger hjelp til å legge dem inn i nettbutikken, med bilder, tekster og riktige kategorier.",
@@ -663,13 +815,23 @@ export function seedMarketplace(
     hoursPerWeek: 10,
     workLocation: "remote",
   });
-  run("person-4", "2026-11-14T10:00:00+01:00", {
-    type: "makeOffer",
-    requestId: design,
+  act("person-4", "2026-11-14T10:00:00+01:00", "design", "makeOffer", {
     workerId: "person-8",
   });
 
-  const result = renumber(history.current(), [nyhetsbrev, katalog]);
+  history.play();
+
+  const result = renumber(
+    history.current(),
+    [
+      "nyhetsbrev",
+      "katalog",
+      "video",
+      "annonser",
+      "video-jul",
+      "opprydding",
+    ].map(history.requestIdOf),
+  );
   return {
     key: "marketplace",
     data: result.marketplace,

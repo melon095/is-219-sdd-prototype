@@ -16,6 +16,12 @@
   gap: var(--space-4);
 }
 
+.request-details-started,
+.request-details-outcome {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
 .request-details-description {
   margin: 0;
   max-width: var(--width-reading);

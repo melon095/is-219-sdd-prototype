@@ -170,9 +170,9 @@ describe("seeded exclusions", () => {
 });
 
 describe("seeded requests", () => {
-  it("has 8–10 requests", () => {
+  it("has 8–14 requests", () => {
     expect(requests.length).toBeGreaterThanOrEqual(8);
-    expect(requests.length).toBeLessThanOrEqual(10);
+    expect(requests.length).toBeLessThanOrEqual(14);
   });
 
   it("has a request with a full shortlist of 3 active entries", () => {
@@ -252,6 +252,136 @@ describe("seeded requests", () => {
         }
       }
     }
+  });
+});
+
+describe("seeded request lifecycle", () => {
+  it("has every request status at least once", () => {
+    const statuses = new Set(requests.map((request) => request.status));
+    for (const status of [
+      "open",
+      "shortlisted",
+      "offered",
+      "agreed",
+      "in-progress",
+      "completed",
+      "cancelled",
+      "under-review",
+    ]) {
+      expect(statuses.has(status as TaskRequest["status"]), status).toBe(true);
+    }
+  });
+
+  it("has all four exclusion reasons", () => {
+    const reasons = new Set(
+      requests.flatMap((request) =>
+        request.excludedWorkerIds.map((item) => item.reason),
+      ),
+    );
+    for (const reason of [
+      "declined",
+      "offer-expired",
+      "withdrew",
+      "shortlist-rejected",
+    ]) {
+      expect(reasons.has(reason as never), reason).toBe(true);
+    }
+  });
+
+  it("has a completed request with outcome permanent at an E-Waves member and a full log", () => {
+    const completed = requests.filter(
+      (request) =>
+        request.status === "completed" && request.outcome === "permanent",
+    );
+    expect(completed.length).toBeGreaterThanOrEqual(1);
+    for (const request of completed) {
+      const business = businesses.find(
+        (item) => item.id === request.businessId,
+      );
+      expect(business?.isEWavesMember).toBe(true);
+      const kinds = new Set(request.log.map((event) => event.kind));
+      for (const kind of [
+        "published",
+        "shortlisted",
+        "interview-invited",
+        "offered",
+        "offer-accepted",
+        "started",
+        "completed",
+      ]) {
+        expect(kinds.has(kind as never), kind).toBe(true);
+      }
+      expect(request.agreement).toBeDefined();
+      expect(request.actualStartDate).toBeDefined();
+    }
+  });
+
+  it("keeps another active shortlist entry on the agreed request", () => {
+    const agreed = requests.filter((request) => request.status === "agreed");
+    expect(agreed.length).toBeGreaterThanOrEqual(1);
+    for (const request of agreed) {
+      expect(
+        activeEntries(request).filter(
+          (entry) => entry.workerId !== request.agreement?.workerId,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("has an in-progress request with a start date and an agreed worker", () => {
+    const inProgress = requests.filter(
+      (request) => request.status === "in-progress",
+    );
+    expect(inProgress.length).toBe(1);
+    expect(inProgress[0]?.actualStartDate).toBeDefined();
+    expect(inProgress[0]?.agreement).toBeDefined();
+  });
+
+  it("has a cancelled request with a reason", () => {
+    const cancelled = requests.filter(
+      (request) => request.status === "cancelled",
+    );
+    expect(cancelled.length).toBeGreaterThanOrEqual(1);
+    for (const request of cancelled) {
+      expect(request.cancellation?.reason.length).toBeGreaterThan(0);
+      expect(request.log.some((event) => event.kind === "cancelled")).toBe(
+        true,
+      );
+    }
+  });
+
+  it("has a request where a worker withdrew", () => {
+    const withdrawn = requests.filter((request) =>
+      request.excludedWorkerIds.some((item) => item.reason === "withdrew"),
+    );
+    expect(withdrawn.length).toBeGreaterThanOrEqual(1);
+    for (const request of withdrawn) {
+      const excluded = request.excludedWorkerIds.find(
+        (item) => item.reason === "withdrew",
+      );
+      expect(
+        request.shortlist.some(
+          (entry) =>
+            entry.workerId === excluded?.workerId &&
+            entry.state === "removed" &&
+            entry.removedReason === "withdrew",
+        ),
+      ).toBe(true);
+      expect(
+        request.log.some(
+          (event) =>
+            event.kind === "withdrew" && event.workerId === excluded?.workerId,
+        ),
+      ).toBe(true);
+      expect(request.agreement).toBeUndefined();
+    }
+  });
+
+  it("never has a worker agreed on two requests that are agreed or in progress", () => {
+    const agreedWorkers = requests
+      .filter((request) => ["agreed", "in-progress"].includes(request.status))
+      .map((request) => request.agreement?.workerId);
+    expect(new Set(agreedWorkers).size).toBe(agreedWorkers.length);
   });
 });
 

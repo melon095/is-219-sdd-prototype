@@ -181,6 +181,82 @@ export function returnToOpenBlocker(
   return undefined;
 }
 
+export function startBlocker(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): Blocker {
+  if (ownerIdOf(state, request) !== person.id) {
+    return blocked(
+      "not-allowed",
+      "Bare eieren av bedriften kan registrere oppstart.",
+    );
+  }
+  if (request.status !== "agreed") {
+    return blocked(
+      "invalid-status",
+      "Oppstart kan bare registreres mens oppdraget er avtalt.",
+    );
+  }
+  return undefined;
+}
+
+export function withdrawBlocker(person: Person, request: TaskRequest): Blocker {
+  if (request.agreement?.workerId !== person.id) {
+    return blocked(
+      "not-allowed",
+      "Bare personen som har takket ja til oppdraget kan trekke seg.",
+    );
+  }
+  if (request.status !== "agreed") {
+    return blocked(
+      "invalid-status",
+      "Du kan bare trekke deg mens oppdraget er avtalt og ikke har startet.",
+    );
+  }
+  return undefined;
+}
+
+export function completeBlocker(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): Blocker {
+  if (ownerIdOf(state, request) !== person.id) {
+    return blocked(
+      "not-allowed",
+      "Bare eieren av bedriften kan markere oppdraget som fullført.",
+    );
+  }
+  if (request.status !== "in-progress") {
+    return blocked(
+      "invalid-status",
+      "Oppdraget kan bare markeres som fullført mens det pågår.",
+    );
+  }
+  return undefined;
+}
+
+export function cancelBlocker(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): Blocker {
+  if (ownerIdOf(state, request) !== person.id && !isAdmin(person)) {
+    return blocked(
+      "not-allowed",
+      "Bare eieren av bedriften og Varodd-administratorer kan avlyse oppdraget.",
+    );
+  }
+  if (request.status === "completed" || request.status === "cancelled") {
+    return blocked(
+      "invalid-status",
+      "Oppdraget er allerede fullført eller avlyst.",
+    );
+  }
+  return undefined;
+}
+
 export function isRequestOwner(
   person: Person,
   request: TaskRequest,
@@ -241,6 +317,34 @@ export function canAcceptOffer(
 
 export function canReturnToOpen(person: Person, request: TaskRequest): boolean {
   return returnToOpenBlocker(person, request) === undefined;
+}
+
+export function canRecordStart(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): boolean {
+  return startBlocker(person, request, state) === undefined;
+}
+
+export function canWithdraw(person: Person, request: TaskRequest): boolean {
+  return withdrawBlocker(person, request) === undefined;
+}
+
+export function canCompleteRequest(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): boolean {
+  return completeBlocker(person, request, state) === undefined;
+}
+
+export function canCancelRequest(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): boolean {
+  return cancelBlocker(person, request, state) === undefined;
 }
 
 export function registerBlocker(person: Person, state: DemoState): Blocker {

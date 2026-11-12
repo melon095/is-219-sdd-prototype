@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "a53dd553bce5684ed85763f48114deaf59ea89b0e703813219bfe32b3cade200",
+  "seedId": "0fe9164f5f9cacabc77a157227df6ba1bb273ec7f9cdb31a9eedfd3c2d78a23b",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -43,8 +43,8 @@
         "id": "person-6",
         "name": "Silje Moen",
         "isVaroddAdmin": false,
-        "seeksWork": false,
-        "description": "Jobber hos Kvadraturen Kaffebrenneri"
+        "seeksWork": true,
+        "description": "Søker oppdrag innen annonsering og video"
       },
       {
         "id": "person-7",
@@ -148,9 +148,7 @@
         "name": "Kvadraturen Kaffebrenneri",
         "description": "Lite kaffebrenneri med nettbutikk og kaffeabonnement til hele landet.",
         "ownerId": "person-5",
-        "employeeIds": [
-          "person-6"
-        ],
+        "employeeIds": [],
         "isEWavesMember": true,
         "crawlOptIn": true,
         "crawlSuggestions": []
@@ -243,6 +241,22 @@
     "activity": [
       {
         "id": "aktivitet-1",
+        "at": "2026-10-01T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-6",
+        "text": "Profilen din er klar",
+        "target": {
+          "route": "/profil"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-2",
         "at": "2026-10-05T10:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-9",
@@ -258,7 +272,106 @@
         }
       },
       {
-        "id": "aktivitet-2",
+        "id": "aktivitet-3",
+        "at": "2026-10-06T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Nytt oppdrag: «Annonser og synlighet for kaffeabonnementet» hos Kvadraturen Kaffebrenneri",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-4",
+        "at": "2026-10-06T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Kvadraturen Kaffebrenneri har fått en kortliste med 1 kandidat",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-5",
+        "at": "2026-10-07T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du er invitert til intervju for «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-6",
+        "at": "2026-10-07T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har invitert Silje Moen til intervju for «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-7",
+        "at": "2026-10-07T09:10:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Ny melding fra Ola Dahl om «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-8",
+        "at": "2026-10-07T11:30:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-6",
+        "text": "Ny melding fra Silje Moen om «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-9",
         "at": "2026-10-08T09:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-15",
@@ -274,7 +387,73 @@
         }
       },
       {
-        "id": "aktivitet-3",
+        "id": "aktivitet-10",
+        "at": "2026-10-08T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har fått et tilbud på «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-11",
+        "at": "2026-10-08T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har gitt Silje Moen et tilbud på «Annonser og synlighet for kaffeabonnementet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-12",
+        "at": "2026-10-09T08:30:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-6",
+        "text": "Silje Moen har godtatt tilbudet på «Annonser og synlighet for kaffeabonnementet». Oppdraget er avtalt",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-13",
+        "at": "2026-10-12T08:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Oppdraget «Annonser og synlighet for kaffeabonnementet» er i gang",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-14",
         "at": "2026-10-12T10:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-8",
@@ -290,7 +469,7 @@
         }
       },
       {
-        "id": "aktivitet-4",
+        "id": "aktivitet-15",
         "at": "2026-10-14T09:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-12",
@@ -306,7 +485,7 @@
         }
       },
       {
-        "id": "aktivitet-5",
+        "id": "aktivitet-16",
         "at": "2026-10-19T09:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-10",
@@ -322,7 +501,7 @@
         }
       },
       {
-        "id": "aktivitet-6",
+        "id": "aktivitet-17",
         "at": "2026-10-20T09:00:00+02:00",
         "featureId": "marketplace",
         "actor": "person-15",
@@ -338,7 +517,156 @@
         }
       },
       {
-        "id": "aktivitet-7",
+        "id": "aktivitet-18",
+        "at": "2026-10-21T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Nytt oppdrag: «Rydde i nettbutikken og regnskapet» hos Sørlandet Honning",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-19",
+        "at": "2026-10-21T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Sørlandet Honning har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3",
+            "person-10",
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-20",
+        "at": "2026-10-22T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Du er invitert til intervju for «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-21",
+        "at": "2026-10-22T09:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Du har invitert Henrik Larsen til intervju for «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-22",
+        "at": "2026-10-22T09:10:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Ny melding fra Per Hansen om «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-23",
+        "at": "2026-10-22T13:40:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-10",
+        "text": "Ny melding fra Henrik Larsen om «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-24",
+        "at": "2026-10-23T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Du har fått et tilbud på «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-25",
+        "at": "2026-10-23T10:00:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Du har gitt Henrik Larsen et tilbud på «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-26",
+        "at": "2026-10-24T08:30:00+02:00",
+        "featureId": "marketplace",
+        "actor": "person-10",
+        "text": "Henrik Larsen har godtatt tilbudet på «Rydde i nettbutikken og regnskapet». Oppdraget er avtalt",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3",
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-27",
         "at": "2026-10-26T12:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-11",
@@ -354,7 +682,40 @@
         }
       },
       {
-        "id": "aktivitet-8",
+        "id": "aktivitet-28",
+        "at": "2026-10-27T16:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-10",
+        "text": "Ny melding fra Henrik Larsen om «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-29",
+        "at": "2026-10-28T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-10",
+        "text": "Henrik Larsen har trukket seg fra «Rydde i nettbutikken og regnskapet»",
+        "target": {
+          "route": "/oppdrag/oppdrag-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-3",
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-30",
         "at": "2026-10-30T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -372,7 +733,7 @@
         }
       },
       {
-        "id": "aktivitet-9",
+        "id": "aktivitet-31",
         "at": "2026-10-30T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -391,7 +752,7 @@
         }
       },
       {
-        "id": "aktivitet-10",
+        "id": "aktivitet-32",
         "at": "2026-10-30T15:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -407,7 +768,7 @@
         }
       },
       {
-        "id": "aktivitet-11",
+        "id": "aktivitet-33",
         "at": "2026-10-31T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -425,7 +786,7 @@
         }
       },
       {
-        "id": "aktivitet-12",
+        "id": "aktivitet-34",
         "at": "2026-10-31T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -443,7 +804,7 @@
         }
       },
       {
-        "id": "aktivitet-13",
+        "id": "aktivitet-35",
         "at": "2026-10-31T10:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-8",
@@ -459,7 +820,7 @@
         }
       },
       {
-        "id": "aktivitet-14",
+        "id": "aktivitet-36",
         "at": "2026-11-02T08:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -475,7 +836,7 @@
         }
       },
       {
-        "id": "aktivitet-15",
+        "id": "aktivitet-37",
         "at": "2026-11-02T08:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -491,7 +852,7 @@
         }
       },
       {
-        "id": "aktivitet-16",
+        "id": "aktivitet-38",
         "at": "2026-11-02T08:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -507,7 +868,7 @@
         }
       },
       {
-        "id": "aktivitet-17",
+        "id": "aktivitet-39",
         "at": "2026-11-02T08:25:00+01:00",
         "featureId": "marketplace",
         "actor": "person-8",
@@ -523,7 +884,7 @@
         }
       },
       {
-        "id": "aktivitet-18",
+        "id": "aktivitet-40",
         "at": "2026-11-02T08:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -539,7 +900,7 @@
         }
       },
       {
-        "id": "aktivitet-19",
+        "id": "aktivitet-41",
         "at": "2026-11-02T08:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -555,7 +916,7 @@
         }
       },
       {
-        "id": "aktivitet-20",
+        "id": "aktivitet-42",
         "at": "2026-11-02T14:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -574,7 +935,24 @@
         }
       },
       {
-        "id": "aktivitet-21",
+        "id": "aktivitet-43",
+        "at": "2026-11-02T15:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Oppdraget «Annonser og synlighet for kaffeabonnementet» er fullført: Ble fast ansettelse",
+        "target": {
+          "route": "/oppdrag/oppdrag-12"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-44",
         "at": "2026-11-03T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -592,7 +970,7 @@
         }
       },
       {
-        "id": "aktivitet-22",
+        "id": "aktivitet-45",
         "at": "2026-11-03T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -610,7 +988,7 @@
         }
       },
       {
-        "id": "aktivitet-23",
+        "id": "aktivitet-46",
         "at": "2026-11-03T11:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-3",
@@ -628,7 +1006,7 @@
         }
       },
       {
-        "id": "aktivitet-24",
+        "id": "aktivitet-47",
         "at": "2026-11-03T11:30:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -646,7 +1024,7 @@
         }
       },
       {
-        "id": "aktivitet-25",
+        "id": "aktivitet-48",
         "at": "2026-11-04T09:15:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -662,7 +1040,7 @@
         }
       },
       {
-        "id": "aktivitet-26",
+        "id": "aktivitet-49",
         "at": "2026-11-04T09:15:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -678,7 +1056,7 @@
         }
       },
       {
-        "id": "aktivitet-27",
+        "id": "aktivitet-50",
         "at": "2026-11-04T09:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -694,7 +1072,7 @@
         }
       },
       {
-        "id": "aktivitet-28",
+        "id": "aktivitet-51",
         "at": "2026-11-04T11:05:00+01:00",
         "featureId": "marketplace",
         "actor": "person-12",
@@ -710,7 +1088,7 @@
         }
       },
       {
-        "id": "aktivitet-29",
+        "id": "aktivitet-52",
         "at": "2026-11-04T12:50:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -726,7 +1104,42 @@
         }
       },
       {
-        "id": "aktivitet-30",
+        "id": "aktivitet-53",
+        "at": "2026-11-04T13:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Nytt oppdrag: «Video og annonser til vinterkolleksjonen» hos Lindesnes Ullvarer",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-54",
+        "at": "2026-11-04T13:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Lindesnes Ullvarer har fått en kortliste med 1 kandidat",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-55",
         "at": "2026-11-04T13:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -742,7 +1155,7 @@
         }
       },
       {
-        "id": "aktivitet-31",
+        "id": "aktivitet-56",
         "at": "2026-11-04T13:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-5",
@@ -758,7 +1171,71 @@
         }
       },
       {
-        "id": "aktivitet-32",
+        "id": "aktivitet-57",
+        "at": "2026-11-04T14:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du er invitert til intervju for «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-58",
+        "at": "2026-11-04T14:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har invitert Silje Moen til intervju for «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-59",
+        "at": "2026-11-04T14:10:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Ny melding fra Anne Lie om «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-60",
+        "at": "2026-11-04T16:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-6",
+        "text": "Ny melding fra Silje Moen om «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-61",
         "at": "2026-11-05T08:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-12",
@@ -775,7 +1252,7 @@
         }
       },
       {
-        "id": "aktivitet-33",
+        "id": "aktivitet-62",
         "at": "2026-11-05T08:30:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -791,7 +1268,7 @@
         }
       },
       {
-        "id": "aktivitet-34",
+        "id": "aktivitet-63",
         "at": "2026-11-05T08:40:00+01:00",
         "featureId": "marketplace",
         "actor": "person-12",
@@ -807,7 +1284,39 @@
         }
       },
       {
-        "id": "aktivitet-35",
+        "id": "aktivitet-64",
+        "at": "2026-11-05T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har fått et tilbud på «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-65",
+        "at": "2026-11-05T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har gitt Silje Moen et tilbud på «Video og annonser til vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-66",
         "at": "2026-11-05T09:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -825,7 +1334,7 @@
         }
       },
       {
-        "id": "aktivitet-36",
+        "id": "aktivitet-67",
         "at": "2026-11-05T09:30:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -844,7 +1353,24 @@
         }
       },
       {
-        "id": "aktivitet-37",
+        "id": "aktivitet-68",
+        "at": "2026-11-05T11:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-6",
+        "text": "Silje Moen har godtatt tilbudet på «Video og annonser til vinterkolleksjonen». Oppdraget er avtalt",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-69",
         "at": "2026-11-06T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -860,7 +1386,7 @@
         }
       },
       {
-        "id": "aktivitet-38",
+        "id": "aktivitet-70",
         "at": "2026-11-06T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -876,7 +1402,7 @@
         }
       },
       {
-        "id": "aktivitet-39",
+        "id": "aktivitet-71",
         "at": "2026-11-06T09:05:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -892,7 +1418,7 @@
         }
       },
       {
-        "id": "aktivitet-40",
+        "id": "aktivitet-72",
         "at": "2026-11-06T12:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-9",
@@ -908,7 +1434,7 @@
         }
       },
       {
-        "id": "aktivitet-41",
+        "id": "aktivitet-73",
         "at": "2026-11-06T13:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -924,7 +1450,7 @@
         }
       },
       {
-        "id": "aktivitet-42",
+        "id": "aktivitet-74",
         "at": "2026-11-06T14:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -942,7 +1468,7 @@
         }
       },
       {
-        "id": "aktivitet-43",
+        "id": "aktivitet-75",
         "at": "2026-11-06T14:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -960,7 +1486,7 @@
         }
       },
       {
-        "id": "aktivitet-44",
+        "id": "aktivitet-76",
         "at": "2026-11-06T14:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -976,7 +1502,7 @@
         }
       },
       {
-        "id": "aktivitet-45",
+        "id": "aktivitet-77",
         "at": "2026-11-06T14:30:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -992,7 +1518,7 @@
         }
       },
       {
-        "id": "aktivitet-46",
+        "id": "aktivitet-78",
         "at": "2026-11-06T14:35:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -1008,7 +1534,7 @@
         }
       },
       {
-        "id": "aktivitet-47",
+        "id": "aktivitet-79",
         "at": "2026-11-06T16:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-11",
@@ -1024,7 +1550,42 @@
         }
       },
       {
-        "id": "aktivitet-48",
+        "id": "aktivitet-80",
+        "at": "2026-11-07T08:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Nytt oppdrag: «Julevideo til nettbutikken» hos Fjordlys Keramikk",
+        "target": {
+          "route": "/oppdrag/oppdrag-13"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-81",
+        "at": "2026-11-07T08:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Fjordlys Keramikk har fått en kortliste med 1 kandidat",
+        "target": {
+          "route": "/oppdrag/oppdrag-13"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-82",
         "at": "2026-11-07T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -1040,7 +1601,7 @@
         }
       },
       {
-        "id": "aktivitet-49",
+        "id": "aktivitet-83",
         "at": "2026-11-07T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -1056,7 +1617,7 @@
         }
       },
       {
-        "id": "aktivitet-50",
+        "id": "aktivitet-84",
         "at": "2026-11-07T14:50:00+01:00",
         "featureId": "marketplace",
         "actor": "person-11",
@@ -1072,7 +1633,7 @@
         }
       },
       {
-        "id": "aktivitet-51",
+        "id": "aktivitet-85",
         "at": "2026-11-07T15:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-11",
@@ -1089,7 +1650,24 @@
         }
       },
       {
-        "id": "aktivitet-52",
+        "id": "aktivitet-86",
+        "at": "2026-11-09T08:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Oppdraget «Video og annonser til vinterkolleksjonen» er i gang",
+        "target": {
+          "route": "/oppdrag/oppdrag-11"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-6"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-87",
         "at": "2026-11-09T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1106,7 +1684,7 @@
         }
       },
       {
-        "id": "aktivitet-53",
+        "id": "aktivitet-88",
         "at": "2026-11-09T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1124,7 +1702,7 @@
         }
       },
       {
-        "id": "aktivitet-54",
+        "id": "aktivitet-89",
         "at": "2026-11-09T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1143,7 +1721,24 @@
         }
       },
       {
-        "id": "aktivitet-55",
+        "id": "aktivitet-90",
+        "at": "2026-11-10T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Oppdraget «Julevideo til nettbutikken» er avlyst",
+        "target": {
+          "route": "/oppdrag/oppdrag-13"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-91",
         "at": "2026-11-10T15:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1159,7 +1754,7 @@
         }
       },
       {
-        "id": "aktivitet-56",
+        "id": "aktivitet-92",
         "at": "2026-11-10T15:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1175,7 +1770,7 @@
         }
       },
       {
-        "id": "aktivitet-57",
+        "id": "aktivitet-93",
         "at": "2026-11-10T15:05:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1191,7 +1786,7 @@
         }
       },
       {
-        "id": "aktivitet-58",
+        "id": "aktivitet-94",
         "at": "2026-11-11T08:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-8",
@@ -1207,7 +1802,7 @@
         }
       },
       {
-        "id": "aktivitet-59",
+        "id": "aktivitet-95",
         "at": "2026-11-11T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-3",
@@ -1225,7 +1820,7 @@
         }
       },
       {
-        "id": "aktivitet-60",
+        "id": "aktivitet-96",
         "at": "2026-11-11T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1243,7 +1838,7 @@
         }
       },
       {
-        "id": "aktivitet-61",
+        "id": "aktivitet-97",
         "at": "2026-11-12T13:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -1261,7 +1856,7 @@
         }
       },
       {
-        "id": "aktivitet-62",
+        "id": "aktivitet-98",
         "at": "2026-11-12T16:40:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1277,7 +1872,7 @@
         }
       },
       {
-        "id": "aktivitet-63",
+        "id": "aktivitet-99",
         "at": "2026-11-13T09:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -1295,7 +1890,7 @@
         }
       },
       {
-        "id": "aktivitet-64",
+        "id": "aktivitet-100",
         "at": "2026-11-13T09:10:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1313,7 +1908,7 @@
         }
       },
       {
-        "id": "aktivitet-65",
+        "id": "aktivitet-101",
         "at": "2026-11-14T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1329,7 +1924,7 @@
         }
       },
       {
-        "id": "aktivitet-66",
+        "id": "aktivitet-102",
         "at": "2026-11-14T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1348,6 +1943,20 @@
   },
   "marketplace": {
     "workerProfiles": [
+      {
+        "personId": "person-6",
+        "skillIds": [
+          "ferdighet-3",
+          "ferdighet-11",
+          "ferdighet-16"
+        ],
+        "experienceLevel": "mid",
+        "availableFrom": "2026-10-05",
+        "isDraft": false,
+        "wishes": "Jeg hjelper små nettbutikker med å bli funnet på nett, og lager korte videoer til kampanjer.",
+        "eligibleSince": "2026-10-01T09:00:00+02:00",
+        "lastShortlistedAt": "2026-11-04T13:00:00+01:00"
+      },
       {
         "personId": "person-8",
         "skillIds": [
@@ -1518,14 +2127,14 @@
         ],
         "log": [
           {
-            "id": "logg-1",
+            "id": "logg-28",
             "at": "2026-10-30T09:00:00+01:00",
             "actor": "person-4",
             "kind": "published",
             "text": "Anne Lie publiserte oppdraget"
           },
           {
-            "id": "logg-2",
+            "id": "logg-29",
             "at": "2026-10-30T09:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1533,7 +2142,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-3",
+            "id": "logg-30",
             "at": "2026-10-30T09:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1541,7 +2150,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-4",
+            "id": "logg-31",
             "at": "2026-10-30T09:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1549,7 +2158,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-5",
+            "id": "logg-32",
             "at": "2026-10-30T09:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -1558,7 +2167,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-6",
+            "id": "logg-33",
             "at": "2026-10-30T15:10:00+01:00",
             "actor": "person-4",
             "kind": "message-sent",
@@ -1566,7 +2175,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-11",
+            "id": "logg-38",
             "at": "2026-10-31T10:30:00+01:00",
             "actor": "person-8",
             "kind": "message-sent",
@@ -1574,14 +2183,14 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-17",
+            "id": "logg-44",
             "at": "2026-11-02T14:20:00+01:00",
             "actor": "person-4",
             "kind": "shortlist-rejected",
             "text": "Anne Lie avviste hele kortlisten"
           },
           {
-            "id": "logg-18",
+            "id": "logg-45",
             "at": "2026-11-02T14:20:00+01:00",
             "actor": "person-4",
             "kind": "status-changed",
@@ -1648,14 +2257,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-19",
+            "id": "logg-48",
             "at": "2026-11-03T10:00:00+01:00",
             "actor": "person-5",
             "kind": "published",
             "text": "Ola Dahl publiserte oppdraget"
           },
           {
-            "id": "logg-20",
+            "id": "logg-49",
             "at": "2026-11-03T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1663,7 +2272,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-21",
+            "id": "logg-50",
             "at": "2026-11-03T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1671,7 +2280,7 @@
             "workerId": "person-10"
           },
           {
-            "id": "logg-22",
+            "id": "logg-51",
             "at": "2026-11-03T10:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -1680,7 +2289,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-27",
+            "id": "logg-56",
             "at": "2026-11-04T09:15:00+01:00",
             "actor": "person-5",
             "kind": "interview-invited",
@@ -1688,7 +2297,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-28",
+            "id": "logg-57",
             "at": "2026-11-04T09:20:00+01:00",
             "actor": "person-5",
             "kind": "message-sent",
@@ -1696,7 +2305,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-29",
+            "id": "logg-58",
             "at": "2026-11-04T11:05:00+01:00",
             "actor": "person-12",
             "kind": "message-sent",
@@ -1704,7 +2313,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-30",
+            "id": "logg-59",
             "at": "2026-11-04T12:50:00+01:00",
             "actor": "person-5",
             "kind": "message-sent",
@@ -1712,7 +2321,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-31",
+            "id": "logg-60",
             "at": "2026-11-04T13:00:00+01:00",
             "actor": "person-5",
             "kind": "offered",
@@ -1720,7 +2329,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-32",
+            "id": "logg-61",
             "at": "2026-11-04T13:00:00+01:00",
             "actor": "person-5",
             "kind": "status-changed",
@@ -1729,7 +2338,7 @@
             "toStatus": "offered"
           },
           {
-            "id": "logg-33",
+            "id": "logg-68",
             "at": "2026-11-05T08:30:00+01:00",
             "actor": "person-12",
             "kind": "offer-accepted",
@@ -1737,7 +2346,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-34",
+            "id": "logg-69",
             "at": "2026-11-05T08:30:00+01:00",
             "actor": "person-12",
             "kind": "status-changed",
@@ -1746,7 +2355,7 @@
             "toStatus": "agreed"
           },
           {
-            "id": "logg-36",
+            "id": "logg-71",
             "at": "2026-11-05T08:40:00+01:00",
             "actor": "person-12",
             "kind": "message-sent",
@@ -1808,14 +2417,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-23",
+            "id": "logg-52",
             "at": "2026-11-03T11:30:00+01:00",
             "actor": "person-3",
             "kind": "published",
             "text": "Per Hansen publiserte oppdraget"
           },
           {
-            "id": "logg-24",
+            "id": "logg-53",
             "at": "2026-11-03T11:30:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1823,7 +2432,7 @@
             "workerId": "person-10"
           },
           {
-            "id": "logg-25",
+            "id": "logg-54",
             "at": "2026-11-03T11:30:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1831,7 +2440,7 @@
             "workerId": "person-12"
           },
           {
-            "id": "logg-26",
+            "id": "logg-55",
             "at": "2026-11-03T11:30:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -1840,7 +2449,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-35",
+            "id": "logg-70",
             "at": "2026-11-05T08:30:00+01:00",
             "actor": "system",
             "kind": "shortlist-entry-removed",
@@ -1909,14 +2518,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-37",
+            "id": "logg-74",
             "at": "2026-11-05T09:30:00+01:00",
             "actor": "person-1",
             "kind": "published",
             "text": "Kari Nordmann publiserte oppdraget"
           },
           {
-            "id": "logg-38",
+            "id": "logg-75",
             "at": "2026-11-05T09:30:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1924,7 +2533,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-39",
+            "id": "logg-76",
             "at": "2026-11-05T09:30:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1932,7 +2541,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-40",
+            "id": "logg-77",
             "at": "2026-11-05T09:30:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -1940,7 +2549,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-41",
+            "id": "logg-78",
             "at": "2026-11-05T09:30:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -1949,7 +2558,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-42",
+            "id": "logg-81",
             "at": "2026-11-06T09:00:00+01:00",
             "actor": "person-1",
             "kind": "interview-invited",
@@ -1957,7 +2566,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-43",
+            "id": "logg-82",
             "at": "2026-11-06T09:05:00+01:00",
             "actor": "person-1",
             "kind": "message-sent",
@@ -1965,7 +2574,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-44",
+            "id": "logg-83",
             "at": "2026-11-06T12:30:00+01:00",
             "actor": "person-9",
             "kind": "message-sent",
@@ -1973,7 +2582,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-45",
+            "id": "logg-84",
             "at": "2026-11-06T13:10:00+01:00",
             "actor": "person-1",
             "kind": "message-sent",
@@ -2043,14 +2652,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-58",
+            "id": "logg-102",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "person-4",
             "kind": "published",
             "text": "Anne Lie publiserte oppdraget"
           },
           {
-            "id": "logg-59",
+            "id": "logg-103",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2058,7 +2667,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-60",
+            "id": "logg-104",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2066,7 +2675,7 @@
             "workerId": "person-10"
           },
           {
-            "id": "logg-61",
+            "id": "logg-105",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2074,7 +2683,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-62",
+            "id": "logg-106",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2083,7 +2692,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-65",
+            "id": "logg-111",
             "at": "2026-11-10T15:00:00+01:00",
             "actor": "person-4",
             "kind": "interview-invited",
@@ -2091,7 +2700,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-66",
+            "id": "logg-112",
             "at": "2026-11-10T15:05:00+01:00",
             "actor": "person-4",
             "kind": "message-sent",
@@ -2099,7 +2708,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-67",
+            "id": "logg-113",
             "at": "2026-11-11T08:20:00+01:00",
             "actor": "person-8",
             "kind": "message-sent",
@@ -2107,7 +2716,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-74",
+            "id": "logg-120",
             "at": "2026-11-12T16:40:00+01:00",
             "actor": "person-4",
             "kind": "message-sent",
@@ -2115,7 +2724,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-79",
+            "id": "logg-125",
             "at": "2026-11-14T10:00:00+01:00",
             "actor": "person-4",
             "kind": "offered",
@@ -2123,7 +2732,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-80",
+            "id": "logg-126",
             "at": "2026-11-14T10:00:00+01:00",
             "actor": "person-4",
             "kind": "status-changed",
@@ -2181,21 +2790,21 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-68",
+            "id": "logg-114",
             "at": "2026-11-11T09:00:00+01:00",
             "actor": "person-3",
             "kind": "published",
             "text": "Per Hansen publiserte oppdraget"
           },
           {
-            "id": "logg-69",
+            "id": "logg-115",
             "at": "2026-11-11T09:00:00+01:00",
             "actor": "person-3",
             "kind": "duration-notice",
             "text": "Varigheten er utenfor det vanlige (2 uker til 6 måneder)"
           },
           {
-            "id": "logg-70",
+            "id": "logg-116",
             "at": "2026-11-11T09:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2203,7 +2812,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-71",
+            "id": "logg-117",
             "at": "2026-11-11T09:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2211,7 +2820,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-72",
+            "id": "logg-118",
             "at": "2026-11-11T09:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2244,7 +2853,7 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-73",
+            "id": "logg-119",
             "at": "2026-11-12T13:20:00+01:00",
             "actor": "person-7",
             "kind": "published",
@@ -2299,14 +2908,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-75",
+            "id": "logg-121",
             "at": "2026-11-13T09:10:00+01:00",
             "actor": "person-1",
             "kind": "published",
             "text": "Kari Nordmann publiserte oppdraget"
           },
           {
-            "id": "logg-76",
+            "id": "logg-122",
             "at": "2026-11-13T09:10:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2314,7 +2923,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-77",
+            "id": "logg-123",
             "at": "2026-11-13T09:10:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2322,7 +2931,7 @@
             "workerId": "person-10"
           },
           {
-            "id": "logg-78",
+            "id": "logg-124",
             "at": "2026-11-13T09:10:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2387,14 +2996,14 @@
         ],
         "log": [
           {
-            "id": "logg-7",
+            "id": "logg-34",
             "at": "2026-10-31T10:00:00+01:00",
             "actor": "person-5",
             "kind": "published",
             "text": "Ola Dahl publiserte oppdraget"
           },
           {
-            "id": "logg-8",
+            "id": "logg-35",
             "at": "2026-10-31T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2402,7 +3011,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-9",
+            "id": "logg-36",
             "at": "2026-10-31T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2410,7 +3019,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-10",
+            "id": "logg-37",
             "at": "2026-10-31T10:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2419,7 +3028,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-12",
+            "id": "logg-39",
             "at": "2026-11-02T08:00:00+01:00",
             "actor": "person-5",
             "kind": "interview-invited",
@@ -2427,7 +3036,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-13",
+            "id": "logg-40",
             "at": "2026-11-02T08:10:00+01:00",
             "actor": "person-5",
             "kind": "message-sent",
@@ -2435,7 +3044,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-14",
+            "id": "logg-41",
             "at": "2026-11-02T08:25:00+01:00",
             "actor": "person-8",
             "kind": "message-sent",
@@ -2443,7 +3052,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-15",
+            "id": "logg-42",
             "at": "2026-11-02T08:30:00+01:00",
             "actor": "person-5",
             "kind": "offered",
@@ -2451,7 +3060,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-16",
+            "id": "logg-43",
             "at": "2026-11-02T08:30:00+01:00",
             "actor": "person-5",
             "kind": "status-changed",
@@ -2460,7 +3069,7 @@
             "toStatus": "offered"
           },
           {
-            "id": "logg-63",
+            "id": "logg-107",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "offer-expired",
@@ -2468,7 +3077,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-64",
+            "id": "logg-108",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2533,14 +3142,14 @@
         ],
         "log": [
           {
-            "id": "logg-46",
+            "id": "logg-85",
             "at": "2026-11-06T14:00:00+01:00",
             "actor": "person-7",
             "kind": "published",
             "text": "Ingrid Solberg publiserte oppdraget"
           },
           {
-            "id": "logg-47",
+            "id": "logg-86",
             "at": "2026-11-06T14:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2548,7 +3157,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-48",
+            "id": "logg-87",
             "at": "2026-11-06T14:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2556,7 +3165,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-49",
+            "id": "logg-88",
             "at": "2026-11-06T14:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2565,7 +3174,7 @@
             "toStatus": "shortlisted"
           },
           {
-            "id": "logg-50",
+            "id": "logg-89",
             "at": "2026-11-06T14:30:00+01:00",
             "actor": "person-7",
             "kind": "interview-invited",
@@ -2573,7 +3182,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-51",
+            "id": "logg-90",
             "at": "2026-11-06T14:35:00+01:00",
             "actor": "person-7",
             "kind": "message-sent",
@@ -2581,7 +3190,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-52",
+            "id": "logg-91",
             "at": "2026-11-06T16:10:00+01:00",
             "actor": "person-11",
             "kind": "message-sent",
@@ -2589,7 +3198,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-53",
+            "id": "logg-95",
             "at": "2026-11-07T09:00:00+01:00",
             "actor": "person-7",
             "kind": "offered",
@@ -2597,7 +3206,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-54",
+            "id": "logg-96",
             "at": "2026-11-07T09:00:00+01:00",
             "actor": "person-7",
             "kind": "status-changed",
@@ -2606,7 +3215,7 @@
             "toStatus": "offered"
           },
           {
-            "id": "logg-55",
+            "id": "logg-97",
             "at": "2026-11-07T14:50:00+01:00",
             "actor": "person-11",
             "kind": "message-sent",
@@ -2614,7 +3223,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-56",
+            "id": "logg-98",
             "at": "2026-11-07T15:00:00+01:00",
             "actor": "person-11",
             "kind": "offer-declined",
@@ -2622,7 +3231,7 @@
             "workerId": "person-11"
           },
           {
-            "id": "logg-57",
+            "id": "logg-99",
             "at": "2026-11-07T15:00:00+01:00",
             "actor": "person-11",
             "kind": "status-changed",
@@ -2631,23 +3240,643 @@
             "toStatus": "shortlisted"
           }
         ]
+      },
+      {
+        "id": "oppdrag-11",
+        "businessId": "bedrift-3",
+        "title": "Video og annonser til vinterkolleksjonen",
+        "description": "Vi vil lage korte videoer som viser frem vinterkolleksjonen, og trenger noen som setter opp enkle annonser og følger dem opp underveis.",
+        "requiredSkillIds": [
+          "ferdighet-11",
+          "ferdighet-16"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-11-09",
+        "estimatedDuration": {
+          "amount": 4,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 10,
+        "workLocation": "remote",
+        "status": "in-progress",
+        "createdAt": "2026-11-04T13:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-6",
+            "rank": 1,
+            "addedAt": "2026-11-04T13:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-11",
+              "ferdighet-16"
+            ],
+            "missingSkillIds": [],
+            "state": "offered",
+            "interviewInvitedAt": "2026-11-04T14:00:00+01:00",
+            "offeredAt": "2026-11-05T09:00:00+01:00"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-62",
+            "at": "2026-11-04T13:00:00+01:00",
+            "actor": "person-4",
+            "kind": "published",
+            "text": "Anne Lie publiserte oppdraget"
+          },
+          {
+            "id": "logg-63",
+            "at": "2026-11-04T13:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Silje Moen ble lagt til på kortlisten",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-64",
+            "at": "2026-11-04T13:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-65",
+            "at": "2026-11-04T14:00:00+01:00",
+            "actor": "person-4",
+            "kind": "interview-invited",
+            "text": "Anne Lie inviterte Silje Moen til intervju",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-66",
+            "at": "2026-11-04T14:10:00+01:00",
+            "actor": "person-4",
+            "kind": "message-sent",
+            "text": "Anne Lie sendte en melding til Silje Moen",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-67",
+            "at": "2026-11-04T16:20:00+01:00",
+            "actor": "person-6",
+            "kind": "message-sent",
+            "text": "Silje Moen sendte en melding til Anne Lie",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-72",
+            "at": "2026-11-05T09:00:00+01:00",
+            "actor": "person-4",
+            "kind": "offered",
+            "text": "Anne Lie ga Silje Moen et tilbud",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-73",
+            "at": "2026-11-05T09:00:00+01:00",
+            "actor": "person-4",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Tilbud sendt",
+            "fromStatus": "shortlisted",
+            "toStatus": "offered"
+          },
+          {
+            "id": "logg-79",
+            "at": "2026-11-05T11:00:00+01:00",
+            "actor": "person-6",
+            "kind": "offer-accepted",
+            "text": "Silje Moen godtok tilbudet",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-80",
+            "at": "2026-11-05T11:00:00+01:00",
+            "actor": "person-6",
+            "kind": "status-changed",
+            "text": "Status endret fra Tilbud sendt til Avtalt",
+            "fromStatus": "offered",
+            "toStatus": "agreed"
+          },
+          {
+            "id": "logg-100",
+            "at": "2026-11-09T08:00:00+01:00",
+            "actor": "person-4",
+            "kind": "started",
+            "text": "Anne Lie registrerte oppstart av oppdraget",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-101",
+            "at": "2026-11-09T08:00:00+01:00",
+            "actor": "person-4",
+            "kind": "status-changed",
+            "text": "Status endret fra Avtalt til Pågår",
+            "fromStatus": "agreed",
+            "toStatus": "in-progress"
+          }
+        ],
+        "agreement": {
+          "workerId": "person-6",
+          "ownerAgreedAt": "2026-11-05T09:00:00+01:00",
+          "workerAgreedAt": "2026-11-05T11:00:00+01:00"
+        },
+        "actualStartDate": "2026-11-09"
+      },
+      {
+        "id": "oppdrag-12",
+        "businessId": "bedrift-4",
+        "title": "Annonser og synlighet for kaffeabonnementet",
+        "description": "Vi vil nå flere nye kunder med kaffeabonnementet vårt. Du setter opp annonser på nett og gjør nettbutikken lettere å finne i søkeresultatene.",
+        "requiredSkillIds": [
+          "ferdighet-3",
+          "ferdighet-16"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-10-12",
+        "estimatedDuration": {
+          "amount": 3,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 12,
+        "workLocation": "remote",
+        "status": "completed",
+        "createdAt": "2026-10-06T09:00:00+02:00",
+        "shortlist": [
+          {
+            "workerId": "person-6",
+            "rank": 1,
+            "addedAt": "2026-10-06T09:00:00+02:00",
+            "matchedSkillIds": [
+              "ferdighet-3",
+              "ferdighet-16"
+            ],
+            "missingSkillIds": [],
+            "state": "offered",
+            "interviewInvitedAt": "2026-10-07T09:00:00+02:00",
+            "offeredAt": "2026-10-08T10:00:00+02:00"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-1",
+            "at": "2026-10-06T09:00:00+02:00",
+            "actor": "person-5",
+            "kind": "published",
+            "text": "Ola Dahl publiserte oppdraget"
+          },
+          {
+            "id": "logg-2",
+            "at": "2026-10-06T09:00:00+02:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Silje Moen ble lagt til på kortlisten",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-3",
+            "at": "2026-10-06T09:00:00+02:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-4",
+            "at": "2026-10-07T09:00:00+02:00",
+            "actor": "person-5",
+            "kind": "interview-invited",
+            "text": "Ola Dahl inviterte Silje Moen til intervju",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-5",
+            "at": "2026-10-07T09:10:00+02:00",
+            "actor": "person-5",
+            "kind": "message-sent",
+            "text": "Ola Dahl sendte en melding til Silje Moen",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-6",
+            "at": "2026-10-07T11:30:00+02:00",
+            "actor": "person-6",
+            "kind": "message-sent",
+            "text": "Silje Moen sendte en melding til Ola Dahl",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-7",
+            "at": "2026-10-08T10:00:00+02:00",
+            "actor": "person-5",
+            "kind": "offered",
+            "text": "Ola Dahl ga Silje Moen et tilbud",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-8",
+            "at": "2026-10-08T10:00:00+02:00",
+            "actor": "person-5",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Tilbud sendt",
+            "fromStatus": "shortlisted",
+            "toStatus": "offered"
+          },
+          {
+            "id": "logg-9",
+            "at": "2026-10-09T08:30:00+02:00",
+            "actor": "person-6",
+            "kind": "offer-accepted",
+            "text": "Silje Moen godtok tilbudet",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-10",
+            "at": "2026-10-09T08:30:00+02:00",
+            "actor": "person-6",
+            "kind": "status-changed",
+            "text": "Status endret fra Tilbud sendt til Avtalt",
+            "fromStatus": "offered",
+            "toStatus": "agreed"
+          },
+          {
+            "id": "logg-11",
+            "at": "2026-10-12T08:00:00+02:00",
+            "actor": "person-5",
+            "kind": "started",
+            "text": "Ola Dahl registrerte oppstart av oppdraget",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-12",
+            "at": "2026-10-12T08:00:00+02:00",
+            "actor": "person-5",
+            "kind": "status-changed",
+            "text": "Status endret fra Avtalt til Pågår",
+            "fromStatus": "agreed",
+            "toStatus": "in-progress"
+          },
+          {
+            "id": "logg-46",
+            "at": "2026-11-02T15:00:00+01:00",
+            "actor": "person-5",
+            "kind": "completed",
+            "text": "Ola Dahl markerte oppdraget som fullført: Ble fast ansettelse",
+            "workerId": "person-6"
+          },
+          {
+            "id": "logg-47",
+            "at": "2026-11-02T15:00:00+01:00",
+            "actor": "person-5",
+            "kind": "status-changed",
+            "text": "Status endret fra Pågår til Fullført",
+            "fromStatus": "in-progress",
+            "toStatus": "completed"
+          }
+        ],
+        "agreement": {
+          "workerId": "person-6",
+          "ownerAgreedAt": "2026-10-08T10:00:00+02:00",
+          "workerAgreedAt": "2026-10-09T08:30:00+02:00"
+        },
+        "actualStartDate": "2026-10-12",
+        "outcome": "permanent"
+      },
+      {
+        "id": "oppdrag-13",
+        "businessId": "bedrift-1",
+        "title": "Julevideo til nettbutikken",
+        "description": "Vi vil lage en kort video som viser hvordan keramikken blir til, og bruke den i nettbutikken og på sosiale medier før jul.",
+        "requiredSkillIds": [
+          "ferdighet-11",
+          "ferdighet-1"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-01",
+        "estimatedDuration": {
+          "amount": 2,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 8,
+        "workLocation": "remote",
+        "status": "cancelled",
+        "createdAt": "2026-11-07T08:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-9",
+            "rank": 1,
+            "addedAt": "2026-11-07T08:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-11",
+              "ferdighet-1"
+            ],
+            "missingSkillIds": [],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-92",
+            "at": "2026-11-07T08:00:00+01:00",
+            "actor": "person-1",
+            "kind": "published",
+            "text": "Kari Nordmann publiserte oppdraget"
+          },
+          {
+            "id": "logg-93",
+            "at": "2026-11-07T08:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Amina Yusuf ble lagt til på kortlisten",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-94",
+            "at": "2026-11-07T08:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-109",
+            "at": "2026-11-10T09:00:00+01:00",
+            "actor": "person-1",
+            "kind": "cancelled",
+            "text": "Kari Nordmann avlyste oppdraget"
+          },
+          {
+            "id": "logg-110",
+            "at": "2026-11-10T09:00:00+01:00",
+            "actor": "person-1",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Avlyst",
+            "fromStatus": "shortlisted",
+            "toStatus": "cancelled"
+          }
+        ],
+        "cancellation": {
+          "reason": "Vi fant ut at vi klarer julevideoen selv, så vi trenger ikke hjelp likevel.",
+          "at": "2026-11-10T09:00:00+01:00",
+          "by": "person-1"
+        }
+      },
+      {
+        "id": "oppdrag-14",
+        "businessId": "bedrift-2",
+        "title": "Rydde i nettbutikken og regnskapet",
+        "description": "Vi har fått mange nye produkter og trenger hjelp til å oppdatere nettsiden og få orden på regnskapet etter sommersesongen.",
+        "requiredSkillIds": [
+          "ferdighet-4",
+          "ferdighet-18"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-11-23",
+        "estimatedDuration": {
+          "amount": 5,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 10,
+        "workLocation": "remote",
+        "status": "shortlisted",
+        "createdAt": "2026-10-21T10:00:00+02:00",
+        "shortlist": [
+          {
+            "workerId": "person-10",
+            "rank": 1,
+            "addedAt": "2026-10-21T10:00:00+02:00",
+            "matchedSkillIds": [
+              "ferdighet-4"
+            ],
+            "missingSkillIds": [
+              "ferdighet-18"
+            ],
+            "state": "removed",
+            "interviewInvitedAt": "2026-10-22T09:00:00+02:00",
+            "offeredAt": "2026-10-23T10:00:00+02:00",
+            "removedReason": "withdrew"
+          },
+          {
+            "workerId": "person-8",
+            "rank": 2,
+            "addedAt": "2026-10-21T10:00:00+02:00",
+            "matchedSkillIds": [
+              "ferdighet-18"
+            ],
+            "missingSkillIds": [
+              "ferdighet-4"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [
+          {
+            "workerId": "person-10",
+            "reason": "withdrew",
+            "at": "2026-10-28T09:00:00+01:00"
+          }
+        ],
+        "log": [
+          {
+            "id": "logg-13",
+            "at": "2026-10-21T10:00:00+02:00",
+            "actor": "person-3",
+            "kind": "published",
+            "text": "Per Hansen publiserte oppdraget"
+          },
+          {
+            "id": "logg-14",
+            "at": "2026-10-21T10:00:00+02:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Henrik Larsen ble lagt til på kortlisten",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-15",
+            "at": "2026-10-21T10:00:00+02:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Mats Johansen ble lagt til på kortlisten",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-16",
+            "at": "2026-10-21T10:00:00+02:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-17",
+            "at": "2026-10-22T09:00:00+02:00",
+            "actor": "person-3",
+            "kind": "interview-invited",
+            "text": "Per Hansen inviterte Henrik Larsen til intervju",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-18",
+            "at": "2026-10-22T09:10:00+02:00",
+            "actor": "person-3",
+            "kind": "message-sent",
+            "text": "Per Hansen sendte en melding til Henrik Larsen",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-19",
+            "at": "2026-10-22T13:40:00+02:00",
+            "actor": "person-10",
+            "kind": "message-sent",
+            "text": "Henrik Larsen sendte en melding til Per Hansen",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-20",
+            "at": "2026-10-23T10:00:00+02:00",
+            "actor": "person-3",
+            "kind": "offered",
+            "text": "Per Hansen ga Henrik Larsen et tilbud",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-21",
+            "at": "2026-10-23T10:00:00+02:00",
+            "actor": "person-3",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Tilbud sendt",
+            "fromStatus": "shortlisted",
+            "toStatus": "offered"
+          },
+          {
+            "id": "logg-22",
+            "at": "2026-10-24T08:30:00+02:00",
+            "actor": "person-10",
+            "kind": "offer-accepted",
+            "text": "Henrik Larsen godtok tilbudet",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-23",
+            "at": "2026-10-24T08:30:00+02:00",
+            "actor": "person-10",
+            "kind": "status-changed",
+            "text": "Status endret fra Tilbud sendt til Avtalt",
+            "fromStatus": "offered",
+            "toStatus": "agreed"
+          },
+          {
+            "id": "logg-24",
+            "at": "2026-10-27T16:20:00+01:00",
+            "actor": "person-10",
+            "kind": "message-sent",
+            "text": "Henrik Larsen sendte en melding til Per Hansen",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-25",
+            "at": "2026-10-28T09:00:00+01:00",
+            "actor": "person-10",
+            "kind": "withdrew",
+            "text": "Henrik Larsen trakk seg fra oppdraget",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-26",
+            "at": "2026-10-28T09:00:00+01:00",
+            "actor": "person-10",
+            "kind": "status-changed",
+            "text": "Status endret fra Avtalt til Åpen",
+            "fromStatus": "agreed",
+            "toStatus": "open"
+          },
+          {
+            "id": "logg-27",
+            "at": "2026-10-28T09:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          }
+        ]
       }
     ],
     "conversations": [
       {
         "id": "samtale-1",
+        "requestId": "oppdrag-12",
+        "ownerId": "person-5",
+        "workerId": "person-6",
+        "messages": [
+          {
+            "id": "melding-1",
+            "at": "2026-10-07T09:10:00+02:00",
+            "authorId": "person-5",
+            "text": "Hei Silje! Vi trenger hjelp med annonser og søkemotoroptimalisering for kaffeabonnementet. Har du tid til en kort prat?"
+          },
+          {
+            "id": "melding-2",
+            "at": "2026-10-07T11:30:00+02:00",
+            "authorId": "person-6",
+            "text": "Hei Ola! Det høres spennende ut. Jeg kan starte allerede neste uke."
+          }
+        ]
+      },
+      {
+        "id": "samtale-2",
+        "requestId": "oppdrag-14",
+        "ownerId": "person-3",
+        "workerId": "person-10",
+        "messages": [
+          {
+            "id": "melding-3",
+            "at": "2026-10-22T09:10:00+02:00",
+            "authorId": "person-3",
+            "text": "Hei Henrik! Vi trenger hjelp med regnskapet og nettsiden vår. Kan du starte mandag 23. november?"
+          },
+          {
+            "id": "melding-4",
+            "at": "2026-10-22T13:40:00+02:00",
+            "authorId": "person-10",
+            "text": "Hei Per! Ja, det passer fint. Jeg tar gjerne regnskapet først."
+          },
+          {
+            "id": "melding-5",
+            "at": "2026-10-27T16:20:00+01:00",
+            "authorId": "person-10",
+            "text": "Hei Per. Jeg har dessverre fått en fast jobb og må trekke meg fra oppdraget. Beklager at jeg sier fra så sent."
+          }
+        ]
+      },
+      {
+        "id": "samtale-3",
+        "requestId": "oppdrag-14",
+        "ownerId": "person-3",
+        "workerId": "person-8",
+        "messages": []
+      },
+      {
+        "id": "samtale-4",
         "requestId": "oppdrag-1",
         "ownerId": "person-4",
         "workerId": "person-8",
         "messages": [
           {
-            "id": "melding-1",
+            "id": "melding-6",
             "at": "2026-10-30T15:10:00+01:00",
             "authorId": "person-4",
             "text": "Hei Mats! Vi lanserer en vinterkolleksjon og trenger hjelp med sosiale medier og nyhetsbrev. Når kan du starte?"
           },
           {
-            "id": "melding-2",
+            "id": "melding-7",
             "at": "2026-10-31T10:30:00+01:00",
             "authorId": "person-8",
             "text": "Hei Anne! Jeg kan starte 23. november og har jobbet mye med nyhetsbrev."
@@ -2655,33 +3884,33 @@
         ]
       },
       {
-        "id": "samtale-2",
+        "id": "samtale-5",
         "requestId": "oppdrag-1",
         "ownerId": "person-4",
         "workerId": "person-11",
         "messages": []
       },
       {
-        "id": "samtale-3",
+        "id": "samtale-6",
         "requestId": "oppdrag-1",
         "ownerId": "person-4",
         "workerId": "person-9",
         "messages": []
       },
       {
-        "id": "samtale-4",
+        "id": "samtale-7",
         "requestId": "oppdrag-9",
         "ownerId": "person-5",
         "workerId": "person-8",
         "messages": [
           {
-            "id": "melding-3",
+            "id": "melding-8",
             "at": "2026-11-02T08:10:00+01:00",
             "authorId": "person-5",
             "text": "Hei Mats! Vi trenger hjelp med et månedlig nyhetsbrev til kaffeabonnentene. Kan du sette opp en mal og skrive det første brevet?"
           },
           {
-            "id": "melding-4",
+            "id": "melding-9",
             "at": "2026-11-02T08:25:00+01:00",
             "authorId": "person-8",
             "text": "Hei Ola! Det kan jeg gjerne. Jeg har laget nyhetsbrev for flere nettbutikker."
@@ -2689,38 +3918,38 @@
         ]
       },
       {
-        "id": "samtale-5",
+        "id": "samtale-8",
         "requestId": "oppdrag-9",
         "ownerId": "person-5",
         "workerId": "person-11",
         "messages": []
       },
       {
-        "id": "samtale-6",
+        "id": "samtale-9",
         "requestId": "oppdrag-2",
         "ownerId": "person-5",
         "workerId": "person-12",
         "messages": [
           {
-            "id": "melding-5",
+            "id": "melding-10",
             "at": "2026-11-04T09:20:00+01:00",
             "authorId": "person-5",
             "text": "Hei Omar! Vi trenger hjelp med pakking og sending før jul. Kan du starte mandag 23. november?"
           },
           {
-            "id": "melding-6",
+            "id": "melding-11",
             "at": "2026-11-04T11:05:00+01:00",
             "authorId": "person-12",
             "text": "Hei Ola! Ja, det passer fint. Jeg har jobbet på lager før og kan ta 15 timer i uken."
           },
           {
-            "id": "melding-7",
+            "id": "melding-12",
             "at": "2026-11-04T12:50:00+01:00",
             "authorId": "person-5",
             "text": "Flott, da sender jeg deg et tilbud nå."
           },
           {
-            "id": "melding-8",
+            "id": "melding-15",
             "at": "2026-11-05T08:40:00+01:00",
             "authorId": "person-12",
             "text": "Takk for tilbudet, jeg gleder meg til å komme i gang!"
@@ -2728,46 +3957,66 @@
         ]
       },
       {
-        "id": "samtale-7",
+        "id": "samtale-10",
         "requestId": "oppdrag-2",
         "ownerId": "person-5",
         "workerId": "person-10",
         "messages": []
       },
       {
-        "id": "samtale-8",
+        "id": "samtale-11",
         "requestId": "oppdrag-3",
         "ownerId": "person-3",
         "workerId": "person-10",
         "messages": []
       },
       {
-        "id": "samtale-9",
+        "id": "samtale-12",
         "requestId": "oppdrag-3",
         "ownerId": "person-3",
         "workerId": "person-12",
         "messages": []
       },
       {
-        "id": "samtale-10",
+        "id": "samtale-13",
+        "requestId": "oppdrag-11",
+        "ownerId": "person-4",
+        "workerId": "person-6",
+        "messages": [
+          {
+            "id": "melding-13",
+            "at": "2026-11-04T14:10:00+01:00",
+            "authorId": "person-4",
+            "text": "Hei Silje! Vi trenger korte videoer og annonser til vinterkolleksjonen vår. Kan du ta det på?"
+          },
+          {
+            "id": "melding-14",
+            "at": "2026-11-04T16:20:00+01:00",
+            "authorId": "person-6",
+            "text": "Hei Anne! Ja, det høres gøy ut. Jeg kan starte med en gang."
+          }
+        ]
+      },
+      {
+        "id": "samtale-14",
         "requestId": "oppdrag-4",
         "ownerId": "person-1",
         "workerId": "person-9",
         "messages": [
           {
-            "id": "melding-9",
+            "id": "melding-16",
             "at": "2026-11-06T09:05:00+01:00",
             "authorId": "person-1",
             "text": "Hei Amina! Vi er en liten keramikkbutikk i Kristiansand og trenger hjelp med innhold til julesalget. Har du tid til en kort prat denne uken?"
           },
           {
-            "id": "melding-10",
+            "id": "melding-17",
             "at": "2026-11-06T12:30:00+01:00",
             "authorId": "person-9",
             "text": "Hei Kari! Det høres spennende ut. Torsdag formiddag passer fint for meg."
           },
           {
-            "id": "melding-11",
+            "id": "melding-18",
             "at": "2026-11-06T13:10:00+01:00",
             "authorId": "person-1",
             "text": "Perfekt, da tar vi det torsdag klokken 10. Jeg sender en lenke i morgen."
@@ -2775,46 +4024,46 @@
         ]
       },
       {
-        "id": "samtale-11",
+        "id": "samtale-15",
         "requestId": "oppdrag-4",
         "ownerId": "person-1",
         "workerId": "person-11",
         "messages": []
       },
       {
-        "id": "samtale-12",
+        "id": "samtale-16",
         "requestId": "oppdrag-4",
         "ownerId": "person-1",
         "workerId": "person-8",
         "messages": []
       },
       {
-        "id": "samtale-13",
+        "id": "samtale-17",
         "requestId": "oppdrag-10",
         "ownerId": "person-7",
         "workerId": "person-9",
         "messages": []
       },
       {
-        "id": "samtale-14",
+        "id": "samtale-18",
         "requestId": "oppdrag-10",
         "ownerId": "person-7",
         "workerId": "person-11",
         "messages": [
           {
-            "id": "melding-12",
+            "id": "melding-19",
             "at": "2026-11-06T14:35:00+01:00",
             "authorId": "person-7",
             "text": "Hei Lena! Vi skal lage en katalog over sjøutstyret vårt og vil gjerne snakke med deg om oppdraget."
           },
           {
-            "id": "melding-13",
+            "id": "melding-20",
             "at": "2026-11-06T16:10:00+01:00",
             "authorId": "person-11",
             "text": "Hei Ingrid! Det høres interessant ut. Jeg har dessverre ikke så mye erfaring med utstyr til båt."
           },
           {
-            "id": "melding-14",
+            "id": "melding-21",
             "at": "2026-11-07T14:50:00+01:00",
             "authorId": "person-11",
             "text": "Takk for tilbudet, men jeg har ikke tid til å ta dette oppdraget nå."
@@ -2822,25 +4071,32 @@
         ]
       },
       {
-        "id": "samtale-15",
+        "id": "samtale-19",
+        "requestId": "oppdrag-13",
+        "ownerId": "person-1",
+        "workerId": "person-9",
+        "messages": []
+      },
+      {
+        "id": "samtale-20",
         "requestId": "oppdrag-5",
         "ownerId": "person-4",
         "workerId": "person-8",
         "messages": [
           {
-            "id": "melding-15",
+            "id": "melding-22",
             "at": "2026-11-10T15:05:00+01:00",
             "authorId": "person-4",
             "text": "Hei Mats! Vi åpner en ny nettbutikk og trenger hjelp med oppsett og lansering. Har du lyst til å ta en prat?"
           },
           {
-            "id": "melding-16",
+            "id": "melding-23",
             "at": "2026-11-11T08:20:00+01:00",
             "authorId": "person-8",
             "text": "Absolutt! Jeg har satt opp flere Shopify-butikker for små bedrifter og laget kampanjer i sosiale medier. Passer det torsdag?"
           },
           {
-            "id": "melding-17",
+            "id": "melding-24",
             "at": "2026-11-12T16:40:00+01:00",
             "authorId": "person-4",
             "text": "Takk for praten i dag, Mats. Jeg sender deg et tilbud snart."
@@ -2848,42 +4104,42 @@
         ]
       },
       {
-        "id": "samtale-16",
+        "id": "samtale-21",
         "requestId": "oppdrag-5",
         "ownerId": "person-4",
         "workerId": "person-10",
         "messages": []
       },
       {
-        "id": "samtale-17",
+        "id": "samtale-22",
         "requestId": "oppdrag-5",
         "ownerId": "person-4",
         "workerId": "person-9",
         "messages": []
       },
       {
-        "id": "samtale-18",
+        "id": "samtale-23",
         "requestId": "oppdrag-6",
         "ownerId": "person-3",
         "workerId": "person-9",
         "messages": []
       },
       {
-        "id": "samtale-19",
+        "id": "samtale-24",
         "requestId": "oppdrag-6",
         "ownerId": "person-3",
         "workerId": "person-11",
         "messages": []
       },
       {
-        "id": "samtale-20",
+        "id": "samtale-25",
         "requestId": "oppdrag-8",
         "ownerId": "person-1",
         "workerId": "person-8",
         "messages": []
       },
       {
-        "id": "samtale-21",
+        "id": "samtale-26",
         "requestId": "oppdrag-8",
         "ownerId": "person-1",
         "workerId": "person-10",

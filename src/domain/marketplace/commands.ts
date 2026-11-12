@@ -1,4 +1,10 @@
 import type { CommandHandler } from "../frame/types";
+import {
+  cancelRequest,
+  completeRequest,
+  recordStart,
+  withdraw,
+} from "./lifecycle";
 import { sendMessage } from "./messages";
 import {
   acceptOffer,
@@ -30,6 +36,10 @@ export const marketplaceCommandHandlers: Record<string, CommandHandler> = {
   rejectShortlist,
   returnToOpen,
   sendMessage,
+  recordStart,
+  withdraw,
+  completeRequest,
+  cancelRequest,
   registerWorkerProfile,
   updateWorkerProfile,
   simulateNavReferral,

@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { DialogTrigger } from "react-aria-components";
 import { ownerIdOf } from "../../../domain/marketplace/helpers";
 import {
   canAcceptOffer,
   canDeclineOffer,
+  canWithdraw,
 } from "../../../domain/marketplace/permissions";
 import type { TaskRequest } from "../../../domain/marketplace/types";
 import { useDemoState, useDispatch } from "../../../frame/store/store";
+import { AlertDialog } from "../../../frame/ui/AlertDialog";
 import { Button } from "../../../frame/ui/Button";
 import { Card } from "../../../frame/ui/Card";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
@@ -29,6 +32,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
 
   const isOffered = canAcceptOffer(person, request, state);
   const canDecline = canDeclineOffer(person, request, state);
+  const canLeave = canWithdraw(person, request);
   const isAgreed = request.agreement?.workerId === person.id;
 
   const accept = () => {
@@ -51,10 +55,26 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     }
   };
 
+  const leave = () => {
+    const result = dispatch({ type: "withdraw", requestId: request.id });
+    if (result.ok) {
+      setError(undefined);
+      announce("Du har trukket deg fra oppdraget");
+    } else {
+      setError(result.error.message);
+    }
+  };
+
   let text =
     "Du står på kortlisten. Eieren velger hvem de vil jobbe sammen med.";
   if (isOffered) {
     text = "Du har fått et tilbud på dette oppdraget.";
+  } else if (isAgreed && request.status === "in-progress") {
+    text = "Oppdraget pågår.";
+  } else if (isAgreed && request.status === "completed") {
+    text = "Oppdraget er fullført.";
+  } else if (isAgreed && request.status === "cancelled") {
+    text = "Oppdraget er avlyst.";
   } else if (isAgreed) {
     text = "Du og eieren er enige om oppdraget.";
   } else if (entry.interviewInvitedAt !== undefined) {
@@ -65,13 +85,25 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     <Card
       heading="Din status"
       action={
-        isOffered || canDecline ? (
+        isOffered || canDecline || canLeave ? (
           <div className="worker-status-actions">
             {isOffered && <Button onPress={accept}>Godta</Button>}
             {canDecline && (
               <Button variant="secondary" onPress={decline}>
                 Avslå
               </Button>
+            )}
+            {canLeave && (
+              <DialogTrigger>
+                <Button variant="secondary">Trekk deg</Button>
+                <AlertDialog
+                  title="Vil du trekke deg fra oppdraget?"
+                  text="Du blir tatt av oppdraget og kommer ikke tilbake på kortlisten for det. Eieren får beskjed."
+                  confirmLabel="Trekk deg fra oppdraget"
+                  cancelLabel="Avbryt"
+                  onConfirm={leave}
+                />
+              </DialogTrigger>
             )}
           </div>
         ) : undefined

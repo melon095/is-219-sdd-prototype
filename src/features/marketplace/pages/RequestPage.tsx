@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { isAdmin } from "../../../domain/frame/people";
 import { ownerIdOf } from "../../../domain/marketplace/helpers";
-import { workLocationLabel } from "../../../domain/marketplace/log";
+import {
+  outcomeLabel,
+  workLocationLabel,
+} from "../../../domain/marketplace/log";
 import {
   canEditRequest,
   canSimulateOfferExpiry,
@@ -25,6 +28,7 @@ import { Tab, TabList, TabPanel, Tabs } from "../../../frame/ui/Tabs";
 import { TimeDebugButton } from "../../../frame/ui/TimeDebugButton";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { ConversationPanel } from "../components/ConversationPanel";
+import { RequestActions } from "../components/RequestActions";
 import { RequestLog } from "../components/RequestLog";
 import { RequestNoLongerOpen } from "../components/RequestNoLongerOpen";
 import { RequestStatusBadge } from "../components/RequestStatusBadge";
@@ -69,6 +73,7 @@ function RequestDetails({ request }: { request: TaskRequest }) {
           <Link href={`/oppdrag/${request.id}/rediger`}>Rediger</Link>
         )}
       </div>
+      <RequestActions request={request} />
       {canSimulateOfferExpiry(person, request, state) && (
         <div>
           <TimeDebugButton
@@ -83,6 +88,21 @@ function RequestDetails({ request }: { request: TaskRequest }) {
         <Notice tone="info" title="Kortlisten ble avvist">
           {request.rejection.reason}
         </Notice>
+      )}
+      {isStaff && request.cancellation !== undefined && (
+        <Notice tone="info" title="Oppdraget ble avlyst">
+          {request.cancellation.reason}
+        </Notice>
+      )}
+      {request.actualStartDate !== undefined && (
+        <p className="request-details-started">
+          Startet {formatDate(request.actualStartDate)}
+        </p>
+      )}
+      {request.outcome !== undefined && (
+        <p className="request-details-outcome">
+          Utfall: {outcomeLabel(request.outcome)}
+        </p>
       )}
       <p className="request-details-description">{request.description}</p>
       <dl className="request-details-facts">
