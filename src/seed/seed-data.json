@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "b6e40189793672a90aead2bb1627f9d98f7906cf40c8e871c0dc4e958a4e0490",
+  "seedId": "e798ba2efb25d076616e661c23aa53ea153dd544cc4282750c91f8a310ef3078",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -240,12 +240,1842 @@
         "name": "Nettsideoppdatering"
       }
     ],
-    "activity": []
+    "activity": [
+      {
+        "id": "aktivitet-1",
+        "at": "2026-10-30T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Nytt oppdrag: «Markedsføring av vinterkolleksjonen» hos Lindesnes Ullvarer",
+        "target": {
+          "route": "/oppdrag/oppdrag-1"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-2",
+        "at": "2026-10-30T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Lindesnes Ullvarer har fått en kortliste med 3 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-1"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-8",
+            "person-11",
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-3",
+        "at": "2026-10-30T15:10:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Ny melding fra Anne Lie om «Markedsføring av vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-1"
+        },
+        "audience": {
+          "personIds": [
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-4",
+        "at": "2026-10-31T10:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-8",
+        "text": "Ny melding fra Mats Johansen om «Markedsføring av vinterkolleksjonen»",
+        "target": {
+          "route": "/oppdrag/oppdrag-1"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-5",
+        "at": "2026-11-02T14:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Kortlisten for «Markedsføring av vinterkolleksjonen» er avvist og oppdraget venter på vurdering",
+        "target": {
+          "route": "/oppdrag/oppdrag-1"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-8",
+            "person-11",
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-6",
+        "at": "2026-11-03T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Nytt oppdrag: «Hjelp med pakking og sending før jul» hos Kvadraturen Kaffebrenneri",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-7",
+        "at": "2026-11-03T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Kvadraturen Kaffebrenneri har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-12",
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-8",
+        "at": "2026-11-03T11:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Nytt oppdrag: «Regnskap og bilag før årsslutt» hos Sørlandet Honning",
+        "target": {
+          "route": "/oppdrag/oppdrag-3"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-9",
+        "at": "2026-11-03T11:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Sørlandet Honning har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-3"
+        },
+        "audience": {
+          "personIds": [
+            "person-3",
+            "person-10",
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-10",
+        "at": "2026-11-04T09:15:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du er invitert til intervju for «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-11",
+        "at": "2026-11-04T09:15:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har invitert Omar Ali til intervju for «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-12",
+        "at": "2026-11-04T09:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Ny melding fra Ola Dahl om «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-13",
+        "at": "2026-11-04T11:05:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-12",
+        "text": "Ny melding fra Omar Ali om «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-14",
+        "at": "2026-11-04T12:50:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Ny melding fra Ola Dahl om «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-15",
+        "at": "2026-11-04T13:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har fått et tilbud på «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-16",
+        "at": "2026-11-04T13:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-5",
+        "text": "Du har gitt Omar Ali et tilbud på «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-17",
+        "at": "2026-11-05T08:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-12",
+        "text": "Omar Ali har godtatt tilbudet på «Hjelp med pakking og sending før jul». Oppdraget er avtalt",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5",
+            "person-12"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-18",
+        "at": "2026-11-05T08:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Omar Ali er ikke lenger på kortlisten for «Regnskap og bilag før årsslutt» fordi personen har takket ja til et annet oppdrag",
+        "target": {
+          "route": "/oppdrag/oppdrag-3"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-19",
+        "at": "2026-11-05T08:40:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-12",
+        "text": "Ny melding fra Omar Ali om «Hjelp med pakking og sending før jul»",
+        "target": {
+          "route": "/oppdrag/oppdrag-2"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-20",
+        "at": "2026-11-05T09:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Nytt oppdrag: «Innhold og sosiale medier til julesalget» hos Fjordlys Keramikk",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-21",
+        "at": "2026-11-05T09:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Fjordlys Keramikk har fått en kortliste med 3 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-9",
+            "person-11",
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-22",
+        "at": "2026-11-06T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Du er invitert til intervju for «Innhold og sosiale medier til julesalget»",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-23",
+        "at": "2026-11-06T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Du har invitert Amina Yusuf til intervju for «Innhold og sosiale medier til julesalget»",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-24",
+        "at": "2026-11-06T09:05:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Ny melding fra Kari Nordmann om «Innhold og sosiale medier til julesalget»",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-25",
+        "at": "2026-11-06T12:30:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-9",
+        "text": "Ny melding fra Amina Yusuf om «Innhold og sosiale medier til julesalget»",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-26",
+        "at": "2026-11-06T13:10:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Ny melding fra Kari Nordmann om «Innhold og sosiale medier til julesalget»",
+        "target": {
+          "route": "/oppdrag/oppdrag-4"
+        },
+        "audience": {
+          "personIds": [
+            "person-9"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-27",
+        "at": "2026-11-09T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Nytt oppdrag: «Ny design på nettbutikken» hos Lindesnes Ullvarer",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-28",
+        "at": "2026-11-09T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Lindesnes Ullvarer har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-4",
+            "person-8",
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-29",
+        "at": "2026-11-10T15:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du er invitert til intervju for «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-30",
+        "at": "2026-11-10T15:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har invitert Mats Johansen til intervju for «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-31",
+        "at": "2026-11-10T15:05:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Ny melding fra Anne Lie om «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-32",
+        "at": "2026-11-11T08:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-8",
+        "text": "Ny melding fra Mats Johansen om «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-33",
+        "at": "2026-11-11T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-3",
+        "text": "Nytt oppdrag: «Nye bilder av honningproduktene» hos Sørlandet Honning",
+        "target": {
+          "route": "/oppdrag/oppdrag-6"
+        },
+        "audience": {
+          "personIds": [
+            "person-3"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-34",
+        "at": "2026-11-11T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Sørlandet Honning har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-6"
+        },
+        "audience": {
+          "personIds": [
+            "person-3",
+            "person-9",
+            "person-11"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-35",
+        "at": "2026-11-12T13:20:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-7",
+        "text": "Nytt oppdrag: «Oversette produktbeskrivelser til engelsk» hos Skagerrak Sjøutstyr",
+        "target": {
+          "route": "/oppdrag/oppdrag-7"
+        },
+        "audience": {
+          "personIds": [
+            "person-7"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-36",
+        "at": "2026-11-12T16:40:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Ny melding fra Anne Lie om «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-37",
+        "at": "2026-11-13T09:10:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-1",
+        "text": "Nytt oppdrag: «Oppdatere nettsiden med nye produkter» hos Fjordlys Keramikk",
+        "target": {
+          "route": "/oppdrag/oppdrag-8"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": [
+            "marketplace.workers"
+          ]
+        }
+      },
+      {
+        "id": "aktivitet-38",
+        "at": "2026-11-13T09:10:00+01:00",
+        "featureId": "marketplace",
+        "actor": "system",
+        "text": "Fjordlys Keramikk har fått en kortliste med 2 kandidater",
+        "target": {
+          "route": "/oppdrag/oppdrag-8"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-8",
+            "person-10"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-39",
+        "at": "2026-11-14T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har fått et tilbud på «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-8"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-40",
+        "at": "2026-11-14T10:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-4",
+        "text": "Du har gitt Mats Johansen et tilbud på «Ny design på nettbutikken»",
+        "target": {
+          "route": "/oppdrag/oppdrag-5"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      }
+    ]
   },
   "marketplace": {
-    "workerProfiles": [],
-    "requests": [],
-    "conversations": [],
+    "workerProfiles": [
+      {
+        "personId": "person-8",
+        "skillIds": [
+          "ferdighet-2",
+          "ferdighet-3",
+          "ferdighet-6",
+          "ferdighet-7",
+          "ferdighet-12",
+          "ferdighet-16",
+          "ferdighet-18"
+        ],
+        "experienceLevel": "mid",
+        "availableFrom": "2026-11-23",
+        "isDraft": false,
+        "eligibleSince": "2026-10-12T10:00:00+02:00",
+        "wishes": "Jeg vil gjerne hjelpe små nettbutikker med å bli mer synlige på nett.",
+        "lastShortlistedAt": "2026-11-13T09:10:00+01:00"
+      },
+      {
+        "personId": "person-9",
+        "skillIds": [
+          "ferdighet-1",
+          "ferdighet-5",
+          "ferdighet-6",
+          "ferdighet-11",
+          "ferdighet-13"
+        ],
+        "experienceLevel": "senior",
+        "availableFrom": "2026-11-30",
+        "isDraft": false,
+        "eligibleSince": "2026-10-05T10:00:00+02:00",
+        "wishes": "Jeg liker å lage bilder og innhold som får produkter til å se best mulig ut.",
+        "lastShortlistedAt": "2026-11-11T09:00:00+01:00"
+      },
+      {
+        "personId": "person-10",
+        "skillIds": [
+          "ferdighet-2",
+          "ferdighet-4",
+          "ferdighet-8",
+          "ferdighet-15",
+          "ferdighet-17"
+        ],
+        "experienceLevel": "senior",
+        "availableFrom": "2026-11-16",
+        "isDraft": false,
+        "eligibleSince": "2026-10-19T09:00:00+02:00",
+        "lastShortlistedAt": "2026-11-13T09:10:00+01:00"
+      },
+      {
+        "personId": "person-11",
+        "skillIds": [
+          "ferdighet-5",
+          "ferdighet-6",
+          "ferdighet-7",
+          "ferdighet-10",
+          "ferdighet-12",
+          "ferdighet-13"
+        ],
+        "experienceLevel": "junior",
+        "availableFrom": "2026-12-07",
+        "isDraft": false,
+        "eligibleSince": "2026-10-26T12:00:00+01:00",
+        "wishes": "Jeg er ny i bransjen, men lærer raskt og er glad i design.",
+        "navReferral": {
+          "referredAt": "2026-10-20T09:00:00+02:00",
+          "simulated": true
+        },
+        "lastShortlistedAt": "2026-11-11T09:00:00+01:00"
+      },
+      {
+        "personId": "person-12",
+        "skillIds": [
+          "ferdighet-2",
+          "ferdighet-8",
+          "ferdighet-9",
+          "ferdighet-15",
+          "ferdighet-17"
+        ],
+        "experienceLevel": "junior",
+        "availableFrom": "2026-11-18",
+        "isDraft": false,
+        "eligibleSince": "2026-10-14T09:00:00+02:00",
+        "wishes": "Jeg har erfaring fra lager og vil gjerne jobbe praktisk.",
+        "navReferral": {
+          "referredAt": "2026-10-08T09:00:00+02:00",
+          "simulated": true
+        },
+        "lastShortlistedAt": "2026-11-03T11:30:00+01:00"
+      }
+    ],
+    "requests": [
+      {
+        "id": "oppdrag-1",
+        "businessId": "bedrift-3",
+        "title": "Markedsføring av vinterkolleksjonen",
+        "description": "Vi lanserer en ny kolleksjon med strikkeplagg til vinteren og trenger hjelp til å nå flere kunder. Oppgaven er å lage innhold til sosiale medier og sette opp et enkelt nyhetsbrev som følger kampanjen.",
+        "requiredSkillIds": [
+          "ferdighet-6",
+          "ferdighet-12"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-14",
+        "estimatedDuration": {
+          "amount": 6,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 10,
+        "workLocation": "remote",
+        "additionalRequirements": "Erfaring fra mote eller håndverk er en fordel.",
+        "status": "under-review",
+        "createdAt": "2026-10-30T09:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-8",
+            "rank": 1,
+            "addedAt": "2026-10-30T09:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6",
+              "ferdighet-12"
+            ],
+            "missingSkillIds": [],
+            "state": "removed",
+            "removedReason": "shortlist-rejected"
+          },
+          {
+            "workerId": "person-11",
+            "rank": 2,
+            "addedAt": "2026-10-30T09:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6",
+              "ferdighet-12"
+            ],
+            "missingSkillIds": [],
+            "state": "removed",
+            "removedReason": "shortlist-rejected"
+          },
+          {
+            "workerId": "person-9",
+            "rank": 3,
+            "addedAt": "2026-10-30T09:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6"
+            ],
+            "missingSkillIds": [
+              "ferdighet-12"
+            ],
+            "state": "removed",
+            "removedReason": "shortlist-rejected"
+          }
+        ],
+        "excludedWorkerIds": [
+          {
+            "workerId": "person-8",
+            "reason": "shortlist-rejected",
+            "at": "2026-11-02T14:20:00+01:00"
+          },
+          {
+            "workerId": "person-11",
+            "reason": "shortlist-rejected",
+            "at": "2026-11-02T14:20:00+01:00"
+          },
+          {
+            "workerId": "person-9",
+            "reason": "shortlist-rejected",
+            "at": "2026-11-02T14:20:00+01:00"
+          }
+        ],
+        "log": [
+          {
+            "id": "logg-1",
+            "at": "2026-10-30T09:00:00+01:00",
+            "actor": "person-4",
+            "kind": "published",
+            "text": "Anne Lie publiserte oppdraget"
+          },
+          {
+            "id": "logg-2",
+            "at": "2026-10-30T09:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Mats Johansen ble lagt til på kortlisten",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-3",
+            "at": "2026-10-30T09:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Lena Eriksen ble lagt til på kortlisten",
+            "workerId": "person-11"
+          },
+          {
+            "id": "logg-4",
+            "at": "2026-10-30T09:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Amina Yusuf ble lagt til på kortlisten",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-5",
+            "at": "2026-10-30T09:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-6",
+            "at": "2026-10-30T15:10:00+01:00",
+            "actor": "person-4",
+            "kind": "message-sent",
+            "text": "Anne Lie sendte en melding til Mats Johansen",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-7",
+            "at": "2026-10-31T10:30:00+01:00",
+            "actor": "person-8",
+            "kind": "message-sent",
+            "text": "Mats Johansen sendte en melding til Anne Lie",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-8",
+            "at": "2026-11-02T14:20:00+01:00",
+            "actor": "person-4",
+            "kind": "shortlist-rejected",
+            "text": "Anne Lie avviste hele kortlisten"
+          },
+          {
+            "id": "logg-9",
+            "at": "2026-11-02T14:20:00+01:00",
+            "actor": "person-4",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Til vurdering",
+            "fromStatus": "shortlisted",
+            "toStatus": "under-review"
+          }
+        ],
+        "rejection": {
+          "reason": "Ingen av dem har erfaring med strikk og mote, og jeg trenger noen som kan skrive tekster som passer stilen vår.",
+          "at": "2026-11-02T14:20:00+01:00"
+        }
+      },
+      {
+        "id": "oppdrag-2",
+        "businessId": "bedrift-4",
+        "title": "Hjelp med pakking og sending før jul",
+        "description": "Kaffeabonnementene våre vokser fort, og vi trenger en ekstra hånd på lageret i førjulstiden. Du pakker og sender bestillinger, holder orden på lageret og svarer på enkle spørsmål fra kunder.",
+        "requiredSkillIds": [
+          "ferdighet-9",
+          "ferdighet-15",
+          "ferdighet-8"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-11-23",
+        "estimatedDuration": {
+          "amount": 6,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 15,
+        "workLocation": "onsite",
+        "additionalRequirements": "Du må kunne løfte opptil 15 kilo.",
+        "status": "agreed",
+        "createdAt": "2026-11-03T10:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-12",
+            "rank": 1,
+            "addedAt": "2026-11-03T10:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-9",
+              "ferdighet-15",
+              "ferdighet-8"
+            ],
+            "missingSkillIds": [],
+            "state": "offered",
+            "interviewInvitedAt": "2026-11-04T09:15:00+01:00",
+            "offeredAt": "2026-11-04T13:00:00+01:00"
+          },
+          {
+            "workerId": "person-10",
+            "rank": 2,
+            "addedAt": "2026-11-03T10:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-15",
+              "ferdighet-8"
+            ],
+            "missingSkillIds": [
+              "ferdighet-9"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-10",
+            "at": "2026-11-03T10:00:00+01:00",
+            "actor": "person-5",
+            "kind": "published",
+            "text": "Ola Dahl publiserte oppdraget"
+          },
+          {
+            "id": "logg-11",
+            "at": "2026-11-03T10:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Omar Ali ble lagt til på kortlisten",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-12",
+            "at": "2026-11-03T10:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Henrik Larsen ble lagt til på kortlisten",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-13",
+            "at": "2026-11-03T10:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-18",
+            "at": "2026-11-04T09:15:00+01:00",
+            "actor": "person-5",
+            "kind": "interview-invited",
+            "text": "Ola Dahl inviterte Omar Ali til intervju",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-19",
+            "at": "2026-11-04T09:20:00+01:00",
+            "actor": "person-5",
+            "kind": "message-sent",
+            "text": "Ola Dahl sendte en melding til Omar Ali",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-20",
+            "at": "2026-11-04T11:05:00+01:00",
+            "actor": "person-12",
+            "kind": "message-sent",
+            "text": "Omar Ali sendte en melding til Ola Dahl",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-21",
+            "at": "2026-11-04T12:50:00+01:00",
+            "actor": "person-5",
+            "kind": "message-sent",
+            "text": "Ola Dahl sendte en melding til Omar Ali",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-22",
+            "at": "2026-11-04T13:00:00+01:00",
+            "actor": "person-5",
+            "kind": "offered",
+            "text": "Ola Dahl ga Omar Ali et tilbud",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-23",
+            "at": "2026-11-04T13:00:00+01:00",
+            "actor": "person-5",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Tilbud sendt",
+            "fromStatus": "shortlisted",
+            "toStatus": "offered"
+          },
+          {
+            "id": "logg-24",
+            "at": "2026-11-05T08:30:00+01:00",
+            "actor": "person-12",
+            "kind": "offer-accepted",
+            "text": "Omar Ali godtok tilbudet",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-25",
+            "at": "2026-11-05T08:30:00+01:00",
+            "actor": "person-12",
+            "kind": "status-changed",
+            "text": "Status endret fra Tilbud sendt til Avtalt",
+            "fromStatus": "offered",
+            "toStatus": "agreed"
+          },
+          {
+            "id": "logg-27",
+            "at": "2026-11-05T08:40:00+01:00",
+            "actor": "person-12",
+            "kind": "message-sent",
+            "text": "Omar Ali sendte en melding til Ola Dahl",
+            "workerId": "person-12"
+          }
+        ],
+        "agreement": {
+          "workerId": "person-12",
+          "ownerAgreedAt": "2026-11-04T13:00:00+01:00",
+          "workerAgreedAt": "2026-11-05T08:30:00+01:00"
+        }
+      },
+      {
+        "id": "oppdrag-3",
+        "businessId": "bedrift-2",
+        "title": "Regnskap og bilag før årsslutt",
+        "description": "Vi har samlet opp bilag gjennom hele sesongen og trenger hjelp til å få orden på regnskapet før årsslutt. Oppgaven er å registrere bilag og avstemme tallene mot nettbutikken.",
+        "requiredSkillIds": [
+          "ferdighet-4",
+          "ferdighet-17"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-01",
+        "estimatedDuration": {
+          "amount": 8,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 8,
+        "workLocation": "remote",
+        "status": "shortlisted",
+        "createdAt": "2026-11-03T11:30:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-10",
+            "rank": 1,
+            "addedAt": "2026-11-03T11:30:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-4",
+              "ferdighet-17"
+            ],
+            "missingSkillIds": [],
+            "state": "active"
+          },
+          {
+            "workerId": "person-12",
+            "rank": 2,
+            "addedAt": "2026-11-03T11:30:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-17"
+            ],
+            "missingSkillIds": [
+              "ferdighet-4"
+            ],
+            "state": "removed",
+            "removedReason": "accepted-elsewhere"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-14",
+            "at": "2026-11-03T11:30:00+01:00",
+            "actor": "person-3",
+            "kind": "published",
+            "text": "Per Hansen publiserte oppdraget"
+          },
+          {
+            "id": "logg-15",
+            "at": "2026-11-03T11:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Henrik Larsen ble lagt til på kortlisten",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-16",
+            "at": "2026-11-03T11:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Omar Ali ble lagt til på kortlisten",
+            "workerId": "person-12"
+          },
+          {
+            "id": "logg-17",
+            "at": "2026-11-03T11:30:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-26",
+            "at": "2026-11-05T08:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlist-entry-removed",
+            "text": "Omar Ali ble tatt av kortlisten fordi personen takket ja til et annet oppdrag",
+            "workerId": "person-12"
+          }
+        ]
+      },
+      {
+        "id": "oppdrag-4",
+        "businessId": "bedrift-1",
+        "title": "Innhold og sosiale medier til julesalget",
+        "description": "Julesalget er det viktigste for keramikkbutikken vår. Vi trenger noen som kan lage gode innlegg, bilder og tekster til sosiale medier, slik at flere finner veien til nettbutikken.",
+        "requiredSkillIds": [
+          "ferdighet-6",
+          "ferdighet-5"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-10",
+        "estimatedDuration": {
+          "amount": 8,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 8,
+        "workLocation": "remote",
+        "additionalRequirements": "Vi vil gjerne ha et fast publiseringsprogram.",
+        "status": "shortlisted",
+        "createdAt": "2026-11-05T09:30:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-9",
+            "rank": 1,
+            "addedAt": "2026-11-05T09:30:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6",
+              "ferdighet-5"
+            ],
+            "missingSkillIds": [],
+            "state": "active",
+            "interviewInvitedAt": "2026-11-06T09:00:00+01:00"
+          },
+          {
+            "workerId": "person-11",
+            "rank": 2,
+            "addedAt": "2026-11-05T09:30:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6",
+              "ferdighet-5"
+            ],
+            "missingSkillIds": [],
+            "state": "active"
+          },
+          {
+            "workerId": "person-8",
+            "rank": 3,
+            "addedAt": "2026-11-05T09:30:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-6"
+            ],
+            "missingSkillIds": [
+              "ferdighet-5"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-28",
+            "at": "2026-11-05T09:30:00+01:00",
+            "actor": "person-1",
+            "kind": "published",
+            "text": "Kari Nordmann publiserte oppdraget"
+          },
+          {
+            "id": "logg-29",
+            "at": "2026-11-05T09:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Amina Yusuf ble lagt til på kortlisten",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-30",
+            "at": "2026-11-05T09:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Lena Eriksen ble lagt til på kortlisten",
+            "workerId": "person-11"
+          },
+          {
+            "id": "logg-31",
+            "at": "2026-11-05T09:30:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Mats Johansen ble lagt til på kortlisten",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-32",
+            "at": "2026-11-05T09:30:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-33",
+            "at": "2026-11-06T09:00:00+01:00",
+            "actor": "person-1",
+            "kind": "interview-invited",
+            "text": "Kari Nordmann inviterte Amina Yusuf til intervju",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-34",
+            "at": "2026-11-06T09:05:00+01:00",
+            "actor": "person-1",
+            "kind": "message-sent",
+            "text": "Kari Nordmann sendte en melding til Amina Yusuf",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-35",
+            "at": "2026-11-06T12:30:00+01:00",
+            "actor": "person-9",
+            "kind": "message-sent",
+            "text": "Amina Yusuf sendte en melding til Kari Nordmann",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-36",
+            "at": "2026-11-06T13:10:00+01:00",
+            "actor": "person-1",
+            "kind": "message-sent",
+            "text": "Kari Nordmann sendte en melding til Amina Yusuf",
+            "workerId": "person-9"
+          }
+        ]
+      },
+      {
+        "id": "oppdrag-5",
+        "businessId": "bedrift-3",
+        "title": "Ny design på nettbutikken",
+        "description": "Nettbutikken vår ser litt gammeldags ut, og vi vil ha et enklere og mer innbydende design som fungerer godt på mobil. Du setter opp og tilpasser en moderne Shopify-mal.",
+        "requiredSkillIds": [
+          "ferdighet-7",
+          "ferdighet-2"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-01",
+        "estimatedDuration": {
+          "amount": 5,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 12,
+        "workLocation": "remote",
+        "status": "offered",
+        "createdAt": "2026-11-09T10:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-8",
+            "rank": 1,
+            "addedAt": "2026-11-09T10:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-7",
+              "ferdighet-2"
+            ],
+            "missingSkillIds": [],
+            "state": "offered",
+            "interviewInvitedAt": "2026-11-10T15:00:00+01:00",
+            "offeredAt": "2026-11-14T10:00:00+01:00"
+          },
+          {
+            "workerId": "person-10",
+            "rank": 2,
+            "addedAt": "2026-11-09T10:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-2"
+            ],
+            "missingSkillIds": [
+              "ferdighet-7"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-37",
+            "at": "2026-11-09T10:00:00+01:00",
+            "actor": "person-4",
+            "kind": "published",
+            "text": "Anne Lie publiserte oppdraget"
+          },
+          {
+            "id": "logg-38",
+            "at": "2026-11-09T10:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Mats Johansen ble lagt til på kortlisten",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-39",
+            "at": "2026-11-09T10:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Henrik Larsen ble lagt til på kortlisten",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-40",
+            "at": "2026-11-09T10:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          },
+          {
+            "id": "logg-41",
+            "at": "2026-11-10T15:00:00+01:00",
+            "actor": "person-4",
+            "kind": "interview-invited",
+            "text": "Anne Lie inviterte Mats Johansen til intervju",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-42",
+            "at": "2026-11-10T15:05:00+01:00",
+            "actor": "person-4",
+            "kind": "message-sent",
+            "text": "Anne Lie sendte en melding til Mats Johansen",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-43",
+            "at": "2026-11-11T08:20:00+01:00",
+            "actor": "person-8",
+            "kind": "message-sent",
+            "text": "Mats Johansen sendte en melding til Anne Lie",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-50",
+            "at": "2026-11-12T16:40:00+01:00",
+            "actor": "person-4",
+            "kind": "message-sent",
+            "text": "Anne Lie sendte en melding til Mats Johansen",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-55",
+            "at": "2026-11-14T10:00:00+01:00",
+            "actor": "person-4",
+            "kind": "offered",
+            "text": "Anne Lie ga Mats Johansen et tilbud",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-56",
+            "at": "2026-11-14T10:00:00+01:00",
+            "actor": "person-4",
+            "kind": "status-changed",
+            "text": "Status endret fra Kortliste klar til Tilbud sendt",
+            "fromStatus": "shortlisted",
+            "toStatus": "offered"
+          }
+        ],
+        "offeredWorkerId": "person-8"
+      },
+      {
+        "id": "oppdrag-6",
+        "businessId": "bedrift-2",
+        "title": "Nye bilder av honningproduktene",
+        "description": "Vi har fått ny etikett på glassene og trenger profesjonelle produktbilder til nettbutikken. Bildene skal brukes på produktsidene og i sosiale medier.",
+        "requiredSkillIds": [
+          "ferdighet-1",
+          "ferdighet-13"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-14",
+        "estimatedDuration": {
+          "amount": 1,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 20,
+        "workLocation": "onsite",
+        "status": "shortlisted",
+        "createdAt": "2026-11-11T09:00:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-9",
+            "rank": 1,
+            "addedAt": "2026-11-11T09:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-1",
+              "ferdighet-13"
+            ],
+            "missingSkillIds": [],
+            "state": "active"
+          },
+          {
+            "workerId": "person-11",
+            "rank": 2,
+            "addedAt": "2026-11-11T09:00:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-13"
+            ],
+            "missingSkillIds": [
+              "ferdighet-1"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-44",
+            "at": "2026-11-11T09:00:00+01:00",
+            "actor": "person-3",
+            "kind": "published",
+            "text": "Per Hansen publiserte oppdraget"
+          },
+          {
+            "id": "logg-45",
+            "at": "2026-11-11T09:00:00+01:00",
+            "actor": "person-3",
+            "kind": "duration-notice",
+            "text": "Varigheten er utenfor det vanlige (2 uker til 6 måneder)"
+          },
+          {
+            "id": "logg-46",
+            "at": "2026-11-11T09:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Amina Yusuf ble lagt til på kortlisten",
+            "workerId": "person-9"
+          },
+          {
+            "id": "logg-47",
+            "at": "2026-11-11T09:00:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Lena Eriksen ble lagt til på kortlisten",
+            "workerId": "person-11"
+          },
+          {
+            "id": "logg-48",
+            "at": "2026-11-11T09:00:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          }
+        ]
+      },
+      {
+        "id": "oppdrag-7",
+        "businessId": "bedrift-5",
+        "title": "Oversette produktbeskrivelser til engelsk",
+        "description": "Vi vil nå flere kunder i utlandet og trenger noen som kan oversette produktbeskrivelsene våre til engelsk, og gjøre teksten tydelig og salgsfremmende.",
+        "requiredSkillIds": [
+          "ferdighet-14",
+          "ferdighet-10"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-11-23",
+        "estimatedDuration": {
+          "amount": 6,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 10,
+        "workLocation": "remote",
+        "status": "open",
+        "createdAt": "2026-11-12T13:20:00+01:00",
+        "shortlist": [],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-49",
+            "at": "2026-11-12T13:20:00+01:00",
+            "actor": "person-7",
+            "kind": "published",
+            "text": "Ingrid Solberg publiserte oppdraget"
+          }
+        ]
+      },
+      {
+        "id": "oppdrag-8",
+        "businessId": "bedrift-1",
+        "title": "Oppdatere nettsiden med nye produkter",
+        "description": "Vi har fått en ny serie med kopper og skåler og trenger hjelp til å legge dem inn i nettbutikken, med bilder, tekster og riktige kategorier.",
+        "requiredSkillIds": [
+          "ferdighet-18",
+          "ferdighet-2"
+        ],
+        "acceptedSuggestionIds": [],
+        "desiredStartDate": "2026-12-01",
+        "estimatedDuration": {
+          "amount": 4,
+          "unit": "weeks"
+        },
+        "hoursPerWeek": 10,
+        "workLocation": "remote",
+        "status": "shortlisted",
+        "createdAt": "2026-11-13T09:10:00+01:00",
+        "shortlist": [
+          {
+            "workerId": "person-8",
+            "rank": 1,
+            "addedAt": "2026-11-13T09:10:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-18",
+              "ferdighet-2"
+            ],
+            "missingSkillIds": [],
+            "state": "active"
+          },
+          {
+            "workerId": "person-10",
+            "rank": 2,
+            "addedAt": "2026-11-13T09:10:00+01:00",
+            "matchedSkillIds": [
+              "ferdighet-2"
+            ],
+            "missingSkillIds": [
+              "ferdighet-18"
+            ],
+            "state": "active"
+          }
+        ],
+        "excludedWorkerIds": [],
+        "log": [
+          {
+            "id": "logg-51",
+            "at": "2026-11-13T09:10:00+01:00",
+            "actor": "person-1",
+            "kind": "published",
+            "text": "Kari Nordmann publiserte oppdraget"
+          },
+          {
+            "id": "logg-52",
+            "at": "2026-11-13T09:10:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Mats Johansen ble lagt til på kortlisten",
+            "workerId": "person-8"
+          },
+          {
+            "id": "logg-53",
+            "at": "2026-11-13T09:10:00+01:00",
+            "actor": "system",
+            "kind": "shortlisted",
+            "text": "Henrik Larsen ble lagt til på kortlisten",
+            "workerId": "person-10"
+          },
+          {
+            "id": "logg-54",
+            "at": "2026-11-13T09:10:00+01:00",
+            "actor": "system",
+            "kind": "status-changed",
+            "text": "Status endret fra Åpen til Kortliste klar",
+            "fromStatus": "open",
+            "toStatus": "shortlisted"
+          }
+        ]
+      }
+    ],
+    "conversations": [
+      {
+        "id": "samtale-1",
+        "requestId": "oppdrag-1",
+        "ownerId": "person-4",
+        "workerId": "person-8",
+        "messages": [
+          {
+            "id": "melding-1",
+            "at": "2026-10-30T15:10:00+01:00",
+            "authorId": "person-4",
+            "text": "Hei Mats! Vi lanserer en vinterkolleksjon og trenger hjelp med sosiale medier og nyhetsbrev. Når kan du starte?"
+          },
+          {
+            "id": "melding-2",
+            "at": "2026-10-31T10:30:00+01:00",
+            "authorId": "person-8",
+            "text": "Hei Anne! Jeg kan starte 23. november og har jobbet mye med nyhetsbrev."
+          }
+        ]
+      },
+      {
+        "id": "samtale-2",
+        "requestId": "oppdrag-1",
+        "ownerId": "person-4",
+        "workerId": "person-11",
+        "messages": []
+      },
+      {
+        "id": "samtale-3",
+        "requestId": "oppdrag-1",
+        "ownerId": "person-4",
+        "workerId": "person-9",
+        "messages": []
+      },
+      {
+        "id": "samtale-4",
+        "requestId": "oppdrag-2",
+        "ownerId": "person-5",
+        "workerId": "person-12",
+        "messages": [
+          {
+            "id": "melding-3",
+            "at": "2026-11-04T09:20:00+01:00",
+            "authorId": "person-5",
+            "text": "Hei Omar! Vi trenger hjelp med pakking og sending før jul. Kan du starte mandag 23. november?"
+          },
+          {
+            "id": "melding-4",
+            "at": "2026-11-04T11:05:00+01:00",
+            "authorId": "person-12",
+            "text": "Hei Ola! Ja, det passer fint. Jeg har jobbet på lager før og kan ta 15 timer i uken."
+          },
+          {
+            "id": "melding-5",
+            "at": "2026-11-04T12:50:00+01:00",
+            "authorId": "person-5",
+            "text": "Flott, da sender jeg deg et tilbud nå."
+          },
+          {
+            "id": "melding-6",
+            "at": "2026-11-05T08:40:00+01:00",
+            "authorId": "person-12",
+            "text": "Takk for tilbudet, jeg gleder meg til å komme i gang!"
+          }
+        ]
+      },
+      {
+        "id": "samtale-5",
+        "requestId": "oppdrag-2",
+        "ownerId": "person-5",
+        "workerId": "person-10",
+        "messages": []
+      },
+      {
+        "id": "samtale-6",
+        "requestId": "oppdrag-3",
+        "ownerId": "person-3",
+        "workerId": "person-10",
+        "messages": []
+      },
+      {
+        "id": "samtale-7",
+        "requestId": "oppdrag-3",
+        "ownerId": "person-3",
+        "workerId": "person-12",
+        "messages": []
+      },
+      {
+        "id": "samtale-8",
+        "requestId": "oppdrag-4",
+        "ownerId": "person-1",
+        "workerId": "person-9",
+        "messages": [
+          {
+            "id": "melding-7",
+            "at": "2026-11-06T09:05:00+01:00",
+            "authorId": "person-1",
+            "text": "Hei Amina! Vi er en liten keramikkbutikk i Kristiansand og trenger hjelp med innhold til julesalget. Har du tid til en kort prat denne uken?"
+          },
+          {
+            "id": "melding-8",
+            "at": "2026-11-06T12:30:00+01:00",
+            "authorId": "person-9",
+            "text": "Hei Kari! Det høres spennende ut. Torsdag formiddag passer fint for meg."
+          },
+          {
+            "id": "melding-9",
+            "at": "2026-11-06T13:10:00+01:00",
+            "authorId": "person-1",
+            "text": "Perfekt, da tar vi det torsdag klokken 10. Jeg sender en lenke i morgen."
+          }
+        ]
+      },
+      {
+        "id": "samtale-9",
+        "requestId": "oppdrag-4",
+        "ownerId": "person-1",
+        "workerId": "person-11",
+        "messages": []
+      },
+      {
+        "id": "samtale-10",
+        "requestId": "oppdrag-4",
+        "ownerId": "person-1",
+        "workerId": "person-8",
+        "messages": []
+      },
+      {
+        "id": "samtale-11",
+        "requestId": "oppdrag-5",
+        "ownerId": "person-4",
+        "workerId": "person-8",
+        "messages": [
+          {
+            "id": "melding-10",
+            "at": "2026-11-10T15:05:00+01:00",
+            "authorId": "person-4",
+            "text": "Hei Mats! Vi trenger nytt design på nettbutikken før vinteren. Har du lyst til å ta en prat?"
+          },
+          {
+            "id": "melding-11",
+            "at": "2026-11-11T08:20:00+01:00",
+            "authorId": "person-8",
+            "text": "Absolutt! Jeg har satt opp flere Shopify-butikker for små bedrifter. Passer det torsdag?"
+          },
+          {
+            "id": "melding-12",
+            "at": "2026-11-12T16:40:00+01:00",
+            "authorId": "person-4",
+            "text": "Takk for praten i dag, Mats. Jeg sender deg et tilbud snart."
+          }
+        ]
+      },
+      {
+        "id": "samtale-12",
+        "requestId": "oppdrag-5",
+        "ownerId": "person-4",
+        "workerId": "person-10",
+        "messages": []
+      },
+      {
+        "id": "samtale-13",
+        "requestId": "oppdrag-6",
+        "ownerId": "person-3",
+        "workerId": "person-9",
+        "messages": []
+      },
+      {
+        "id": "samtale-14",
+        "requestId": "oppdrag-6",
+        "ownerId": "person-3",
+        "workerId": "person-11",
+        "messages": []
+      },
+      {
+        "id": "samtale-15",
+        "requestId": "oppdrag-8",
+        "ownerId": "person-1",
+        "workerId": "person-8",
+        "messages": []
+      },
+      {
+        "id": "samtale-16",
+        "requestId": "oppdrag-8",
+        "ownerId": "person-1",
+        "workerId": "person-10",
+        "messages": []
+      }
+    ],
     "crawlCatalog": [],
     "crawlRuns": []
   }
