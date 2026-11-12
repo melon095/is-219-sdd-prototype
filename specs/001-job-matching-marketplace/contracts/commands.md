@@ -185,7 +185,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 |---|---|
 | **Input** | `skillIds` (at least 1), `experienceLevel`, `availableFrom`, `wishes?` |
 | **Allowed** | The person themselves, if `seeksWork`. Registering creates the profile, or completes a NAV draft. |
-| **Effects** | Profile complete, `isDraft: false`, `eligibleSince` set if not yet set. If the worker is now eligible, `fillShortlist` runs for every Open, Shortlisted, or Offered request with fewer than 3 active entries, oldest first (FR-017). Updating an existing profile does not change the worker's existing shortlist entries. |
+| **Effects** | Profile complete, `isDraft: false`, `eligibleSince` set if not yet set. If the worker is now eligible, `fillShortlist` runs for every Open, Shortlisted, or Offered request with fewer than 3 `active` or `offered` entries, oldest first (FR-017). Updating an existing profile does not change the worker's existing shortlist entries. |
 | **Activity** | "Profilen din er klar" to the worker. |
 | **Spec** | FR-002, FR-017, US3-1, US3-3 |
 

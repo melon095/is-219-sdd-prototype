@@ -10,36 +10,36 @@
 
 ## Requirement Completeness
 
-- [ ] CHK001 Does the spec define what happens to the other active shortlist entries on a request once it becomes Agreed, and what happens to them if the request returns to Open after the agreed worker withdraws? [Gap, Spec §US2-6, §US4-5]
-- [ ] CHK002 Does the spec define what happens to shortlisted and offered workers when a request is cancelled, including whether they are notified and whether an open offer ends? [Gap, Spec §FR-013, §US4-7]
-- [ ] CHK003 Is it specified whether a worker can withdraw from an In progress request, or only from an Agreed one? [Gap, Spec §US4-5, §Edge Cases]
-- [ ] CHK004 Does the spec state what happens to a worker's existing shortlist entries when they change their skills or earliest start date after being shortlisted? [Gap, Spec §FR-002; data-model.md keeps the entries unchanged]
-- [ ] CHK005 Is it specified which owner actions are allowed while an offer is outstanding, such as inviting other shortlisted workers to interviews, making a second offer, or rejecting the shortlist? [Gap, Spec §US2-4, §US2-5, §US2-7]
+- [x] CHK001 Does the spec define what happens to the other active shortlist entries on a request once it becomes Agreed, and what happens to them if the request returns to Open after the agreed worker withdraws? [Gap, Spec §US2-6, §US4-5]
+- [x] CHK002 Does the spec define what happens to shortlisted and offered workers when a request is cancelled, including whether they are notified and whether an open offer ends? [Gap, Spec §FR-013, §US4-7]
+- [x] CHK003 Is it specified whether a worker can withdraw from an In progress request, or only from an Agreed one? [Gap, Spec §US4-5, §Edge Cases]
+- [x] CHK004 Does the spec state what happens to a worker's existing shortlist entries when they change their skills or earliest start date after being shortlisted? [Gap, Spec §FR-002; data-model.md keeps the entries unchanged]
+- [x] CHK005 Is it specified which owner actions are allowed while an offer is outstanding, such as inviting other shortlisted workers to interviews, making a second offer, or rejecting the shortlist? [Gap, Spec §US2-4, §US2-5, §US2-7]
 
 ## Requirement Clarity
 
-- [ ] CHK006 Is the start of the 7-day offer expiry defined (for example, the moment the offer is made), and is "7 days" defined as calendar days or as 7 × 24 hours? [Clarity, Spec §FR-016]
-- [ ] CHK007 In FR-017, is "shortlists that have fewer than 3 workers" clear about whether an offered worker counts toward the 3, and whether requests with status Offered are included? [Ambiguity, Spec §FR-017]
-- [ ] CHK008 Does the spec say what counts as the owner's agreement in FR-006? The data model treats making the offer as the owner agreeing. [Assumption, Spec §FR-006; data-model.md §TaskRequest `agreement`]
+- [x] CHK006 Is the start of the 7-day offer expiry defined (for example, the moment the offer is made), and is "7 days" defined as calendar days or as 7 × 24 hours? [Clarity, Spec §FR-016]
+- [x] CHK007 In FR-017, is "shortlists that have fewer than 3 workers" clear about whether an offered worker counts toward the 3, and whether requests with status Offered are included? [Ambiguity, Spec §FR-017]
+- [x] CHK008 Does the spec say what counts as the owner's agreement in FR-006? The data model treats making the offer as the owner agreeing. [Assumption, Spec §FR-006; data-model.md §TaskRequest `agreement`]
 
 ## Consistency Between Spec and Plan
 
-- [ ] CHK009 Does FR-017 list every event that starts matching? The plan also runs matching when a worker becomes free again (request Completed or Cancelled, or worker withdrew) and when an active entry is removed. [Consistency, Spec §FR-017, §Edge Cases; data-model.md §Matching rules 1]
-- [ ] CHK010 Does the spec's ranking rule allow the extra final tie-breaker the plan adds (lower person ID first)? [Consistency, Spec §Edge Cases; data-model.md §Matching rules 4]
-- [ ] CHK011 FR-037 says workers see "every Open request", but routes.md also shows workers the requests where they are shortlisted, offered, or agreed. Is this wider access stated in the spec? [Conflict, Spec §FR-037, §US3-7; contracts/routes.md §/oppdrag]
-- [ ] CHK012 Does the spec say who may press a time debug button? commands.md lets anyone who can see the request page press it, including the offered worker. [Gap, Spec §FR-033, §US1-7; contracts/commands.md §simulateOfferExpiry]
+- [x] CHK009 Does FR-017 list every event that starts matching? The plan also runs matching when a worker becomes free again (request Completed or Cancelled, or worker withdrew) and when an active entry is removed. [Consistency, Spec §FR-017, §Edge Cases; data-model.md §Matching rules 1]
+- [x] CHK010 Does the spec's ranking rule allow the extra final tie-breaker the plan adds (lower person ID first)? [Consistency, Spec §Edge Cases; data-model.md §Matching rules 4]
+- [x] CHK011 FR-037 says workers see "every Open request", but routes.md also shows workers the requests where they are shortlisted, offered, or agreed. Is this wider access stated in the spec? [Conflict, Spec §FR-037, §US3-7; contracts/routes.md §/oppdrag]
+- [x] CHK012 Does the spec say who may press a time debug button? commands.md lets anyone who can see the request page press it, including the offered worker. [Gap, Spec §FR-033, §US1-7; contracts/commands.md §simulateOfferExpiry]
 
 ## Access and Visibility Coverage
 
-- [ ] CHK013 Does the spec define which parts of a request page a shortlisted worker may see: the other candidates on the shortlist, the log events, and the status history? [Gap, Spec §FR-011, §US4-1; data-model.md §LogEvent visibility]
-- [ ] CHK014 Is it specified whether a worker keeps access to a request and to their conversation after being removed from its shortlist (declined, offer expired, shortlist rejected, or accepted elsewhere)? [Gap, Spec §FR-008, §FR-011]
-- [ ] CHK015 Do the activity feed rules agree with the page access rules over time? For example, a worker can see a "new Open request" entry after the request has left Open, but the page it links to is then closed to them. [Consistency, Spec §FR-030, §US1-4, §FR-037; data-model.md §ActivityEntry]
-- [ ] CHK016 Does the spec cover people with more than one role, such as a business owner who also seeks work being matched to their own business's request, or an employee being shortlisted for the business they work at? [Edge Case, Gap, Spec §Key Entities "Simulated User"]
+- [x] CHK013 Does the spec define which parts of a request page a shortlisted worker may see: the other candidates on the shortlist, the log events, and the status history? [Gap, Spec §FR-011, §US4-1; data-model.md §LogEvent visibility]
+- [x] CHK014 Is it specified whether a worker keeps access to a request and to their conversation after being removed from its shortlist (declined, offer expired, shortlist rejected, or accepted elsewhere)? [Gap, Spec §FR-008, §FR-011]
+- [x] CHK015 Do the activity feed rules agree with the page access rules over time? For example, a worker can see a "new Open request" entry after the request has left Open, but the page it links to is then closed to them. [Consistency, Spec §FR-030, §US1-4, §FR-037; data-model.md §ActivityEntry]
+- [x] CHK016 Does the spec cover people with more than one role, such as a business owner who also seeks work being matched to their own business's request, or an employee being shortlisted for the business they work at? [Edge Case, Gap, Spec §Key Entities "Simulated User"]
 
 ## Acceptance Criteria Quality
 
-- [ ] CHK017 Is "the seeded test scenarios" in SC-005 defined, so it is clear which exclusion reasons (declined, offer expired, withdrew, shortlist rejected) must be covered? [Measurability, Spec §SC-005]
-- [ ] CHK018 Do the acceptance scenarios cover every status change in FR-007, including Shortlisted → Open when the last worker leaves and Cancelled from each status that allows it? [Coverage, Spec §FR-007, §US3-5, §US4-7; data-model.md §Request status flow]
+- [x] CHK017 Is "the seeded test scenarios" in SC-005 defined, so it is clear which exclusion reasons (declined, offer expired, withdrew, shortlist rejected) must be covered? [Measurability, Spec §SC-005]
+- [x] CHK018 Do the acceptance scenarios cover every status change in FR-007, including Shortlisted → Open when the last worker leaves and Cancelled from each status that allows it? [Coverage, Spec §FR-007, §US3-5, §US4-7; data-model.md §Request status flow]
 
 ## Notes
 
