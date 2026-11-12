@@ -48,3 +48,19 @@
 .request-card-body p {
   margin: 0;
 }
+
+.request-list-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.request-list-section h2 {
+  margin: 0;
+  font-size: var(--font-size-h2);
+}
+
+.request-list-section p {
+  margin: 0;
+}

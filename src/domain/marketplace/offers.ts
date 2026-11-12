@@ -4,6 +4,7 @@ import type {
   CommandHandler,
   DemoState,
   Id,
+  IsoDateTime,
 } from "../frame/types";
 import {
   actorOf,
@@ -33,12 +34,21 @@ import {
   statusChangedLog,
 } from "./log";
 import { fillShortlist } from "./matching";
-import { acceptBlocker, inviteBlocker, offerBlocker } from "./permissions";
+import {
+  acceptBlocker,
+  declineBlocker,
+  inviteBlocker,
+  offerBlocker,
+  simulateExpiryBlocker,
+} from "./permissions";
 import type {
   AcceptOfferInput,
+  DeclineOfferInput,
   InviteToInterviewInput,
   MakeOfferInput,
   RequestStatus,
+  SimulateOfferExpiryInput,
+  TaskRequest,
 } from "./types";
 
 export type EndOfferOptions = {
@@ -276,3 +286,90 @@ export const acceptOffer: CommandHandler = (state, command, context) => {
   next = releaseWorkerElsewhere(next, workerId, request.id, context);
   return succeed(next);
 };
+
+export const declineOffer: CommandHandler = (state, command, context) => {
+  const input = command as unknown as DeclineOfferInput;
+  const request = findRequest(state, input.requestId);
+  if (request === undefined) {
+    return fail("not-found", "Vi finner ikke oppdraget.");
+  }
+  const blocker = declineBlocker(actorOf(state, context), request, state);
+  if (blocker !== undefined) {
+    return failWith(blocker);
+  }
+  return succeed(
+    endOffer(state, request.id, "declined", context, {
+      actor: context.actorId,
+    }),
+  );
+};
+
+export const simulateOfferExpiry: CommandHandler = (
+  state,
+  command,
+  context,
+) => {
+  const input = command as unknown as SimulateOfferExpiryInput;
+  const request = findRequest(state, input.requestId);
+  if (request === undefined) {
+    return fail("not-found", "Vi finner ikke oppdraget.");
+  }
+  const blocker = simulateExpiryBlocker(
+    actorOf(state, context),
+    request,
+    state,
+  );
+  if (blocker !== undefined) {
+    return failWith(blocker);
+  }
+  return succeed(
+    endOffer(state, request.id, "offer-expired", context, {
+      actor: "system",
+      simulated: true,
+    }),
+  );
+};
+
+const offerLifetimeMs = 7 * 24 * 60 * 60 * 1000;
+
+function hasOverdueOffer(request: TaskRequest, nowMs: number): boolean {
+  if (request.status !== "offered" || request.offeredWorkerId === undefined) {
+    return false;
+  }
+  const entry = liveEntry(request, request.offeredWorkerId);
+  return (
+    entry !== undefined &&
+    entry.state === "offered" &&
+    entry.offeredAt !== undefined &&
+    nowMs - Date.parse(entry.offeredAt) > offerLifetimeMs
+  );
+}
+
+export function expireOverdueOffers(
+  state: DemoState,
+  now: IsoDateTime,
+): DemoState {
+  const nowMs = Date.parse(now);
+  const overdue = state.marketplace.requests
+    .filter((request) => hasOverdueOffer(request, nowMs))
+    .sort(byCreatedAt);
+  if (overdue.length === 0) {
+    return state;
+  }
+  let counter = 0;
+  const context: CommandContext = {
+    actorId: "system",
+    now,
+    newId: () => {
+      counter += 1;
+      return `system-${now}-${counter}`;
+    },
+  };
+  let current = state;
+  for (const request of overdue) {
+    current = endOffer(current, request.id, "offer-expired", context, {
+      actor: "system",
+    });
+  }
+  return current;
+}

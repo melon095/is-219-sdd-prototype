@@ -103,7 +103,7 @@ describe("RequestListPage for administratorer", () => {
     open("person-15");
 
     const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows).toHaveLength(9);
+    expect(rows).toHaveLength(11);
     expect(rows[1]?.textContent).toContain(
       "Markedsføring av vinterkolleksjonen",
     );
@@ -169,6 +169,99 @@ describe("RequestListPage for andre", () => {
         "Denne delen er for bedriftseiere og folk som søker oppdrag.",
       ),
     ).toBeTruthy();
+  });
+});
+
+describe("RequestListPage for arbeidssøkere", () => {
+  it("viser alle åpne oppdrag", () => {
+    open("person-8");
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Oppdrag" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("link", {
+        name: "Oversette produktbeskrivelser til engelsk",
+      }),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("link", { name: "Regnskap og bilag før årsslutt" }),
+    ).toBe(null);
+  });
+
+  it("viser oppdragene arbeidssøkeren er med i under Dine oppdrag", () => {
+    open("person-8");
+
+    const mine = screen.getByRole("region", { name: "Dine oppdrag" });
+    for (const title of [
+      "Innhold og sosiale medier til julesalget",
+      "Lansere ny nettbutikk med kampanje",
+      "Oppdatere nettsiden med nye produkter",
+    ]) {
+      expect(within(mine).getByRole("link", { name: title })).toBeTruthy();
+    }
+    expect(
+      within(mine).queryByRole("link", {
+        name: "Oversette produktbeskrivelser til engelsk",
+      }),
+    ).toBe(null);
+  });
+
+  it("viser ikke oppdrag der arbeidssøkeren er tatt av kortlisten", () => {
+    open("person-8");
+
+    for (const title of [
+      "Markedsføring av vinterkolleksjonen",
+      "Nyhetsbrev med fin design til kaffeabonnentene",
+    ]) {
+      expect(screen.queryByRole("link", { name: title })).toBe(null);
+    }
+  });
+
+  it("viser oppdraget arbeidssøkeren har avtalt under Dine oppdrag", () => {
+    open("person-12");
+
+    const mine = screen.getByRole("region", { name: "Dine oppdrag" });
+    expect(
+      within(mine).getByRole("link", {
+        name: "Hjelp med pakking og sending før jul",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("forklarer at en ikke kan søke direkte, og har ingen søkeknapp", () => {
+    open("person-9");
+
+    expect(
+      screen.getByText("Du kan ikke søke direkte; vi matcher deg automatisk"),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /søk/i })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Nytt oppdrag" })).toBe(null);
+  });
+
+  it("viser åpne oppdrag og Dine oppdrag som kort på mobil", () => {
+    open("person-8", "mobile");
+
+    expect(screen.queryByRole("table")).toBe(null);
+    expect(screen.getByRole("region", { name: "Dine oppdrag" })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Oversette produktbeskrivelser til engelsk",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("har ingen tilgjengelighetsfeil", async () => {
+    const { container } = open("person-8");
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("har ingen tilgjengelighetsfeil på mobil", async () => {
+    const { container } = open("person-8", "mobile");
+
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
 

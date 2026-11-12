@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { isAdmin, ownedBusiness } from "../../../domain/frame/people";
+import { liveEntry } from "../../../domain/marketplace/helpers";
 import { statusLabel } from "../../../domain/marketplace/log";
 import { canPublishRequest } from "../../../domain/marketplace/permissions";
 import type {
@@ -48,11 +49,17 @@ function adminOrder(a: TaskRequest, b: TaskRequest): number {
   return reviewA - reviewB || newestFirst(a, b);
 }
 
-function RequestTable({ requests }: { requests: TaskRequest[] }) {
+function RequestTable({
+  requests,
+  labelledBy,
+}: {
+  requests: TaskRequest[];
+  labelledBy?: string;
+}) {
   const state = useDemoState();
 
   return (
-    <table className="request-table">
+    <table className="request-table" aria-labelledby={labelledBy}>
       <thead>
         <tr>
           <th scope="col">Oppdrag</th>
@@ -91,15 +98,24 @@ function RequestTable({ requests }: { requests: TaskRequest[] }) {
   );
 }
 
-function RequestCards({ requests }: { requests: TaskRequest[] }) {
+function RequestCards({
+  requests,
+  labelledBy,
+  headingLevel = 2,
+}: {
+  requests: TaskRequest[];
+  labelledBy?: string;
+  headingLevel?: 2 | 3;
+}) {
   const state = useDemoState();
 
   return (
-    <ul className="request-cards">
+    <ul className="request-cards" aria-labelledby={labelledBy}>
       {requests.map((request) => (
         <li key={request.id}>
           <Card
             heading={request.title}
+            headingLevel={headingLevel}
             action={
               <Link
                 href={`/oppdrag/${request.id}`}
@@ -132,6 +148,33 @@ function RequestCards({ requests }: { requests: TaskRequest[] }) {
   );
 }
 
+function WorkerSection({
+  id,
+  title,
+  empty,
+  requests,
+  layout,
+}: {
+  id: string;
+  title: string;
+  empty: string;
+  requests: TaskRequest[];
+  layout: "desktop" | "mobile";
+}) {
+  return (
+    <section className="request-list-section" aria-labelledby={id}>
+      <h2 id={id}>{title}</h2>
+      {requests.length === 0 ? (
+        <p>{empty}</p>
+      ) : layout === "desktop" ? (
+        <RequestTable requests={requests} labelledBy={id} />
+      ) : (
+        <RequestCards requests={requests} labelledBy={id} headingLevel={3} />
+      )}
+    </section>
+  );
+}
+
 export function RequestListPage() {
   const state = useDemoState();
   const person = useCurrentPerson();
@@ -157,6 +200,40 @@ export function RequestListPage() {
   }
 
   const all = visibleRequests(person, state);
+
+  if (worker && !isOwner && !admin) {
+    const mine = all.filter(
+      (request) =>
+        liveEntry(request, person.id) !== undefined ||
+        request.agreement?.workerId === person.id,
+    );
+    const open = all.filter(
+      (request) => request.status === "open" && !mine.includes(request),
+    );
+    return (
+      <>
+        <PageHeading>Oppdrag</PageHeading>
+        <Notice tone="info">
+          Du kan ikke søke direkte; vi matcher deg automatisk
+        </Notice>
+        <WorkerSection
+          id="apne-oppdrag"
+          title="Åpne oppdrag"
+          empty="Det er ingen åpne oppdrag akkurat nå."
+          requests={[...open].sort(newestFirst)}
+          layout={layout}
+        />
+        <WorkerSection
+          id="dine-oppdrag"
+          title="Dine oppdrag"
+          empty="Du står ikke på noen kortlister ennå."
+          requests={[...mine].sort(newestFirst)}
+          layout={layout}
+        />
+      </>
+    );
+  }
+
   const filtered =
     admin && filter !== "all"
       ? all.filter((request) => request.status === filter)
@@ -190,11 +267,6 @@ export function RequestListPage() {
           <Disclosure title="Filtrer oppdrag">{filterField}</Disclosure>
         )}
       </div>
-      {worker && !isOwner && !admin && (
-        <Notice tone="info">
-          Du kan ikke søke direkte; vi matcher deg automatisk
-        </Notice>
-      )}
       {requests.length === 0 ? (
         <EmptyState title="Ingen oppdrag å vise">
           <p>

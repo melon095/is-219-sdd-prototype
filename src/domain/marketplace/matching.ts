@@ -238,3 +238,18 @@ export function fillRequests(
   }
   return current;
 }
+
+export function fillRequestsWithRoom(
+  state: DemoState,
+  context: CommandContext,
+): DemoState {
+  const ids = state.marketplace.requests
+    .filter(
+      (item) =>
+        matchableStatuses.includes(item.status) &&
+        item.shortlist.filter((entry) => entry.state !== "removed").length <
+          maxShortlistSize,
+    )
+    .map((item) => item.id);
+  return fillRequests(ids, state, context);
+}

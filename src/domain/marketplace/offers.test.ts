@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { CommandResult, DemoState } from "../frame/types";
-import { acceptOffer, inviteToInterview, makeOffer } from "./offers";
+import { fillShortlist, isEligibleForMatching } from "./matching";
+import {
+  acceptOffer,
+  declineOffer,
+  expireOverdueOffers,
+  inviteToInterview,
+  makeOffer,
+  simulateOfferExpiry,
+} from "./offers";
 import {
   createContext,
   createState,
@@ -434,5 +442,399 @@ describe("acceptOffer", () => {
     expect(errorCode(accept(acceptanceState(), ids.mats, "oppdrag-99"))).toBe(
       "not-found",
     );
+  });
+});
+
+function outstandingOfferState(offeredAt = "2026-11-14T10:00:00+01:00") {
+  return createState({
+    requests: [
+      request("oppdrag-1", {
+        createdAt: "2026-11-01T09:00:00+01:00",
+        status: "offered",
+        offeredWorkerId: ids.mats,
+        shortlist: [
+          entry(ids.mats, { rank: 1, state: "offered", offeredAt }),
+          entry(ids.amina, { rank: 2 }),
+          entry(ids.lena, { rank: 3 }),
+        ],
+      }),
+      request("oppdrag-2", {
+        createdAt: "2026-11-02T09:00:00+01:00",
+        businessId: "bedrift-2",
+        status: "shortlisted",
+        shortlist: [entry(ids.amina, { rank: 1 })],
+      }),
+    ],
+    workers: [
+      worker(ids.mats),
+      worker(ids.amina),
+      worker(ids.lena),
+      worker(ids.omar),
+    ],
+  });
+}
+
+function decline(
+  state: DemoState,
+  actorId: string,
+  requestId = "oppdrag-1",
+): CommandResult {
+  return declineOffer(
+    state,
+    { type: "declineOffer", requestId },
+    createContext(actorId, "2026-11-16T12:00:00+01:00", "ny"),
+  );
+}
+
+describe("declineOffer", () => {
+  it("excludes the worker, removes the entry and moves the request back to shortlisted", () => {
+    const state = okState(
+      decline(deepFreeze(outstandingOfferState()), ids.mats),
+    );
+    const updated = requestIn(state, "oppdrag-1");
+    expect(updated?.status).toBe("shortlisted");
+    expect(updated?.offeredWorkerId).toBeUndefined();
+    expect(updated?.excludedWorkerIds).toEqual([
+      {
+        workerId: ids.mats,
+        reason: "declined",
+        at: "2026-11-16T12:00:00+01:00",
+      },
+    ]);
+    expect(
+      updated?.shortlist.find((item) => item.workerId === ids.mats),
+    ).toMatchObject({ state: "removed", removedReason: "declined" });
+  });
+
+  it("logs offer-declined and status-changed, then matching adds the next eligible worker", () => {
+    const state = okState(decline(outstandingOfferState(), ids.mats));
+    const updated = requestIn(state, "oppdrag-1");
+    expect(updated?.log.map((event) => event.kind)).toEqual([
+      "offer-declined",
+      "status-changed",
+      "shortlisted",
+    ]);
+    expect(updated?.log[0]).toMatchObject({
+      actor: ids.mats,
+      workerId: ids.mats,
+    });
+    expect(updated?.log[1]).toMatchObject({
+      fromStatus: "offered",
+      toStatus: "shortlisted",
+    });
+    expect(updated?.log[2]).toMatchObject({
+      actor: "system",
+      workerId: ids.omar,
+    });
+    expect(
+      updated?.shortlist
+        .filter((item) => item.state === "active")
+        .map((item) => item.workerId),
+    ).toEqual([ids.amina, ids.lena, ids.omar]);
+  });
+
+  it("announces the decline to the owner and the worker", () => {
+    const state = okState(decline(outstandingOfferState(), ids.mats));
+    const ended = state.frame.activity.filter((item) =>
+      item.text.includes("avslått tilbudet"),
+    );
+    expect(ended).toHaveLength(1);
+    expect(ended[0]?.audience.personIds.sort()).toEqual(
+      [ids.owner1, ids.mats].sort(),
+    );
+  });
+
+  it("returns the request to open when no active entry remains and nobody else is eligible", () => {
+    const base = createState({
+      requests: [
+        request("oppdrag-1", {
+          status: "offered",
+          offeredWorkerId: ids.mats,
+          shortlist: [
+            entry(ids.mats, {
+              state: "offered",
+              offeredAt: "2026-11-14T10:00:00+01:00",
+            }),
+          ],
+        }),
+      ],
+      workers: [worker(ids.mats)],
+    });
+    const updated = requestIn(okState(decline(base, ids.mats)), "oppdrag-1");
+    expect(updated?.status).toBe("open");
+    expect(updated?.log.map((event) => event.kind)).toEqual([
+      "offer-declined",
+      "status-changed",
+      "status-changed",
+    ]);
+  });
+
+  it("leaves the worker eligible for other requests but never lists them again here", () => {
+    const state = okState(decline(outstandingOfferState(), ids.mats));
+    const profile = state.marketplace.workerProfiles.find(
+      (item) => item.personId === ids.mats,
+    );
+    expect(profile && isEligibleForMatching(profile, state)).toBe(true);
+
+    const otherRequest = requestIn(state, "oppdrag-2");
+    const refilledOther = otherRequest
+      ? fillShortlist(
+          otherRequest,
+          state,
+          createContext(ids.mats, "2026-11-16T13:00:00+01:00"),
+        )
+      : state;
+    expect(
+      requestIn(refilledOther, "oppdrag-2")?.shortlist.some(
+        (item) => item.workerId === ids.mats && item.state === "active",
+      ),
+    ).toBe(true);
+
+    const same = requestIn(state, "oppdrag-1");
+    const refilledSame = same
+      ? fillShortlist(
+          same,
+          state,
+          createContext(ids.mats, "2026-11-16T13:00:00+01:00"),
+        )
+      : state;
+    expect(
+      requestIn(refilledSame, "oppdrag-1")?.shortlist.filter(
+        (item) => item.workerId === ids.mats && item.state !== "removed",
+      ),
+    ).toEqual([]);
+  });
+
+  it("is allowed for the offered worker only", () => {
+    for (const actor of [ids.amina, ids.owner1, ids.admin, ids.omar]) {
+      expect(errorCode(decline(outstandingOfferState(), actor))).toBe(
+        "not-allowed",
+      );
+    }
+  });
+
+  it("needs the request to be offered", () => {
+    expect(errorCode(decline(shortlistedState(), ids.mats))).toBe(
+      "invalid-status",
+    );
+    expect(errorCode(decline(shortlistedState(), ids.omar))).toBe(
+      "not-allowed",
+    );
+    const declined = okState(decline(outstandingOfferState(), ids.mats));
+    expect(errorCode(decline(declined, ids.mats))).toBe("invalid-status");
+  });
+
+  it("returns not-found for an unknown request", () => {
+    expect(
+      errorCode(decline(outstandingOfferState(), ids.mats, "oppdrag-99")),
+    ).toBe("not-found");
+  });
+});
+
+describe("expireOverdueOffers", () => {
+  const now = "2026-11-16T12:00:00+01:00";
+
+  it("treats an offer older than 7 days as a decline by the system", () => {
+    const base = outstandingOfferState("2026-11-09T11:59:00+01:00");
+    const state = expireOverdueOffers(deepFreeze(base), now);
+    const updated = requestIn(state, "oppdrag-1");
+    expect(updated?.status).toBe("shortlisted");
+    expect(updated?.offeredWorkerId).toBeUndefined();
+    expect(updated?.excludedWorkerIds).toEqual([
+      { workerId: ids.mats, reason: "offer-expired", at: now },
+    ]);
+    expect(
+      updated?.shortlist.find((item) => item.workerId === ids.mats),
+    ).toMatchObject({ state: "removed", removedReason: "offer-expired" });
+    expect(updated?.log.map((event) => event.kind)).toEqual([
+      "offer-expired",
+      "status-changed",
+      "shortlisted",
+    ]);
+    expect(updated?.log.every((event) => event.actor === "system")).toBe(true);
+    expect(updated?.log.every((event) => event.at === now)).toBe(true);
+    expect(updated?.log[0]).toMatchObject({ workerId: ids.mats });
+    expect(updated?.log[0]?.simulated).toBeUndefined();
+    expect(updated?.log[0]?.text).not.toContain("Simulert");
+    expect(
+      updated?.shortlist
+        .filter((item) => item.state === "active")
+        .map((item) => item.workerId),
+    ).toEqual([ids.amina, ids.lena, ids.omar]);
+  });
+
+  it("leaves offers of 7 days or less alone and returns the same state", () => {
+    for (const offeredAt of [
+      "2026-11-09T12:00:00+01:00",
+      "2026-11-12T12:00:00+01:00",
+    ]) {
+      const base = outstandingOfferState(offeredAt);
+      expect(expireOverdueOffers(base, now)).toBe(base);
+    }
+  });
+
+  it("ignores requests that are not offered", () => {
+    const base = createState({
+      requests: [
+        request("oppdrag-1", {
+          status: "shortlisted",
+          shortlist: [
+            entry(ids.mats, {
+              state: "active",
+              offeredAt: "2026-10-01T09:00:00+01:00",
+            }),
+          ],
+        }),
+      ],
+      workers: [worker(ids.mats)],
+    });
+    expect(expireOverdueOffers(base, now)).toBe(base);
+  });
+
+  it("handles every overdue request, oldest first, with unique ids", () => {
+    const base = createState({
+      requests: [
+        request("oppdrag-2", {
+          createdAt: "2026-11-02T09:00:00+01:00",
+          status: "offered",
+          offeredWorkerId: ids.henrik,
+          shortlist: [
+            entry(ids.henrik, {
+              state: "offered",
+              offeredAt: "2026-11-05T09:00:00+01:00",
+            }),
+          ],
+        }),
+        request("oppdrag-1", {
+          createdAt: "2026-11-01T09:00:00+01:00",
+          status: "offered",
+          offeredWorkerId: ids.mats,
+          shortlist: [
+            entry(ids.mats, {
+              state: "offered",
+              offeredAt: "2026-11-04T09:00:00+01:00",
+            }),
+          ],
+        }),
+        request("oppdrag-3", {
+          createdAt: "2026-11-03T09:00:00+01:00",
+          status: "offered",
+          offeredWorkerId: ids.amina,
+          shortlist: [
+            entry(ids.amina, {
+              state: "offered",
+              offeredAt: "2026-11-15T09:00:00+01:00",
+            }),
+          ],
+        }),
+      ],
+      workers: [worker(ids.mats), worker(ids.henrik), worker(ids.amina)],
+    });
+    const state = expireOverdueOffers(base, now);
+    expect(requestIn(state, "oppdrag-1")?.excludedWorkerIds[0]?.reason).toBe(
+      "offer-expired",
+    );
+    expect(requestIn(state, "oppdrag-2")?.excludedWorkerIds[0]?.reason).toBe(
+      "offer-expired",
+    );
+    expect(requestIn(state, "oppdrag-3")).toEqual(requestIn(base, "oppdrag-3"));
+    const allIds = [
+      ...state.marketplace.requests.flatMap((item) =>
+        item.log.map((event) => event.id),
+      ),
+      ...state.frame.activity.map((item) => item.id),
+      ...state.marketplace.conversations.map((item) => item.id),
+    ];
+    expect(new Set(allIds).size).toBe(allIds.length);
+    expect(expireOverdueOffers(state, now)).toBe(state);
+  });
+
+  it("announces the expiry to the owner and the worker", () => {
+    const state = expireOverdueOffers(
+      outstandingOfferState("2026-11-01T09:00:00+01:00"),
+      now,
+    );
+    const ended = state.frame.activity.filter((item) =>
+      item.text.includes("har utløpt"),
+    );
+    expect(ended).toHaveLength(1);
+    expect(ended[0]?.actor).toBe("system");
+    expect(ended[0]?.audience.personIds.sort()).toEqual(
+      [ids.owner1, ids.mats].sort(),
+    );
+  });
+});
+
+describe("simulateOfferExpiry", () => {
+  const now = "2026-11-16T12:00:00+01:00";
+
+  function simulate(
+    state: DemoState,
+    actorId: string,
+    requestId = "oppdrag-1",
+  ): CommandResult {
+    return simulateOfferExpiry(
+      state,
+      { type: "simulateOfferExpiry", requestId },
+      createContext(actorId, now, "ny"),
+    );
+  }
+
+  it("expires a recent offer straight away and marks the log event as simulated", () => {
+    const state = okState(
+      simulate(deepFreeze(outstandingOfferState()), ids.owner1),
+    );
+    const updated = requestIn(state, "oppdrag-1");
+    expect(updated?.status).toBe("shortlisted");
+    expect(updated?.excludedWorkerIds).toEqual([
+      { workerId: ids.mats, reason: "offer-expired", at: now },
+    ]);
+    const expired = updated?.log.find(
+      (event) => event.kind === "offer-expired",
+    );
+    expect(expired).toMatchObject({
+      actor: "system",
+      at: now,
+      workerId: ids.mats,
+      simulated: true,
+    });
+    expect(expired?.text).toContain("Simulert med feilsøkingsknappen");
+    expect(
+      updated?.shortlist
+        .filter((item) => item.state === "active")
+        .map((item) => item.workerId),
+    ).toEqual([ids.amina, ids.lena, ids.omar]);
+  });
+
+  it("changes no other request", () => {
+    const base = outstandingOfferState();
+    const state = okState(simulate(base, ids.owner1));
+    expect(requestIn(state, "oppdrag-2")).toBe(requestIn(base, "oppdrag-2"));
+  });
+
+  it("is allowed for anyone who can see the request", () => {
+    for (const actor of [ids.owner1, ids.mats, ids.amina, ids.admin]) {
+      expect(simulate(outstandingOfferState(), actor).ok).toBe(true);
+    }
+  });
+
+  it("is not allowed for people who cannot see the request", () => {
+    for (const actor of [ids.owner2, ids.employee1, ids.thea, ids.omar]) {
+      expect(errorCode(simulate(outstandingOfferState(), actor))).toBe(
+        "not-allowed",
+      );
+    }
+  });
+
+  it("needs the request to be offered", () => {
+    expect(errorCode(simulate(shortlistedState(), ids.owner1))).toBe(
+      "invalid-status",
+    );
+  });
+
+  it("returns not-found for an unknown request", () => {
+    expect(
+      errorCode(simulate(outstandingOfferState(), ids.owner1, "oppdrag-99")),
+    ).toBe("not-found");
   });
 });

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { DialogTrigger } from "react-aria-components";
-import { isAdmin } from "../../../domain/frame/people";
+import { isAdmin, workerProfileOf } from "../../../domain/frame/people";
 import type { Command } from "../../../domain/frame/types";
-import { canReturnToOpen } from "../../../domain/marketplace/permissions";
+import {
+  canReturnToOpen,
+  canSimulateNavReferral,
+} from "../../../domain/marketplace/permissions";
 import { RequireAccess } from "../../../frame/layout/RequireAccess";
 import { useDemoState, useDispatch } from "../../../frame/store/store";
 import { AlertDialog } from "../../../frame/ui/AlertDialog";
@@ -12,6 +15,7 @@ import { Link } from "../../../frame/ui/Link";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { PageHeading } from "../../../frame/ui/PageHeading";
+import { SimulatedLabel } from "../../../frame/ui/SimulatedLabel";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import "./AdminPage.css";
 
@@ -24,6 +28,10 @@ function AdminContent() {
 
   const underReview = state.marketplace.requests.filter(
     (request) => request.status === "under-review",
+  );
+  const withoutProfile = state.frame.people.filter(
+    (candidate) =>
+      candidate.seeksWork && workerProfileOf(candidate.id, state) === undefined,
   );
 
   const run = (command: Command, message: string) => {
@@ -39,9 +47,9 @@ function AdminContent() {
   return (
     <>
       <PageHeading>Varodd-verktøy</PageHeading>
+      {error !== undefined && <Notice tone="error">{error}</Notice>}
       <section className="admin-section" aria-labelledby="til-vurdering">
         <h2 id="til-vurdering">Til vurdering</h2>
-        {error !== undefined && <Notice tone="error">{error}</Notice>}
         {underReview.length === 0 ? (
           <EmptyState title="Ingen oppdrag venter på vurdering">
             <p>Når en eier avviser en kortliste, dukker oppdraget opp her.</p>
@@ -95,6 +103,43 @@ function AdminContent() {
                     />
                   </DialogTrigger>
                 </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      <section className="admin-section" aria-labelledby="nav-henvisning">
+        <h2 id="nav-henvisning">Simulert NAV-henvisning</h2>
+        <p>
+          Her kan du henvise en som søker oppdrag, som om personen kom fra NAV.
+          Personen får en utkastprofil og må fylle den ut selv.
+        </p>
+        {withoutProfile.length === 0 ? (
+          <EmptyState title="Alle som søker oppdrag har allerede en profil">
+            <p>Det er ingen å henvise akkurat nå.</p>
+          </EmptyState>
+        ) : (
+          <ul className="admin-nav-list">
+            {withoutProfile.map((candidate) => (
+              <li key={candidate.id} className="admin-nav-item">
+                <div className="admin-nav-person">
+                  <span className="admin-nav-name">{candidate.name}</span>
+                  <span>{candidate.description}</span>
+                </div>
+                <SimulatedLabel />
+                {canSimulateNavReferral(person, candidate.id, state) && (
+                  <Button
+                    variant="secondary"
+                    onPress={() =>
+                      run(
+                        { type: "simulateNavReferral", personId: candidate.id },
+                        `${candidate.name} er henvist fra NAV (simulert)`,
+                      )
+                    }
+                  >
+                    Henvis fra NAV (simulert)
+                  </Button>
+                )}
               </li>
             ))}
           </ul>

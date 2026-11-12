@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { expireOverdueOffers } from "../../domain/marketplace/offers";
 import {
   createState,
   ids,
@@ -23,17 +24,26 @@ function personOf(id: string) {
 }
 
 describe("marketplace feature", () => {
-  it("registers every US2 command", () => {
+  it("registers every US2 and US3 command", () => {
     expect(Object.keys(marketplaceFeature.commandHandlers).sort()).toEqual([
       "acceptOffer",
+      "declineOffer",
       "editRequest",
       "inviteToInterview",
       "makeOffer",
       "publishRequest",
+      "registerWorkerProfile",
       "rejectShortlist",
       "returnToOpen",
       "sendMessage",
+      "simulateNavReferral",
+      "simulateOfferExpiry",
+      "updateWorkerProfile",
     ]);
+  });
+
+  it("registers the offer expiry system step", () => {
+    expect(marketplaceFeature.systemSteps).toEqual([expireOverdueOffers]);
   });
 
   it("registers the workers audience group for non-draft profiles", () => {

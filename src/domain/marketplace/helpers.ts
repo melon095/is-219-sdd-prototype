@@ -34,6 +34,29 @@ export function failWith(error: CommandError): CommandResult {
   return fail(error.code, error.message, error.fieldErrors);
 }
 
+export function validationFailure(
+  errors: Record<string, string>,
+): CommandResult {
+  return fail(
+    "validation",
+    "Sjekk feltene som er merket, og prøv igjen.",
+    errors,
+  );
+}
+
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+export function isValidDate(value: unknown): value is string {
+  if (typeof value !== "string" || !datePattern.test(value)) {
+    return false;
+  }
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return (
+    !Number.isNaN(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === value
+  );
+}
+
 export function actorOf(state: DemoState, context: CommandContext): Person {
   return (
     personById(context.actorId, state) ?? {

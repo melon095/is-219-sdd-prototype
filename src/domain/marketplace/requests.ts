@@ -1,9 +1,4 @@
-import type {
-  CommandHandler,
-  CommandResult,
-  DemoState,
-  Notice,
-} from "../frame/types";
+import type { CommandHandler, DemoState, Notice } from "../frame/types";
 import {
   actorOf,
   addActivity,
@@ -11,10 +6,12 @@ import {
   fail,
   failWith,
   findRequest,
+  isValidDate,
   omitKey,
   readText,
   replaceRequest,
   succeed,
+  validationFailure,
 } from "./helpers";
 import {
   durationNoticeLog,
@@ -44,10 +41,6 @@ import type {
   TaskRequest,
 } from "./types";
 
-const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-
-const validationMessage = "Sjekk feltene som er merket, og prøv igjen.";
-
 export function durationNotice(
   duration: EstimatedDuration,
 ): Notice | undefined {
@@ -63,17 +56,6 @@ export function durationNotice(
     message:
       "Varigheten er utenfor det vanlige (2 uker til 6 måneder). Du kan fortsatt publisere oppdraget.",
   };
-}
-
-function isValidDate(value: unknown): value is string {
-  if (typeof value !== "string" || !datePattern.test(value)) {
-    return false;
-  }
-  const parsed = new Date(`${value}T00:00:00Z`);
-  return (
-    !Number.isNaN(parsed.getTime()) &&
-    parsed.toISOString().slice(0, 10) === value
-  );
 }
 
 type FieldsResult =
@@ -184,10 +166,6 @@ function readFields(
     fields.additionalRequirements = additional;
   }
   return { fields, errors: undefined };
-}
-
-function validationFailure(errors: Record<string, string>): CommandResult {
-  return fail("validation", validationMessage, errors);
 }
 
 export const publishRequest: CommandHandler = (state, command, context) => {

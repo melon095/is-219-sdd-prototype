@@ -516,3 +516,34 @@ export function messageActivity(
     people(recipientId),
   );
 }
+
+export function profileReadyActivity(
+  context: CommandContext,
+  workerId: Id,
+): ActivityEntry {
+  return {
+    id: context.newId(),
+    at: context.now,
+    featureId: "marketplace",
+    actor: workerId,
+    text: "Profilen din er klar",
+    target: { route: "/profil" },
+    audience: people(workerId),
+  };
+}
+
+export function navReferralActivity(
+  context: CommandContext,
+  actor: Actor,
+  personId: Id,
+): ActivityEntry {
+  return {
+    id: context.newId(),
+    at: context.now,
+    featureId: "marketplace",
+    actor,
+    text: "Du er henvist fra NAV (simulert)",
+    target: { route: "/profil" },
+    audience: people(personId),
+  };
+}

@@ -402,6 +402,125 @@ describe("RequestPage for arbeidssøkere", () => {
   });
 });
 
+describe("RequestPage tilbud og avslag", () => {
+  it("viser både Godta og Avslå til arbeidssøkeren som har fått tilbud", () => {
+    open("oppdrag-5", "person-8");
+
+    expect(screen.getByRole("button", { name: "Godta" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Avslå" })).toBeTruthy();
+  });
+
+  it("viser ikke Avslå til andre på kortlisten", () => {
+    open("oppdrag-5", "person-10");
+
+    expect(screen.queryByRole("button", { name: "Avslå" })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Godta" })).toBe(null);
+  });
+
+  it("avslår tilbudet, ekskluderer arbeidssøkeren og viser at oppdraget ikke lenger er åpent for dem", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-5", "person-8");
+
+    await user.click(screen.getByRole("button", { name: "Avslå" }));
+
+    const request = store
+      .getState()
+      .marketplace.requests.find((item) => item.id === "oppdrag-5");
+    expect(request?.status).toBe("shortlisted");
+    expect(request?.excludedWorkerIds).toContainEqual(
+      expect.objectContaining({ workerId: "person-8", reason: "declined" }),
+    );
+    expect(
+      await screen.findByText(
+        "Dette oppdraget er ikke lenger åpent for deg. Vi gir deg beskjed når vi finner nye oppdrag som passer deg.",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("viser bare detaljene til en arbeidssøker på et åpent oppdrag uten kortlisteplass", () => {
+    open("oppdrag-7", "person-9");
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Detaljer" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Kortliste" })).toBe(null);
+    expect(screen.queryByRole("heading", { name: "Meldinger" })).toBe(null);
+    expect(screen.queryByRole("heading", { name: "Logg" })).toBe(null);
+    expect(screen.queryByRole("heading", { name: "Din status" })).toBe(null);
+  });
+});
+
+describe("RequestPage tidsknapp for tilbud", () => {
+  const label = "Demo: Simuler at 7 dager har gått";
+
+  it("viser tidsknappen på et oppdrag med tilbud", () => {
+    open("oppdrag-5", "person-4");
+
+    expect(screen.getByRole("button", { name: label })).toBeTruthy();
+  });
+
+  it("viser ikke tidsknappen når oppdraget ikke har et tilbud", () => {
+    open("oppdrag-4", "person-1");
+
+    expect(screen.queryByRole("button", { name: label })).toBe(null);
+  });
+
+  it("sender simulateOfferExpiry og merker loggen som simulert", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-5", "person-4");
+
+    await user.click(screen.getByRole("button", { name: label }));
+
+    const state = store.getState();
+    const request = state.marketplace.requests.find(
+      (item) => item.id === "oppdrag-5",
+    );
+    expect(request?.status).toBe("shortlisted");
+    expect(request?.excludedWorkerIds).toContainEqual(
+      expect.objectContaining({
+        workerId: "person-8",
+        reason: "offer-expired",
+      }),
+    );
+    const expired = request?.log.find(
+      (event) => event.kind === "offer-expired",
+    );
+    expect(expired?.simulated).toBe(true);
+    expect(expired?.text).toContain("Simulert med feilsøkingsknappen");
+    const log = await screen.findByRole("list", { name: "Logg" });
+    expect(within(log).getAllByText("Simulert")).toHaveLength(1);
+    expect(screen.queryByRole("button", { name: label })).toBe(null);
+  });
+
+  it("endrer ikke andre oppdrag", async () => {
+    const user = userEvent.setup();
+    const { store } = open("oppdrag-5", "person-4");
+    const before = store.getState().marketplace.requests;
+
+    await user.click(screen.getByRole("button", { name: label }));
+
+    const after = store.getState().marketplace.requests;
+    for (const item of before.filter((request) => request.id !== "oppdrag-5")) {
+      expect(after.find((request) => request.id === item.id)).toEqual(item);
+    }
+  });
+
+  it("er tilgjengelig for arbeidssøkeren og administratoren", () => {
+    const first = open("oppdrag-5", "person-8");
+    expect(screen.getByRole("button", { name: label })).toBeTruthy();
+    first.unmount();
+
+    open("oppdrag-5", "person-15");
+    expect(screen.getByRole("button", { name: label })).toBeTruthy();
+  });
+
+  it("har ingen tilgjengelighetsfeil for eier med tidsknapp", async () => {
+    const { container } = open("oppdrag-5", "person-4");
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
 describe("RequestPage for andre", () => {
   it("viser siden om manglende tilgang når verken oppdraget eller tittelen kan ses", () => {
     open("oppdrag-4", "person-14");

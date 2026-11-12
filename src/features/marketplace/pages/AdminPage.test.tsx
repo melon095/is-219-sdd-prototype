@@ -91,3 +91,94 @@ describe("AdminPage", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe("AdminPage Simulert NAV-henvisning", () => {
+  function itemFor(name: string): HTMLElement {
+    const section = screen.getByRole("region", {
+      name: "Simulert NAV-henvisning",
+    });
+    const found = within(section)
+      .getAllByRole("listitem")
+      .find((candidate) => within(candidate).queryByText(name) !== null);
+    if (found === undefined) {
+      throw new Error(`Fant ikke ${name} i NAV-listen`);
+    }
+    return found;
+  }
+
+  it("lister alle som søker oppdrag uten profil, med knapp og Simulert-merke", () => {
+    open("person-15");
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Simulert NAV-henvisning",
+      }),
+    ).toBeTruthy();
+    const section = screen.getByRole("region", {
+      name: "Simulert NAV-henvisning",
+    });
+    expect(
+      within(section)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      expect.stringContaining("Thea Bakke"),
+      expect.stringContaining("Sander Haugen"),
+    ]);
+    for (const name of ["Thea Bakke", "Sander Haugen"]) {
+      const item = itemFor(name);
+      expect(
+        within(item).getByRole("button", {
+          name: "Henvis fra NAV (simulert)",
+        }),
+      ).toBeTruthy();
+      expect(within(item).getByText("Simulert")).toBeTruthy();
+    }
+  });
+
+  it("henviser personen og fjerner dem fra listen", async () => {
+    const user = userEvent.setup();
+    const { store } = open("person-15");
+
+    await user.click(
+      within(itemFor("Sander Haugen")).getByRole("button", {
+        name: "Henvis fra NAV (simulert)",
+      }),
+    );
+
+    const section = screen.getByRole("region", {
+      name: "Simulert NAV-henvisning",
+    });
+    expect(within(section).queryByText("Sander Haugen")).toBe(null);
+    expect(within(section).getByText("Thea Bakke")).toBeTruthy();
+    const draft = store
+      .getState()
+      .marketplace.workerProfiles.find((item) => item.personId === "person-14");
+    expect(draft).toMatchObject({ isDraft: true, skillIds: [] });
+    expect(draft?.navReferral?.simulated).toBe(true);
+  });
+
+  it("viser en melding når alle har en profil", async () => {
+    const user = userEvent.setup();
+    open("person-15");
+
+    for (const name of ["Thea Bakke", "Sander Haugen"]) {
+      await user.click(
+        within(itemFor(name)).getByRole("button", {
+          name: "Henvis fra NAV (simulert)",
+        }),
+      );
+    }
+
+    expect(
+      await screen.findByText("Alle som søker oppdrag har allerede en profil"),
+    ).toBeTruthy();
+  });
+
+  it("har ingen tilgjengelighetsfeil", async () => {
+    const { container } = open("person-15");
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

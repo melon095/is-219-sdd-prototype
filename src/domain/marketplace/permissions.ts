@@ -1,7 +1,8 @@
-import { isAdmin } from "../frame/people";
+import { isAdmin, personById, workerProfileOf } from "../frame/people";
 import type { CommandError, DemoState, Id, Person } from "../frame/types";
 import { liveEntry, ownerIdOf } from "./helpers";
 import type { TaskRequest } from "./types";
+import { canSeeRequest } from "./visibility";
 
 export type Blocker = CommandError | undefined;
 
@@ -240,4 +241,153 @@ export function canAcceptOffer(
 
 export function canReturnToOpen(person: Person, request: TaskRequest): boolean {
   return returnToOpenBlocker(person, request) === undefined;
+}
+
+export function registerBlocker(person: Person, state: DemoState): Blocker {
+  if (!person.seeksWork) {
+    return blocked(
+      "not-allowed",
+      "Bare personer som søker oppdrag kan registrere en profil.",
+    );
+  }
+  const profile = workerProfileOf(person.id, state);
+  if (profile !== undefined && !profile.isDraft) {
+    return blocked(
+      "invalid-status",
+      "Du har allerede en profil. Bruk Rediger for å endre den.",
+    );
+  }
+  return undefined;
+}
+
+export function updateProfileBlocker(
+  person: Person,
+  state: DemoState,
+): Blocker {
+  if (!person.seeksWork) {
+    return blocked(
+      "not-allowed",
+      "Bare personer som søker oppdrag kan endre en profil.",
+    );
+  }
+  const profile = workerProfileOf(person.id, state);
+  if (profile === undefined || profile.isDraft) {
+    return blocked(
+      "invalid-status",
+      "Du må registrere profilen før du kan endre den.",
+    );
+  }
+  return undefined;
+}
+
+export function navReferralBlocker(
+  person: Person,
+  personId: Id,
+  state: DemoState,
+): Blocker {
+  if (!isAdmin(person)) {
+    return blocked(
+      "not-allowed",
+      "Bare Varodd-administratorer kan henvise fra NAV.",
+    );
+  }
+  const referred = personById(personId, state);
+  if (referred === undefined) {
+    return blocked("not-found", "Vi finner ikke personen.");
+  }
+  if (!referred.seeksWork) {
+    return blocked("invalid-status", "Personen søker ikke oppdrag.");
+  }
+  if (workerProfileOf(personId, state) !== undefined) {
+    return blocked("invalid-status", "Personen har allerede en profil.");
+  }
+  return undefined;
+}
+
+export function declineBlocker(
+  person: Person,
+  request: TaskRequest,
+  _state: DemoState,
+): Blocker {
+  if (request.status !== "offered") {
+    const isOnShortlist = request.shortlist.some(
+      (item) => item.workerId === person.id,
+    );
+    return isOnShortlist
+      ? blocked(
+          "invalid-status",
+          "Det finnes ikke noe tilbud å avslå på dette oppdraget akkurat nå.",
+        )
+      : blocked(
+          "not-allowed",
+          "Bare personen som har fått tilbudet kan avslå det.",
+        );
+  }
+  const entry = liveEntry(request, person.id);
+  if (
+    request.offeredWorkerId !== person.id ||
+    entry === undefined ||
+    entry.state !== "offered"
+  ) {
+    return blocked(
+      "not-allowed",
+      "Bare personen som har fått tilbudet kan avslå det.",
+    );
+  }
+  return undefined;
+}
+
+export function simulateExpiryBlocker(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): Blocker {
+  if (!canSeeRequest(person, request, state)) {
+    return blocked("not-allowed", "Du har ikke tilgang til dette oppdraget.");
+  }
+  if (request.status !== "offered") {
+    return blocked(
+      "invalid-status",
+      "Det finnes ikke noe tilbud som kan utløpe på dette oppdraget.",
+    );
+  }
+  return undefined;
+}
+
+export function canRegisterWorkerProfile(
+  person: Person,
+  state: DemoState,
+): boolean {
+  return registerBlocker(person, state) === undefined;
+}
+
+export function canUpdateWorkerProfile(
+  person: Person,
+  state: DemoState,
+): boolean {
+  return updateProfileBlocker(person, state) === undefined;
+}
+
+export function canSimulateNavReferral(
+  person: Person,
+  personId: Id,
+  state: DemoState,
+): boolean {
+  return navReferralBlocker(person, personId, state) === undefined;
+}
+
+export function canDeclineOffer(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): boolean {
+  return declineBlocker(person, request, state) === undefined;
+}
+
+export function canSimulateOfferExpiry(
+  person: Person,
+  request: TaskRequest,
+  state: DemoState,
+): boolean {
+  return simulateExpiryBlocker(person, request, state) === undefined;
 }

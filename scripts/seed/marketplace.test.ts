@@ -72,6 +72,103 @@ describe("seeded worker profiles", () => {
   });
 });
 
+describe("seeded people without a worker profile", () => {
+  it("has at least 2 people who seek work and have no profile", () => {
+    const withoutProfile = people.filter(
+      (person) =>
+        person.seeksWork &&
+        !workerProfiles.some((profile) => profile.personId === person.id),
+    );
+    expect(withoutProfile.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("has an open request without entries that a new profile could fit", () => {
+    const open = requests.filter(
+      (request) => request.status === "open" && request.shortlist.length === 0,
+    );
+    const target = open[0];
+    expect(target).toBeDefined();
+    if (target === undefined) {
+      return;
+    }
+    const newcomer = {
+      personId: "person-new",
+      skillIds: target.requiredSkillIds,
+      experienceLevel: "mid" as const,
+      availableFrom: daysBefore(target.desiredStartDate, 1),
+      isDraft: false,
+    };
+    expect(rankCandidates(target, [newcomer])).toHaveLength(1);
+  });
+
+  it("has an offered request where a further eligible worker is waiting", () => {
+    const busy = new Set(
+      requests
+        .filter((item) => ["agreed", "in-progress"].includes(item.status))
+        .map((item) => item.agreement?.workerId),
+    );
+    const waiting = requests
+      .filter((request) => request.status === "offered")
+      .map((request) => {
+        const taken = new Set([
+          ...request.shortlist
+            .filter((entry) => entry.state !== "removed")
+            .map((entry) => entry.workerId),
+          ...request.excludedWorkerIds.map((item) => item.workerId),
+        ]);
+        return rankCandidates(
+          request,
+          workerProfiles.filter(
+            (profile) =>
+              !busy.has(profile.personId) && !taken.has(profile.personId),
+          ),
+        ).length;
+      });
+    expect(waiting.some((count) => count >= 1)).toBe(true);
+  });
+});
+
+describe("seeded exclusions", () => {
+  it("has a worker excluded after declining on one request", () => {
+    expect(
+      requests.some((request) =>
+        request.excludedWorkerIds.some((item) => item.reason === "declined"),
+      ),
+    ).toBe(true);
+  });
+
+  it("has a worker excluded after an offer expired on another request", () => {
+    const declined = requests.find((request) =>
+      request.excludedWorkerIds.some((item) => item.reason === "declined"),
+    );
+    const expired = requests.find((request) =>
+      request.excludedWorkerIds.some((item) => item.reason === "offer-expired"),
+    );
+    expect(expired).toBeDefined();
+    expect(expired?.id).not.toBe(declined?.id);
+  });
+
+  it("logs the decline and the expiry on those requests", () => {
+    for (const [reason, kind] of [
+      ["declined", "offer-declined"],
+      ["offer-expired", "offer-expired"],
+    ] as const) {
+      const request = requests.find((item) =>
+        item.excludedWorkerIds.some((excluded) => excluded.reason === reason),
+      );
+      const excluded = request?.excludedWorkerIds.find(
+        (item) => item.reason === reason,
+      );
+      expect(
+        request?.log.some(
+          (event) =>
+            event.kind === kind && event.workerId === excluded?.workerId,
+        ),
+      ).toBe(true);
+    }
+  });
+});
+
 describe("seeded requests", () => {
   it("has 8–10 requests", () => {
     expect(requests.length).toBeGreaterThanOrEqual(8);
@@ -267,8 +364,12 @@ describe("seeded references", () => {
       for (const personId of entry.audience.personIds) {
         expect(personIds.has(personId)).toBe(true);
       }
-      const requestId = entry.target.route.replace("/oppdrag/", "");
-      expect(requestIds.has(requestId)).toBe(true);
+      if (entry.target.route.startsWith("/oppdrag/")) {
+        const requestId = entry.target.route.replace("/oppdrag/", "");
+        expect(requestIds.has(requestId)).toBe(true);
+      } else {
+        expect(entry.target.route).toBe("/profil");
+      }
     }
   });
 

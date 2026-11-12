@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { useParams } from "react-router";
 import { isAdmin } from "../../../domain/frame/people";
 import { ownerIdOf } from "../../../domain/marketplace/helpers";
 import { workLocationLabel } from "../../../domain/marketplace/log";
-import { canEditRequest } from "../../../domain/marketplace/permissions";
+import {
+  canEditRequest,
+  canSimulateOfferExpiry,
+} from "../../../domain/marketplace/permissions";
 import { durationNotice } from "../../../domain/marketplace/requests";
 import type { TaskRequest } from "../../../domain/marketplace/types";
 import {
@@ -11,12 +15,14 @@ import {
 } from "../../../domain/marketplace/visibility";
 import { NoAccessPage } from "../../../frame/home/NoAccessPage";
 import { NotFoundPage } from "../../../frame/home/NotFoundPage";
-import { useDemoState } from "../../../frame/store/store";
+import { useDemoState, useDispatch } from "../../../frame/store/store";
 import { useLayout } from "../../../frame/store/useLayout";
 import { Link } from "../../../frame/ui/Link";
+import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { PageHeading } from "../../../frame/ui/PageHeading";
 import { Tab, TabList, TabPanel, Tabs } from "../../../frame/ui/Tabs";
+import { TimeDebugButton } from "../../../frame/ui/TimeDebugButton";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { ConversationPanel } from "../components/ConversationPanel";
 import { RequestLog } from "../components/RequestLog";
@@ -34,9 +40,25 @@ function RequestDetails({ request }: { request: TaskRequest }) {
   const business = state.frame.businesses.find(
     (item) => item.id === request.businessId,
   );
+  const dispatch = useDispatch();
+  const announce = useAnnounce();
+  const [error, setError] = useState<string | undefined>(undefined);
   const notice = durationNotice(request.estimatedDuration);
   const isOwner = ownerIdOf(state, request) === person.id;
   const isStaff = isOwner || isAdmin(person);
+
+  const simulateExpiry = () => {
+    const result = dispatch({
+      type: "simulateOfferExpiry",
+      requestId: request.id,
+    });
+    if (result.ok) {
+      setError(undefined);
+      announce("Simulert: tilbudet har utløpt");
+    } else {
+      setError(result.error.message);
+    }
+  };
 
   return (
     <section className="request-details" aria-labelledby="detaljer-overskrift">
@@ -47,6 +69,15 @@ function RequestDetails({ request }: { request: TaskRequest }) {
           <Link href={`/oppdrag/${request.id}/rediger`}>Rediger</Link>
         )}
       </div>
+      {canSimulateOfferExpiry(person, request, state) && (
+        <div>
+          <TimeDebugButton
+            label="Simuler at 7 dager har gått"
+            onPress={simulateExpiry}
+          />
+        </div>
+      )}
+      {error !== undefined && <Notice tone="error">{error}</Notice>}
       {notice !== undefined && <Notice tone="warning">{notice.message}</Notice>}
       {isStaff && request.rejection !== undefined && (
         <Notice tone="info" title="Kortlisten ble avvist">
@@ -171,5 +202,5 @@ export function RequestPage() {
       <NoAccessPage />
     );
   }
-  return <RequestView request={request} />;
+  return <RequestView key={request.id} request={request} />;
 }

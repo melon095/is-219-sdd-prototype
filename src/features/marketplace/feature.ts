@@ -6,12 +6,14 @@ import {
   workerProfileOf,
 } from "../../domain/frame/people";
 import { marketplaceCommandHandlers } from "../../domain/marketplace/commands";
+import { expireOverdueOffers } from "../../domain/marketplace/offers";
 import { isActiveWorker } from "../../domain/marketplace/visibility";
 import { FeatureLayout } from "./components/FeatureSubNav";
 import { AdminPage } from "./pages/AdminPage";
 import { RequestFormPage } from "./pages/RequestFormPage";
 import { RequestListPage } from "./pages/RequestListPage";
 import { RequestPage } from "./pages/RequestPage";
+import { WorkerProfilePage } from "./pages/WorkerProfilePage";
 import { marketplaceStateSchema } from "./schema";
 
 const ownerCard: HomeCard = {
@@ -62,6 +64,7 @@ export const marketplaceFeature: FeatureDefinition = {
           path: "/oppdrag/:requestId/rediger",
           element: createElement(RequestFormPage),
         },
+        { path: "/profil", element: createElement(WorkerProfilePage) },
         { path: "/admin", element: createElement(AdminPage) },
       ],
     },
@@ -69,5 +72,5 @@ export const marketplaceFeature: FeatureDefinition = {
   audienceGroups: { "marketplace.workers": isActiveWorker },
   commandHandlers: marketplaceCommandHandlers,
   stateSchema: marketplaceStateSchema,
-  systemSteps: [],
+  systemSteps: [expireOverdueOffers],
 };

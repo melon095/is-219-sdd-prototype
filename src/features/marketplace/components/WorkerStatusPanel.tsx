@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { ownerIdOf } from "../../../domain/marketplace/helpers";
-import { canAcceptOffer } from "../../../domain/marketplace/permissions";
+import {
+  canAcceptOffer,
+  canDeclineOffer,
+} from "../../../domain/marketplace/permissions";
 import type { TaskRequest } from "../../../domain/marketplace/types";
 import { useDemoState, useDispatch } from "../../../frame/store/store";
 import { Button } from "../../../frame/ui/Button";
@@ -8,6 +11,7 @@ import { Card } from "../../../frame/ui/Card";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
+import "./WorkerStatusPanel.css";
 
 export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
   const state = useDemoState();
@@ -24,6 +28,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
   }
 
   const isOffered = canAcceptOffer(person, request, state);
+  const canDecline = canDeclineOffer(person, request, state);
   const isAgreed = request.agreement?.workerId === person.id;
 
   const accept = () => {
@@ -31,6 +36,16 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     if (result.ok) {
       setError(undefined);
       announce("Du har godtatt tilbudet");
+    } else {
+      setError(result.error.message);
+    }
+  };
+
+  const decline = () => {
+    const result = dispatch({ type: "declineOffer", requestId: request.id });
+    if (result.ok) {
+      setError(undefined);
+      announce("Du har avslått tilbudet");
     } else {
       setError(result.error.message);
     }
@@ -49,7 +64,18 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
   return (
     <Card
       heading="Din status"
-      action={isOffered ? <Button onPress={accept}>Godta</Button> : undefined}
+      action={
+        isOffered || canDecline ? (
+          <div className="worker-status-actions">
+            {isOffered && <Button onPress={accept}>Godta</Button>}
+            {canDecline && (
+              <Button variant="secondary" onPress={decline}>
+                Avslå
+              </Button>
+            )}
+          </div>
+        ) : undefined
+      }
     >
       <p>{text}</p>
       {error !== undefined && <Notice tone="error">{error}</Notice>}
