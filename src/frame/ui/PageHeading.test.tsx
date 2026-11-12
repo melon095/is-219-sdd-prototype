@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { Link, MemoryRouter, Route, Routes } from "react-router";
 import { describe, expect, it } from "vitest";
-import { PageHeading } from "./PageHeading";
+import { PageFocusProvider, PageHeading } from "./PageHeading";
 
-function Example() {
-  return (
+function Example({ shared = true }: { shared?: boolean }) {
+  const content = (
     <MemoryRouter>
       <Link to="/oppdrag">Til oppdrag</Link>
       <Routes>
@@ -15,6 +15,7 @@ function Example() {
       </Routes>
     </MemoryRouter>
   );
+  return shared ? <PageFocusProvider>{content}</PageFocusProvider> : content;
 }
 
 describe("PageHeading", () => {
@@ -50,6 +51,19 @@ describe("PageHeading", () => {
     });
     expect(document.activeElement).toBe(heading);
     expect(document.title).toBe("Oppdrag – Varodd");
+  });
+
+  it("flytter ikke fokus uten PageFocusProvider", async () => {
+    const user = userEvent.setup();
+    render(<Example shared={false} />);
+
+    await user.click(screen.getByRole("link", { name: "Til oppdrag" }));
+
+    const heading = await screen.findByRole("heading", {
+      level: 1,
+      name: "Oppdrag",
+    });
+    expect(document.activeElement).not.toBe(heading);
   });
 
   it("har ingen tilgjengelighetsfeil", async () => {
