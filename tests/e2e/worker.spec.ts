@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { axeTags, openTab, switchUser } from "./helpers";
+import { axeTags, openTab, pickSkills, switchUser, typeDate } from "./helpers";
 
 const translateTitle = "Oversette produktbeskrivelser til engelsk";
 const launchTitle = "Lansere ny nettbutikk med kampanje";
@@ -15,21 +15,16 @@ function statusBadge(page: Page, label: string) {
   return page.locator(".status-badge", { hasText: label });
 }
 
-function todayDigits(): string {
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  return `${day}${month}${today.getFullYear()}`;
-}
-
 async function registerProfile(page: Page, skills: string[]) {
-  for (const skill of skills) {
-    await page.getByRole("combobox", { name: "Ferdigheter" }).fill(skill);
-    await page.getByRole("option", { name: skill, exact: true }).click();
-  }
+  await pickSkills(page, "Ferdigheter", skills);
   await page.getByText("Erfaren", { exact: true }).click();
-  await page.getByRole("spinbutton").first().click();
-  await page.keyboard.type(todayDigits());
+  const today = new Date();
+  await typeDate(
+    page,
+    today.getDate(),
+    today.getMonth() + 1,
+    today.getFullYear(),
+  );
   await page.getByRole("button", { name: "Registrer profilen" }).click();
 }
 

@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { axeTags, openTab, switchUser } from "./helpers";
+import { axeTags, openTab, pickSkills, switchUser, typeDate } from "./helpers";
 
 type NewRequest = {
   title: string;
@@ -35,18 +35,11 @@ async function fillAndPublish(page: Page, request: NewRequest) {
   await page
     .getByRole("textbox", { name: "Beskrivelse" })
     .fill("Vi trenger hjelp med innhold og kampanjer i vinter.");
-  for (const skill of request.skills) {
-    const picker = page.getByRole("combobox", {
-      name: "Nødvendige ferdigheter",
-    });
-    await picker.fill(skill);
-    await page.getByRole("option", { name: skill, exact: true }).click();
-  }
+  await pickSkills(page, "Nødvendige ferdigheter", request.skills);
   await page
     .getByRole("textbox", { name: "Tilleggskrav (valgfritt)" })
     .fill("Gjerne erfaring fra små nettbutikker.");
-  await page.getByRole("spinbutton").first().click();
-  await page.keyboard.type("15012027");
+  await typeDate(page, 15, 1, 2027);
   await page
     .getByRole("textbox", { name: "Varighet" })
     .fill(request.durationAmount);
