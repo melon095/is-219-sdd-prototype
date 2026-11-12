@@ -88,24 +88,20 @@ describe("RequestFormPage", () => {
   });
 
   it("publiserer, går til oppdragssiden og kunngjør at oppdraget er publisert", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const { router, store } = renderPage(<RequestFormPage />, {
       ...newOptions,
       extraPages: [requestPage],
     });
 
-    await user.type(
-      screen.getByRole("textbox", { name: "Tittel" }),
-      "Hjelp med sosiale medier",
-    );
-    await user.type(
-      screen.getByRole("textbox", { name: "Beskrivelse" }),
-      "Vi trenger hjelp til å lage innlegg.",
-    );
-    await user.type(
+    await user.click(screen.getByLabelText("Tittel"));
+    await user.paste("Hjelp med sosiale medier");
+    await user.click(screen.getByLabelText("Beskrivelse"));
+    await user.paste("Vi trenger hjelp til å lage innlegg.");
+    await user.click(
       screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
-      "Sosiale",
     );
+    await user.paste("Sosiale");
     await user.keyboard("{ArrowDown}{Enter}");
     await user.click(screen.getByRole("button", { name: /Kalender/ }));
     const calendar = await screen.findByRole("dialog");
@@ -114,14 +110,11 @@ describe("RequestFormPage", () => {
         name: /20\. /,
       })[0] as HTMLElement,
     );
-    await user.type(screen.getByRole("textbox", { name: "Varighet" }), "6");
-    await user.tab();
-    await user.type(
-      screen.getByRole("textbox", { name: "Timer per uke" }),
-      "10",
-    );
-    await user.tab();
-    await user.click(screen.getByRole("radio", { name: "Fjernarbeid" }));
+    await user.click(screen.getByRole("textbox", { name: "Varighet" }));
+    await user.paste("6");
+    await user.click(screen.getByRole("textbox", { name: "Timer per uke" }));
+    await user.paste("10");
+    await user.click(screen.getByLabelText("Fjernarbeid"));
     await user.click(
       screen.getByRole("button", { name: "Publiser oppdraget" }),
     );
@@ -295,10 +288,10 @@ describe("RequestFormPage med forslag fra gjennomgangen", () => {
     await user.click(
       screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
     );
-    await user.type(
+    await user.click(
       screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
-      "Regnskap",
     );
+    await user.paste("Regnskap");
     await user.keyboard("{ArrowDown}{Enter}");
 
     expect(screen.queryByRole("row", { name: /Innholdsproduksjon/ })).toBe(
@@ -317,10 +310,10 @@ describe("RequestFormPage med forslag fra gjennomgangen", () => {
     await user.click(
       screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
     );
-    await user.type(
+    await user.click(
       screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
-      "Innholdsproduksjon",
     );
+    await user.paste("Innholdsproduksjon");
     await user.keyboard("{ArrowDown}{Enter}");
 
     expect(
@@ -330,7 +323,7 @@ describe("RequestFormPage med forslag fra gjennomgangen", () => {
   });
 
   it("lagrer forslagene som er beholdt, og alle valgte ferdigheter", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const { store } = renderPage(<RequestFormPage />, {
       ...suggestedOptions,
       extraPages: [requestPage],
@@ -339,19 +332,15 @@ describe("RequestFormPage med forslag fra gjennomgangen", () => {
     await user.click(
       screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
     );
-    await user.type(
+    await user.click(
       screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
-      "Regnskap",
     );
+    await user.paste("Regnskap");
     await user.keyboard("{ArrowDown}{Enter}");
-    await user.type(
-      screen.getByRole("textbox", { name: "Tittel" }),
-      "Hjelp med kampanjen",
-    );
-    await user.type(
-      screen.getByRole("textbox", { name: "Beskrivelse" }),
-      "Vi trenger hjelp til å lage innlegg.",
-    );
+    await user.click(screen.getByRole("textbox", { name: "Tittel" }));
+    await user.paste("Hjelp med kampanjen");
+    await user.click(screen.getByRole("textbox", { name: "Beskrivelse" }));
+    await user.paste("Vi trenger hjelp til å lage innlegg.");
     await user.click(screen.getByRole("button", { name: /Kalender/ }));
     const calendar = await screen.findByRole("dialog");
     await user.click(

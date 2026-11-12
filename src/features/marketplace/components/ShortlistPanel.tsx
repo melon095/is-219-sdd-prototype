@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { DialogTrigger } from "react-aria-components";
 import { workerProfileOf } from "../../../domain/frame/people";
 import type { Command } from "../../../domain/frame/types";
@@ -36,6 +36,24 @@ export function ShortlistPanel({
   const announce = useAnnounce();
   const headingId = useId();
   const [error, setError] = useState<string | undefined>(undefined);
+  const [focusWorkerId, setFocusWorkerId] = useState<string | undefined>(
+    undefined,
+  );
+  const panelRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (focusWorkerId === undefined) {
+      return;
+    }
+    const items =
+      panelRef.current?.querySelectorAll<HTMLElement>("[data-worker-id]");
+    for (const element of items ?? []) {
+      if (element.dataset.workerId === focusWorkerId) {
+        element.focus();
+      }
+    }
+    setFocusWorkerId(undefined);
+  }, [focusWorkerId]);
 
   const entries = request.shortlist
     .filter((entry) => entry.state !== "removed")
@@ -43,11 +61,12 @@ export function ShortlistPanel({
   const skillName = (id: string) =>
     state.frame.skills.find((skill) => skill.id === id)?.name ?? id;
 
-  const run = (command: Command, message: string) => {
+  const run = (command: Command, message: string, workerId?: string) => {
     const result = dispatch(command);
     if (result.ok) {
       setError(undefined);
       announce(message);
+      setFocusWorkerId(workerId);
     } else {
       setError(result.error.message);
     }
@@ -60,7 +79,11 @@ export function ShortlistPanel({
   const canReject = canRejectShortlist(person, request, state);
 
   return (
-    <section className="shortlist-panel" aria-labelledby={headingId}>
+    <section
+      ref={panelRef}
+      className="shortlist-panel"
+      aria-labelledby={headingId}
+    >
       <h2
         id={headingId}
         className={hideHeading ? "visually-hidden" : undefined}
@@ -80,7 +103,12 @@ export function ShortlistPanel({
             const matched = entry.matchedSkillIds.map(skillName);
             const missing = entry.missingSkillIds.map(skillName);
             return (
-              <li key={entry.workerId} className="shortlist-entry">
+              <li
+                key={entry.workerId}
+                className="shortlist-entry"
+                data-worker-id={entry.workerId}
+                tabIndex={-1}
+              >
                 <div className="shortlist-entry-head">
                   <h3>{name}</h3>
                   <span className="shortlist-entry-rank">Nr. {entry.rank}</span>
@@ -128,6 +156,7 @@ export function ShortlistPanel({
                               workerId: entry.workerId,
                             },
                             `${name} er invitert til intervju`,
+                            entry.workerId,
                           )
                         }
                       >
@@ -144,6 +173,7 @@ export function ShortlistPanel({
                               workerId: entry.workerId,
                             },
                             `Du har gitt ${name} et tilbud`,
+                            entry.workerId,
                           )
                         }
                       >

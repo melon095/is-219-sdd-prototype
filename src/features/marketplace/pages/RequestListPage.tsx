@@ -59,7 +59,7 @@ function RequestTable({
   const state = useDemoState();
 
   return (
-    <table className="request-table" aria-labelledby={labelledBy}>
+    <table className="request-table wide-table" aria-labelledby={labelledBy}>
       <thead>
         <tr>
           <th scope="col">Oppdrag</th>

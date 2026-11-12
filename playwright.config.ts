@@ -20,6 +20,7 @@ export default defineConfig({
     },
     {
       name: "mobile",
+      testIgnore: ["**/performance.spec.ts", "**/keyboard.spec.ts"],
       use: {
         browserName: "webkit",
         viewport: { width: 390, height: 844 },

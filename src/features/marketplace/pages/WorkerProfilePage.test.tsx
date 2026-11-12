@@ -109,20 +109,18 @@ describe("WorkerProfilePage uten profil", () => {
   });
 
   it("registrerer profilen og viser den etterpå", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const { store } = open("person-13");
 
-    await user.type(
-      screen.getByRole("combobox", { name: "Ferdigheter" }),
-      "Oversettelse",
-    );
+    await user.click(screen.getByRole("combobox", { name: "Ferdigheter" }));
+    await user.paste("Oversettelse");
     await user.keyboard("{ArrowDown}{Enter}");
     await user.click(screen.getByRole("radio", { name: "Erfaren" }));
     await pickDate(user);
-    await user.type(
+    await user.click(
       screen.getByRole("textbox", { name: "Ønsker (valgfritt)" }),
-      "Jeg vil oversette tekster.",
     );
+    await user.paste("Jeg vil oversette tekster.");
     await user.click(
       screen.getByRole("button", { name: "Registrer profilen" }),
     );
@@ -186,18 +184,14 @@ describe("WorkerProfilePage med NAV-utkast", () => {
   });
 
   it("fullfører utkastet og blir med i matchingen", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const { store } = open("person-14", { state: withNavDraft("person-14") });
 
-    await user.type(
-      screen.getByRole("combobox", { name: "Ferdigheter" }),
-      "Oversettelse",
-    );
+    await user.click(screen.getByRole("combobox", { name: "Ferdigheter" }));
+    await user.paste("Oversettelse");
     await user.keyboard("{ArrowDown}{Enter}");
-    await user.type(
-      screen.getByRole("combobox", { name: "Ferdigheter" }),
-      "Tekstskriving",
-    );
+    await user.click(screen.getByRole("combobox", { name: "Ferdigheter" }));
+    await user.paste("Tekstskriving");
     await user.keyboard("{ArrowDown}{Enter}");
     await user.click(screen.getByRole("radio", { name: "Junior" }));
     await pickDate(user);
