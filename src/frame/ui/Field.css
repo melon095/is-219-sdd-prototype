@@ -1,0 +1,202 @@
+.react-aria-TextField,
+.react-aria-NumberField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  max-width: var(--width-reading);
+}
+
+.react-aria-Label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  cursor: default;
+}
+
+.react-aria-Text[slot="description"] {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.react-aria-FieldError {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-error-text);
+}
+
+.react-aria-Input,
+.react-aria-TextArea {
+  width: 100%;
+  min-height: var(--target-size-min);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-grey-300);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  box-shadow: var(--shadow-field);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.react-aria-TextArea {
+  resize: vertical;
+}
+
+.react-aria-Input::placeholder,
+.react-aria-TextArea::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 1;
+}
+
+.react-aria-Input[data-hovered],
+.react-aria-TextArea[data-hovered] {
+  border-color: var(--color-grey-500);
+}
+
+.react-aria-Input[data-focused],
+.react-aria-TextArea[data-focused] {
+  border-color: var(--color-navy);
+  outline: none;
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-navy);
+}
+
+.react-aria-Input[data-focus-visible],
+.react-aria-TextArea[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.react-aria-Input[data-invalid],
+.react-aria-TextArea[data-invalid] {
+  border-color: var(--color-error-text);
+}
+
+.react-aria-Input[data-invalid][data-focused],
+.react-aria-TextArea[data-invalid][data-focused] {
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-error-text);
+}
+
+.react-aria-Input[data-disabled],
+.react-aria-TextArea[data-disabled] {
+  background: var(--color-grey-50);
+  border-color: var(--color-grey-200);
+  color: var(--color-grey-500);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.react-aria-NumberField .react-aria-Group {
+  display: flex;
+  width: fit-content;
+  min-height: var(--target-size-min);
+  border: 1px solid var(--color-grey-300);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  box-shadow: var(--shadow-field);
+  overflow: hidden;
+}
+
+.react-aria-NumberField .react-aria-Group[data-hovered] {
+  border-color: var(--color-grey-500);
+}
+
+.react-aria-NumberField .react-aria-Group[data-focus-within] {
+  border-color: var(--color-navy);
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-navy);
+}
+
+.react-aria-NumberField .react-aria-Group[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.react-aria-NumberField .react-aria-Group[data-invalid] {
+  border-color: var(--color-error-text);
+}
+
+.react-aria-NumberField .react-aria-Group[data-invalid][data-focus-within] {
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-error-text);
+}
+
+.react-aria-NumberField .react-aria-Group[data-disabled] {
+  background: var(--color-grey-50);
+  border-color: var(--color-grey-200);
+  box-shadow: none;
+}
+
+.react-aria-NumberField .react-aria-Input {
+  width: 5rem;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: center;
+}
+
+.react-aria-NumberField .react-aria-Input[data-focused] {
+  outline: none;
+  box-shadow: none;
+}
+
+.react-aria-NumberField .react-aria-Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-size-min);
+  min-height: var(--target-size-min);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: var(--color-navy-50);
+  color: var(--color-navy);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.react-aria-NumberField .react-aria-Button[slot="increment"] {
+  order: 2;
+  border-inline-start: 1px solid var(--color-grey-200);
+}
+
+.react-aria-NumberField .react-aria-Button[slot="decrement"] {
+  order: 0;
+  border-inline-end: 1px solid var(--color-grey-200);
+}
+
+.react-aria-NumberField .react-aria-Input {
+  order: 1;
+}
+
+.react-aria-NumberField .react-aria-Button[data-hovered] {
+  background: var(--color-navy-100);
+  color: var(--color-navy-hover);
+}
+
+.react-aria-NumberField .react-aria-Button[data-pressed] {
+  background: var(--color-navy-200);
+  color: var(--color-navy-pressed);
+}
+
+.react-aria-NumberField .react-aria-Button[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.react-aria-NumberField .react-aria-Button[data-disabled] {
+  background: var(--color-grey-50);
+  color: var(--color-grey-400);
+  cursor: not-allowed;
+}

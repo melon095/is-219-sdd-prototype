@@ -1,0 +1,95 @@
+.tag-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--width-reading);
+}
+
+.tag-picker .react-aria-TagGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+}
+
+.tag-picker .react-aria-TagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+}
+
+.tag-picker .react-aria-Tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-size-min);
+  padding-inline: var(--space-3) var(--space-1);
+  border: 1px solid var(--color-navy-200);
+  border-radius: var(--radius);
+  background: var(--color-navy-50);
+  color: var(--color-text);
+  outline: none;
+  cursor: default;
+}
+
+.tag-picker .react-aria-Tag[data-hovered] {
+  border-color: var(--color-navy-300);
+}
+
+.tag-picker .react-aria-Tag[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.tag-picker .react-aria-Tag[data-disabled] {
+  color: var(--color-grey-500);
+  background: var(--color-grey-50);
+  border-color: var(--color-grey-200);
+}
+
+.tag-picker-mark {
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-info);
+  border-radius: var(--radius);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+  color: var(--color-info);
+  background: var(--color-background);
+}
+
+.tag-picker .react-aria-Tag .react-aria-Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--target-size-min) - 0.75rem);
+  min-height: calc(var(--target-size-min) - 0.5rem);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-navy);
+  font-size: var(--font-size-h3);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tag-picker .react-aria-Tag .react-aria-Button[data-hovered] {
+  background: var(--color-navy-100);
+  color: var(--color-navy-hover);
+}
+
+.tag-picker .react-aria-Tag .react-aria-Button[data-pressed] {
+  background: var(--color-navy-200);
+  color: var(--color-navy-pressed);
+}
+
+.tag-picker .react-aria-Tag .react-aria-Button[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}

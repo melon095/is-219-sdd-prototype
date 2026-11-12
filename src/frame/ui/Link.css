@@ -1,0 +1,32 @@
+.react-aria-Link {
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.react-aria-Link[data-hovered] {
+  color: var(--color-navy-hover);
+  text-decoration-thickness: 2px;
+}
+
+.react-aria-Link[data-pressed] {
+  color: var(--color-navy-pressed);
+}
+
+.react-aria-Link[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.react-aria-Link[data-disabled] {
+  color: var(--color-grey-500);
+  cursor: default;
+  text-decoration: none;
+}
+
+.react-aria-Link[data-current] {
+  font-weight: var(--font-weight-semibold);
+}

@@ -156,7 +156,7 @@ Unit and component tests sit next to the file they test, as `*.test.ts` or `*.te
 
 ## Implementation Notes
 
-- Code is written by a Fable subagent, with the main agent coordinating the tasks and checking the results.
+- Code is written by subagents running Claude Sonnet 5.5 (`claude-sonnet-5-5`) at medium reasoning effort, with the main agent coordinating the tasks and checking the results.
 - No comments in code (project owner's rule).
 - Domain functions take time and the acting person as inputs and never read the clock, so tests use fixed times.
 - Interface text is written directly in Norwegian Bokmål in the warm "du"/"vi" tone of the spec's Design Language section.

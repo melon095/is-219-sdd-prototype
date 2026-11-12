@@ -1,0 +1,146 @@
+.react-aria-Menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  max-height: 20rem;
+  margin: 0;
+  padding: var(--space-1);
+  overflow: auto;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.react-aria-MenuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  cursor: default;
+  outline: none;
+}
+
+.react-aria-MenuItem[data-hovered] {
+  background: var(--color-navy-50);
+}
+
+.react-aria-MenuItem[data-focused] {
+  background: var(--color-navy-100);
+}
+
+.react-aria-MenuItem[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.react-aria-MenuItem[data-pressed] {
+  background: var(--color-navy-200);
+}
+
+.react-aria-MenuItem[data-disabled] {
+  color: var(--color-grey-500);
+  cursor: not-allowed;
+}
+
+.react-aria-Disclosure {
+  border-bottom: 1px solid var(--color-grey-200);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+}
+
+.react-aria-Disclosure .react-aria-Heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+}
+
+.react-aria-Disclosure .react-aria-Heading .react-aria-Button {
+  width: 100%;
+  justify-content: flex-start;
+  padding-inline: var(--space-2);
+  text-align: start;
+}
+
+.disclosure-chevron {
+  display: inline-block;
+  flex: none;
+  width: 1em;
+}
+
+.react-aria-Disclosure[data-expanded] .disclosure-chevron {
+  transform: rotate(90deg);
+}
+
+.react-aria-DisclosurePanel {
+  padding: var(--space-2) var(--space-2) var(--space-4);
+}
+
+.react-aria-Tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+}
+
+.react-aria-TabList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--color-grey-200);
+}
+
+.react-aria-Tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-size-min);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 3px solid transparent;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  outline: none;
+}
+
+.react-aria-Tab[data-hovered] {
+  background: var(--color-navy-50);
+  color: var(--color-navy-hover);
+}
+
+.react-aria-Tab[data-pressed] {
+  background: var(--color-navy-100);
+  color: var(--color-navy-pressed);
+}
+
+.react-aria-Tab[data-selected] {
+  border-bottom-color: var(--color-navy);
+  color: var(--color-navy);
+}
+
+.react-aria-Tab[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.react-aria-Tab[data-disabled] {
+  color: var(--color-grey-500);
+  cursor: not-allowed;
+}
+
+.react-aria-TabPanel {
+  outline: none;
+}
+
+.react-aria-TabPanel[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}

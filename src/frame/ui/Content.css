@@ -1,0 +1,179 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-grey-100);
+  border-radius: var(--radius);
+  background: var(--color-grey-50);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+}
+
+.card .card-heading {
+  margin: 0;
+  font-size: var(--font-size-h3);
+}
+
+.card .card-text {
+  color: var(--color-text);
+}
+
+.card .card-text > :last-child {
+  margin-bottom: 0;
+}
+
+.card .card-action {
+  margin-top: auto;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-grey-400);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.status-badge[data-tone="neutral"] {
+  background: var(--color-grey-100);
+  border-color: var(--color-grey-400);
+}
+
+.status-badge[data-tone="info"] {
+  background: var(--color-navy-50);
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.status-badge[data-tone="success"] {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-text);
+}
+
+.status-badge[data-tone="warning"] {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: var(--color-text);
+}
+
+.status-badge[data-tone="error"] {
+  background: var(--color-background);
+  border-color: var(--color-error-text);
+  color: var(--color-error-text);
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-grey-300);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+}
+
+.notice .notice-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.125rem;
+  border: 2px solid currentcolor;
+  border-radius: 50%;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+}
+
+.notice .notice-body {
+  min-width: 0;
+}
+
+.notice .notice-title {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.notice .notice-text > :last-child {
+  margin-bottom: 0;
+}
+
+.notice[data-tone="info"] {
+  border-color: var(--color-info);
+}
+
+.notice[data-tone="info"] .notice-icon,
+.notice[data-tone="info"] .notice-title {
+  color: var(--color-info);
+}
+
+.notice[data-tone="success"] {
+  border-color: var(--color-success-text);
+}
+
+.notice[data-tone="success"] .notice-icon,
+.notice[data-tone="success"] .notice-title {
+  color: var(--color-success-text);
+}
+
+.notice[data-tone="warning"] {
+  border-color: var(--color-warning-text);
+}
+
+.notice[data-tone="warning"] .notice-icon,
+.notice[data-tone="warning"] .notice-title {
+  color: var(--color-warning-text);
+}
+
+.notice[data-tone="error"] {
+  border-color: var(--color-error-text);
+}
+
+.notice[data-tone="error"] .notice-icon,
+.notice[data-tone="error"] .notice-title {
+  color: var(--color-error-text);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  border: 1px dashed var(--color-grey-300);
+  border-radius: var(--radius);
+  background: var(--color-navy-50);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  text-align: center;
+}
+
+.empty-state .empty-state-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+}
+
+.empty-state .empty-state-text > :last-child {
+  margin-bottom: 0;
+}
