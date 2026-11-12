@@ -18,6 +18,7 @@ import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { PageHeading } from "../../../frame/ui/PageHeading";
 import { SimulatedLabel } from "../../../frame/ui/SimulatedLabel";
+import { useFocusAfter } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { formatDateTime } from "../format";
 import "./AdminPage.css";
@@ -26,6 +27,7 @@ function AdminContent() {
   const state = useDemoState();
   const dispatch = useDispatch();
   const announce = useAnnounce();
+  const focusAfter = useFocusAfter();
   const person = useCurrentPerson();
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -40,6 +42,18 @@ function AdminContent() {
   const crawlRuns = [...state.marketplace.crawlRuns].sort(
     (a, b) => Date.parse(b.at) - Date.parse(a.at),
   );
+  const afterReview = (id: string) => {
+    const next = neighbour(underReview, id);
+    return next === undefined
+      ? "#til-vurdering"
+      : `[data-request-id="${next.id}"]`;
+  };
+  const afterReferral = (id: string) => {
+    const next = neighbour(withoutProfile, id);
+    return next === undefined
+      ? "#nav-henvisning"
+      : `[data-person-id="${next.id}"]`;
+  };
   const businessNames = (businessIds: string[]) =>
     businessIds.length === 0
       ? "ingen"
@@ -51,11 +65,19 @@ function AdminContent() {
           )
           .join(", ");
 
-  const run = (command: Command, message: string) => {
+  const neighbour = <T extends { id: string }>(items: T[], id: string) => {
+    const index = items.findIndex((item) => item.id === id);
+    return items[index + 1] ?? items[index - 1];
+  };
+
+  const run = (command: Command, message: string, focusSelector?: string) => {
     const result = dispatch(command);
     if (result.ok) {
       setError(undefined);
       announce(message);
+      if (focusSelector !== undefined) {
+        focusAfter(focusSelector);
+      }
     } else {
       setError(result.error.message);
     }
@@ -66,7 +88,9 @@ function AdminContent() {
       <PageHeading>Varodd-verktøy</PageHeading>
       {error !== undefined && <Notice tone="error">{error}</Notice>}
       <section className="admin-section" aria-labelledby="til-vurdering">
-        <h2 id="til-vurdering">Til vurdering</h2>
+        <h2 id="til-vurdering" tabIndex={-1}>
+          Til vurdering
+        </h2>
         {underReview.length === 0 ? (
           <EmptyState title="Ingen oppdrag venter på vurdering">
             <p>Når en eier avviser en kortliste, dukker oppdraget opp her.</p>
@@ -74,7 +98,12 @@ function AdminContent() {
         ) : (
           <ul className="admin-review-list">
             {underReview.map((request) => (
-              <li key={request.id} className="admin-review-item">
+              <li
+                key={request.id}
+                className="admin-review-item"
+                data-request-id={request.id}
+                tabIndex={-1}
+              >
                 <h3>
                   <Link href={`/oppdrag/${request.id}`}>{request.title}</Link>
                 </h3>
@@ -93,6 +122,7 @@ function AdminContent() {
                         run(
                           { type: "returnToOpen", requestId: request.id },
                           "Oppdraget er åpent igjen",
+                          afterReview(request.id),
                         )
                       }
                     >
@@ -116,6 +146,7 @@ function AdminContent() {
                               reason: reason ?? "",
                             },
                             "Oppdraget er avlyst",
+                            afterReview(request.id),
                           )
                         }
                       />
@@ -128,7 +159,9 @@ function AdminContent() {
         )}
       </section>
       <section className="admin-section" aria-labelledby="nav-henvisning">
-        <h2 id="nav-henvisning">Simulert NAV-henvisning</h2>
+        <h2 id="nav-henvisning" tabIndex={-1}>
+          Simulert NAV-henvisning
+        </h2>
         <p>
           Her kan du henvise en som søker oppdrag, som om personen kom fra NAV.
           Personen får en utkastprofil og må fylle den ut selv.
@@ -140,7 +173,12 @@ function AdminContent() {
         ) : (
           <ul className="admin-nav-list">
             {withoutProfile.map((candidate) => (
-              <li key={candidate.id} className="admin-nav-item">
+              <li
+                key={candidate.id}
+                className="admin-nav-item"
+                data-person-id={candidate.id}
+                tabIndex={-1}
+              >
                 <div className="admin-nav-person">
                   <span className="admin-nav-name">{candidate.name}</span>
                   <span>{candidate.description}</span>
@@ -153,6 +191,7 @@ function AdminContent() {
                       run(
                         { type: "simulateNavReferral", personId: candidate.id },
                         `${candidate.name} er henvist fra NAV (simulert)`,
+                        afterReferral(candidate.id),
                       )
                     }
                   >

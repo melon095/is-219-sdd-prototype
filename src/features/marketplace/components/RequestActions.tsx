@@ -18,6 +18,7 @@ import { Dialog } from "../../../frame/ui/Dialog";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { Radio, RadioGroup } from "../../../frame/ui/RadioGroup";
+import { useFocusAfter } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import "./RequestActions.css";
 
@@ -119,6 +120,7 @@ export function RequestActions({ request }: { request: TaskRequest }) {
   const person = useCurrentPerson();
   const dispatch = useDispatch();
   const announce = useAnnounce();
+  const focusAfter = useFocusAfter();
   const [error, setError] = useState<string | undefined>(undefined);
 
   const canStart = canRecordStart(person, request, state);
@@ -134,6 +136,7 @@ export function RequestActions({ request }: { request: TaskRequest }) {
     if (result.ok) {
       setError(undefined);
       announce(message);
+      focusAfter("#detaljer-overskrift");
     } else {
       setError(result.error.message);
     }

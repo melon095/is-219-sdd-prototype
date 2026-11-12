@@ -13,6 +13,7 @@ import { Button } from "../../../frame/ui/Button";
 import { Card } from "../../../frame/ui/Card";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
+import { useFocusAfter } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import "./WorkerStatusPanel.css";
 
@@ -21,6 +22,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
   const person = useCurrentPerson();
   const dispatch = useDispatch();
   const announce = useAnnounce();
+  const focusAfter = useFocusAfter();
   const [error, setError] = useState<string | undefined>(undefined);
 
   const entry = request.shortlist.find(
@@ -40,6 +42,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     if (result.ok) {
       setError(undefined);
       announce("Du har godtatt tilbudet");
+      focusAfter("#din-status-overskrift");
     } else {
       setError(result.error.message);
     }
@@ -50,6 +53,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     if (result.ok) {
       setError(undefined);
       announce("Du har avslått tilbudet");
+      focusAfter("h1");
     } else {
       setError(result.error.message);
     }
@@ -60,6 +64,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
     if (result.ok) {
       setError(undefined);
       announce("Du har trukket deg fra oppdraget");
+      focusAfter("h1");
     } else {
       setError(result.error.message);
     }
@@ -84,6 +89,7 @@ export function WorkerStatusPanel({ request }: { request: TaskRequest }) {
   return (
     <Card
       heading="Din status"
+      headingId="din-status-overskrift"
       action={
         isOffered || canDecline || canLeave ? (
           <div className="worker-status-actions">

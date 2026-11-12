@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import { DialogTrigger } from "react-aria-components";
 import { workerProfileOf } from "../../../domain/frame/people";
 import type { Command } from "../../../domain/frame/types";
@@ -19,6 +19,7 @@ import { EmptyState } from "../../../frame/ui/EmptyState";
 import { useAnnounce } from "../../../frame/ui/LiveAnnouncer";
 import { Notice } from "../../../frame/ui/Notice";
 import { StatusBadge } from "../../../frame/ui/StatusBadge";
+import { useFocusAfter } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { formatDate } from "../format";
 import "./ShortlistPanel.css";
@@ -36,24 +37,7 @@ export function ShortlistPanel({
   const announce = useAnnounce();
   const headingId = useId();
   const [error, setError] = useState<string | undefined>(undefined);
-  const [focusWorkerId, setFocusWorkerId] = useState<string | undefined>(
-    undefined,
-  );
-  const panelRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (focusWorkerId === undefined) {
-      return;
-    }
-    const items =
-      panelRef.current?.querySelectorAll<HTMLElement>("[data-worker-id]");
-    for (const element of items ?? []) {
-      if (element.dataset.workerId === focusWorkerId) {
-        element.focus();
-      }
-    }
-    setFocusWorkerId(undefined);
-  }, [focusWorkerId]);
+  const focusAfter = useFocusAfter();
 
   const entries = request.shortlist
     .filter((entry) => entry.state !== "removed")
@@ -61,12 +45,12 @@ export function ShortlistPanel({
   const skillName = (id: string) =>
     state.frame.skills.find((skill) => skill.id === id)?.name ?? id;
 
-  const run = (command: Command, message: string, workerId?: string) => {
+  const run = (command: Command, message: string, focusSelector: string) => {
     const result = dispatch(command);
     if (result.ok) {
       setError(undefined);
       announce(message);
-      setFocusWorkerId(workerId);
+      focusAfter(focusSelector);
     } else {
       setError(result.error.message);
     }
@@ -79,13 +63,11 @@ export function ShortlistPanel({
   const canReject = canRejectShortlist(person, request, state);
 
   return (
-    <section
-      ref={panelRef}
-      className="shortlist-panel"
-      aria-labelledby={headingId}
-    >
+    <section className="shortlist-panel" aria-labelledby={headingId}>
       <h2
         id={headingId}
+        data-focus="shortlist-heading"
+        tabIndex={-1}
         className={hideHeading ? "visually-hidden" : undefined}
       >
         Kortliste
@@ -156,7 +138,7 @@ export function ShortlistPanel({
                               workerId: entry.workerId,
                             },
                             `${name} er invitert til intervju`,
-                            entry.workerId,
+                            `[data-worker-id="${entry.workerId}"]`,
                           )
                         }
                       >
@@ -173,7 +155,7 @@ export function ShortlistPanel({
                               workerId: entry.workerId,
                             },
                             `Du har gitt ${name} et tilbud`,
-                            entry.workerId,
+                            `[data-worker-id="${entry.workerId}"]`,
                           )
                         }
                       >
@@ -205,6 +187,7 @@ export function ShortlistPanel({
                     reason: reason ?? "",
                   },
                   "Kortlisten er avvist",
+                  '[data-focus="shortlist-heading"]',
                 )
               }
             />

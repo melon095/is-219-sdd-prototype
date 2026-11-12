@@ -479,4 +479,88 @@ test.describe("Bare tastatur", () => {
       "Invitert til intervju",
     );
   });
+
+  test("arbeideren godtar et tilbud med tastaturet og fokus havner på Din status", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await selectUserByKeyboard(page, "Mats Johansen");
+    await page.goto("/#/oppdrag/oppdrag-5");
+    await expect(statusBadge(page, "Tilbud sendt")).toBeVisible();
+
+    await tabTo(page, page.getByRole("button", { name: "Godta" }));
+    await page.keyboard.press("Enter");
+
+    await expect(statusBadge(page, "Avtalt")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Din status" }),
+    ).toBeFocused();
+    await expectFocusVisible(page);
+    await expect(
+      page
+        .locator('[aria-live="polite"]')
+        .filter({ hasText: "Du har godtatt tilbudet" }),
+    ).toHaveCount(1);
+  });
+
+  test("arbeideren avslår et tilbud med tastaturet og fokus havner på sidens overskrift", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await selectUserByKeyboard(page, "Mats Johansen");
+    await page.goto("/#/oppdrag/oppdrag-5");
+    await expect(statusBadge(page, "Tilbud sendt")).toBeVisible();
+
+    await tabTo(page, page.getByRole("button", { name: "Avslå" }));
+    await page.keyboard.press("Enter");
+
+    await expect(
+      page.getByText(
+        "Dette oppdraget er ikke lenger åpent for deg. Vi gir deg beskjed når vi finner nye oppdrag som passer deg.",
+      ),
+    ).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toBeFocused();
+    await expectFocusVisible(page);
+    await expect(
+      page
+        .locator('[aria-live="polite"]')
+        .filter({ hasText: "Du har avslått tilbudet" }),
+    ).toHaveCount(1);
+  });
+
+  test("eieren avlyser et oppdrag med tastaturet og fokus havner på Detaljer", async ({
+    page,
+  }) => {
+    await openOwnerRequest(
+      page,
+      "oppdrag-4",
+      "Innhold og sosiale medier til julesalget",
+    );
+
+    await tabTo(page, page.getByRole("button", { name: "Avlys" }));
+    await page.keyboard.press("Enter");
+    const dialog = page.getByRole("alertdialog");
+    await expect(dialog).toBeVisible();
+    await typeInto(
+      page,
+      dialog.getByRole("textbox", { name: "Hvorfor avlyses oppdraget?" }),
+      "Oppdraget er ikke lenger aktuelt.",
+    );
+    await tabTo(page, dialog.getByRole("button", { name: "Avlys oppdraget" }));
+    await page.keyboard.press("Enter");
+
+    await expect(dialog).toBeHidden();
+    await expect(statusBadge(page, "Avlyst")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Detaljer" }),
+    ).toBeFocused();
+    await expectFocusVisible(page);
+    await expect(
+      page
+        .locator('[aria-live="polite"]')
+        .filter({ hasText: "Oppdraget er avlyst" }),
+    ).toHaveCount(1);
+  });
 });

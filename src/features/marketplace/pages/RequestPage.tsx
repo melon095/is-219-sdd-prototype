@@ -66,7 +66,9 @@ function RequestDetails({ request }: { request: TaskRequest }) {
 
   return (
     <section className="request-details" aria-labelledby="detaljer-overskrift">
-      <h2 id="detaljer-overskrift">Detaljer</h2>
+      <h2 id="detaljer-overskrift" tabIndex={-1}>
+        Detaljer
+      </h2>
       <div className="request-details-status">
         <RequestStatusBadge status={request.status} />
         {canEditRequest(person, request, state) && (

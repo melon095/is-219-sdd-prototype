@@ -33,7 +33,19 @@ Every Tab stop is checked for a visible focus indicator. The test takes a screen
 1. Focus was lost after "Inviter til intervju" and "Gi tilbud". The button is removed from the page once the action is done, so focus dropped to the top of the document, and the next Tab started from the beginning. Fixed in `src/features/marketplace/components/ShortlistPanel.tsx`: after a successful invite or offer, focus moves to the worker's entry in the shortlist (the list item now accepts programmatic focus with `tabIndex={-1}`).
 2. While running the same flow, the first version of the focus check gave false alarms for the remove button on skill tags (the button's parent has no box of its own) and for buttons inside dialogs (the dialog pulled focus back). These were faults in the test, not the app, and were fixed in the test.
 
-**Known limit, not changed.** The same loss of focus can happen after other actions that remove the button that was pressed: accept or decline an offer, withdraw, register start, complete, cancel, reject the whole shortlist, "Gjør åpen igjen", and the NAV referral button. They are outside scenarios 3, 7, and 13 and were not changed. The browser keeps the keyboard user's place near where the button was, and no content is hidden or unreachable.
+**Same problem elsewhere, fixed.** Other actions also remove the button that was pressed, so focus dropped to the top of the page. Each now moves focus to a fixed target once the action succeeds, using one shared helper, `focusAfterRender` in `src/frame/ui/useFocusAfter.ts`. It waits until the page has updated and any closing dialog is gone, focuses the target, and stops if the person has already moved focus elsewhere. The status is still announced through `useAnnounce`. The targets are made focusable with `tabIndex={-1}`.
+
+| Action | Where focus lands |
+|---|---|
+| Invite to interview, make an offer | The worker's entry in the shortlist |
+| Reject the whole shortlist | The "Kortliste" heading |
+| Accept an offer | The "Din status" heading |
+| Decline an offer, withdraw | The page heading (`<h1>`), which now shows the "not open for you" text |
+| Record start, complete, cancel, "Gjør åpen igjen" on the request page | The "Detaljer" heading, next to the status badge |
+| "Gjør åpen igjen" or cancel on Varodd-verktøy | The next request in "Til vurdering", or the previous one if it was last, or the "Til vurdering" heading if the list is now empty |
+| NAV referral on Varodd-verktøy | The next person in the list, or the previous one if it was last, or the "Simulert NAV-henvisning" heading if the list is now empty |
+
+Component tests in `src/features/marketplace/pages/focusAfterAction.test.tsx` check each landing place. `tests/e2e/keyboard.spec.ts` drives accept, decline and cancel by keyboard in a real browser and checks the focus ring is visible on the target. The helper's first version kept pulling focus back to the target after a person had already pressed Tab; the keyboard test for scenario 7 caught it, and it now stops once focus has moved.
 
 ## 2. Screen reader
 
