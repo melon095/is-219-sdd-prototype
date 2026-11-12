@@ -36,7 +36,7 @@
 }
 ```
 
-Feature 002 adds a top-level `"knowledgeBase"` object (see [shared-frame.md](./shared-frame.md#seed-data)). Field shapes are those in the data model. One Zod schema (`src/frame/store/schema.ts` for the frame part, and one per feature) is used both to check the generated file in tests and to check stored data when the app loads.
+Feature 002 adds a top-level `"knowledgeBase"` object (see [shared-frame.md](./shared-frame.md#seed-data)). Field shapes are those in the data model. The Zod schemas for the frame part (`src/frame/store/schema.ts`) and for each feature part are combined in two ways: `buildSeedFileSchema` checks the seed file shape above, and `buildStoredStateSchema` checks the stored value `{ format, seedId, state: DemoState }` when the app loads. Both use the same frame and feature schemas, so a record is checked the same way in both places.
 
 ### Dates in the seed file
 
@@ -53,7 +53,7 @@ All `IsoDate` and `IsoDateTime` values in the file are written as if today were 
 
 1. Read `varodd-prototype:state`.
 2. If it is missing, cannot be parsed, fails the Zod schema, has another `format`, or has a `seedId` different from the bundled seed file, load the seed file with moved dates instead and save it.
-3. Run `expireOverdueOffers` with the current time and save if anything changed.
+3. Run every feature's system steps (for feature 001, `expireOverdueOffers`) with the current time and save if anything changed.
 4. Read `varodd-prototype:user`. If it is missing or not a person in the state, select the first business owner in the seed, so a first visit opens on the main business-owner view.
 
 ### Reset

@@ -54,6 +54,7 @@ This feature is built first, so it also defines the shared frame of the whole pr
 ### Session 2026-11-12
 
 - Q: What happens when a worker follows an activity feed entry to a request they can no longer see, for example after declining, after their offer expired, after their shortlist was rejected, or after a new request stopped being Open? → A: The visibility rules stay as they are. Instead of a general "no access" page, the worker sees a short page with the request's title saying that the request is no longer open to them.
+- Q: What status does a request get when the agreed worker withdraws while other workers are still on its shortlist? → A: Shortlisted. The other workers stay on the shortlist after an offer is accepted, so the request returns to Open and matching immediately makes it Shortlisted again. It stays Open only when no worker remains on the shortlist and no other eligible worker exists.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -136,7 +137,7 @@ Everything concerning a request is kept in one place, like a case in a business 
 2. **Given** an owner and a shortlisted worker, **When** either sends a message, **Then** it is stored on the request page in a conversation visible only to those two people and Varodd administrators.
 3. **Given** a Varodd administrator, **When** they open any request, **Then** they can see all of its details, conversations, and log.
 4. **Given** an Agreed request, **When** the owner records the start date, **Then** the status changes to In progress.
-5. **Given** an Agreed request, **When** the worker withdraws, **Then** the status returns to Open and the worker is never listed for this request again.
+5. **Given** an Agreed request, **When** the worker withdraws, **Then** the status returns to Open, or to Shortlisted if other workers are still on its shortlist, and the worker is never listed for this request again.
 6. **Given** an In progress request, **When** the owner marks it completed and records whether it finished as planned, was extended, or became a permanent position, **Then** the status changes to Completed.
 7. **Given** a request that is not Completed, **When** the owner or a Varodd administrator cancels it and gives a reason, **Then** the status changes to Cancelled; a cancellation after Agreed counts as not completed.
 

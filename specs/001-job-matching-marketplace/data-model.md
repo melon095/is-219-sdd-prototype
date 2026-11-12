@@ -259,6 +259,7 @@ stateDiagram-v2
     under_review --> open: returnToOpen (admin)
     agreed --> in_progress: recordStart (owner)
     agreed --> open: withdraw (worker)
+    agreed --> shortlisted: withdraw, other active entries remain
     in_progress --> completed: completeRequest (owner, outcome)
     open --> cancelled: cancelRequest
     shortlisted --> cancelled: cancelRequest
@@ -276,7 +277,7 @@ Each transition, with its permissions and side effects, is defined in [contracts
 
 ## Matching rules (FR-003, FR-017, spec edge cases)
 
-Matching is one pure function, `fillShortlist(request, state, now)`, run for one request at a time.
+Matching is one pure function, `fillShortlist(request, state, context)`, run for one request at a time. `context` is the command context, which gives the time and the IDs for new records.
 
 1. **Runs when**: a request is published, edited while Open, or returned to Open; a worker profile becomes eligible; a worker becomes free again (their agreed request is Completed or Cancelled, or they withdraw); an active entry is removed (decline, expiry, accepted elsewhere). It runs only for requests with status Open, Shortlisted, or Offered.
 2. **Candidates**: every worker where `isEligibleForMatching` is true, who is not in `excludedWorkerIds` for this request, and has no `active` or `offered` entry on it.

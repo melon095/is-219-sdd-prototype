@@ -9,26 +9,32 @@ Feature 001 builds the frame that every feature runs in (spec Prototype Scope, c
 Each feature exports one definition, and `src/app/features.ts` lists them in header order:
 
 ```ts
+type SystemStep = (state: DemoState, now: IsoDateTime) => DemoState;
+
 type FeatureDefinition = {
   id: string;
   label: string;
   basePath: string;
-  homeCard: { title: string; text: string; actionLabel: string };
+  homeCard: (person: Person, state: DemoState) => { title: string; text: string; actionLabel: string; route: string } | null;
   routes: RouteObject[];
   audienceGroups: Record<string, (person: Person, state: DemoState) => boolean>;
   commandHandlers: Record<string, CommandHandler>;
   stateSchema: ZodType;
+  systemSteps: SystemStep[];
 };
 ```
+
+`homeCard` returns the card for the given person, or `null` when the feature has no card for them. A system step is a rule that depends on time passing. The frame runs every feature's system steps when the state is loaded, before every command, and once a minute.
 
 | Field | Feature 001 value |
 |---|---|
 | `id` | `"marketplace"` |
 | `label` | `"Oppdrag"` |
 | `basePath` | `"/oppdrag"` |
-| `homeCard` | "Få hjelp med små oppdrag" / "Beskriv hva du trenger hjelp til, så finner vi folk som kan hjelpe deg." / "Gå til oppdrag" (shown to owners; workers and admins get a matching variant) |
+| `homeCard` | Owners: "Få hjelp med små oppdrag" / "Beskriv hva du trenger hjelp til, så finner vi folk som kan hjelpe deg." / "Gå til oppdrag". Workers: "Oppdrag som passer deg" / "Vi matcher deg automatisk med oppdrag som passer ferdighetene dine." / "Se oppdrag". Admins: "Følg alle oppdrag" / "Se alle oppdrag og det som venter på vurdering." / "Gå til oppdrag". All link to `/oppdrag`. Everyone else: `null`. |
 | `audienceGroups` | `"marketplace.workers"` |
 | `commandHandlers` | The commands in [commands.md](./commands.md) |
+| `systemSteps` | `expireOverdueOffers` |
 
 The frame builds the router, the header buttons, the home page cards, `applyCommand`, the feed's audience check, and the stored state schema from this list. Adding a feature means adding one entry; no frame file other than `features.ts` changes.
 

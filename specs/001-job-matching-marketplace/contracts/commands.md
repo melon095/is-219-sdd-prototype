@@ -5,15 +5,16 @@
 Every change to demo data goes through one function:
 
 ```ts
-applyCommand(state: DemoState, command: Command, context: { actorId: Id; now: IsoDateTime }): CommandResult
+applyCommand(state: DemoState, command: Command, context: { actorId: Id; now: IsoDateTime; newId: () => Id }): CommandResult
 
 type CommandResult =
   | { ok: true; state: DemoState; notices: Notice[] }
   | { ok: false; error: CommandError }
 ```
 
-- `applyCommand` is pure: it never reads the clock, `localStorage`, or the DOM, and it never changes the `state` it is given.
-- Before handling the command, `applyCommand` runs `expireOverdueOffers(state, now)` (see [research.md §8](../research.md#8-time-offer-expiry-and-the-time-debug-button)).
+- `applyCommand` is pure: it never reads the clock, `localStorage`, the DOM, or `crypto`, and it never changes the `state` it is given.
+- `context.newId` gives the ID for every new record. The store passes `crypto.randomUUID`, the seed step passes a counter that gives readable IDs, and tests pass a fixed sequence.
+- Before handling the command, `applyCommand` runs every feature's system steps with `context.now` (see [shared-frame.md](./shared-frame.md#feature-registration)). Feature 001 has one, `expireOverdueOffers(state, now)` (see [research.md §8](../research.md#8-time-offer-expiry-and-the-time-debug-button)).
 - A failed command leaves the state unchanged. `CommandError` has a `code` (below) and a Norwegian `message` shown to the user.
 - `Notice` is a non-blocking message for the user, such as the duration notice (FR-014). The UI announces notices and successful commands through a polite live region.
 - Every successful command adds the listed log events to the request's `log` and the listed activity entries to `frame.activity`, using `context.now` and `context.actorId`. Effects caused by matching or expiry use the actor `"system"`.
@@ -140,7 +141,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 |---|---|
 | **Input** | `requestId` |
 | **Allowed** | The agreed worker; status Agreed. |
-| **Effects** | Worker excluded with reason `withdrew`; their entry `removed` with reason `withdrew`; `agreement` cleared; status → Open; then `fillShortlist` for this request and for every request the now-free worker might match. |
+| **Effects** | Worker excluded with reason `withdrew`; their entry `removed` with reason `withdrew`; `agreement` cleared; status → Open; then `fillShortlist` for this request and for every request the now-free worker might match. If this request still has `active` entries after filling, its status becomes Shortlisted (US4-5). |
 | **Log** | `withdrew`, `status-changed`. |
 | **Spec** | FR-008, FR-017, US4-5 |
 
