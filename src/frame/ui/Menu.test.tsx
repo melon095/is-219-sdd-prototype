@@ -46,6 +46,8 @@ describe("Menu", () => {
 
     expect(onAction).toHaveBeenCalledWith("cancel");
 
+    await waitFor(() => expect(screen.queryByRole("menu")).toBe(null));
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
     await user.keyboard("{Enter}");
     await screen.findByRole("menu");
     await user.keyboard("{Escape}");
