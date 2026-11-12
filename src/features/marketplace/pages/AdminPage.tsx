@@ -5,6 +5,7 @@ import type { Command } from "../../../domain/frame/types";
 import {
   canCancelRequest,
   canReturnToOpen,
+  canSimulateCrawl,
   canSimulateNavReferral,
 } from "../../../domain/marketplace/permissions";
 import { RequireAccess } from "../../../frame/layout/RequireAccess";
@@ -18,6 +19,7 @@ import { Notice } from "../../../frame/ui/Notice";
 import { PageHeading } from "../../../frame/ui/PageHeading";
 import { SimulatedLabel } from "../../../frame/ui/SimulatedLabel";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
+import { formatDateTime } from "../format";
 import "./AdminPage.css";
 
 function AdminContent() {
@@ -34,6 +36,20 @@ function AdminContent() {
     (candidate) =>
       candidate.seeksWork && workerProfileOf(candidate.id, state) === undefined,
   );
+
+  const crawlRuns = [...state.marketplace.crawlRuns].sort(
+    (a, b) => Date.parse(b.at) - Date.parse(a.at),
+  );
+  const businessNames = (businessIds: string[]) =>
+    businessIds.length === 0
+      ? "ingen"
+      : businessIds
+          .map(
+            (id) =>
+              state.frame.businesses.find((business) => business.id === id)
+                ?.name ?? id,
+          )
+          .join(", ");
 
   const run = (command: Command, message: string) => {
     const result = dispatch(command);
@@ -143,6 +159,46 @@ function AdminContent() {
                     Henvis fra NAV (simulert)
                   </Button>
                 )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      <section className="admin-section" aria-labelledby="gjennomgang">
+        <h2 id="gjennomgang">Simulert gjennomgang av nettsider</h2>
+        <p>
+          Her kan du kjøre en simulert gjennomgang av nettsidene til bedriftene
+          som har sagt ja til forslag. Bedriftene får nye forslag til
+          ferdigheter. Oppdrag som allerede er laget blir ikke endret.
+        </p>
+        <div className="admin-crawl-action">
+          <Button
+            variant="secondary"
+            isDisabled={!canSimulateCrawl(person)}
+            onPress={() =>
+              run(
+                { type: "simulateCrawl" },
+                "Den simulerte gjennomgangen er kjørt",
+              )
+            }
+          >
+            Kjør simulert gjennomgang
+          </Button>
+          <SimulatedLabel />
+        </div>
+        {crawlRuns.length === 0 ? (
+          <EmptyState title="Ingen gjennomgang er kjørt ennå">
+            <p>Når du kjører en gjennomgang, vises den her.</p>
+          </EmptyState>
+        ) : (
+          <ul className="admin-crawl-list">
+            {crawlRuns.map((crawlRun) => (
+              <li key={crawlRun.id} className="admin-crawl-item">
+                <time dateTime={crawlRun.at}>
+                  {formatDateTime(crawlRun.at)}
+                </time>
+                <p>Gjennomgått: {businessNames(crawlRun.crawledBusinessIds)}</p>
+                <p>Hoppet over: {businessNames(crawlRun.skippedBusinessIds)}</p>
               </li>
             ))}
           </ul>

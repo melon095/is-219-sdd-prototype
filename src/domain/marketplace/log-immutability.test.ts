@@ -204,6 +204,20 @@ const steps: Step[] = [
       text: "Hei Henrik! Kan du fortsatt hjelpe oss?",
     }),
   },
+  {
+    actorId: "person-1",
+    at: "2026-11-24T13:00:00+01:00",
+    command: () => ({
+      type: "setCrawlOptIn",
+      businessId: "bedrift-1",
+      optIn: false,
+    }),
+  },
+  {
+    actorId: "person-15",
+    at: "2026-11-24T13:10:00+01:00",
+    command: () => ({ type: "simulateCrawl" }),
+  },
 ];
 
 function assertPrefixes(before: DemoState, after: DemoState, label: string) {

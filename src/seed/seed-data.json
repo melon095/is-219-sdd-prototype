@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "0fe9164f5f9cacabc77a157227df6ba1bb273ec7f9cdb31a9eedfd3c2d78a23b",
+  "seedId": "fe3d166de42846f557a2ddc0eeb5dbb0162a745c8e3cb465a8b3cb8434f87639",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -121,7 +121,13 @@
         ],
         "isEWavesMember": true,
         "crawlOptIn": true,
-        "crawlSuggestions": []
+        "crawlSuggestions": [
+          "ferdighet-1",
+          "ferdighet-5",
+          "ferdighet-6",
+          "ferdighet-2"
+        ],
+        "crawlSuggestionsUpdatedAt": "2026-11-09T09:00:00+01:00"
       },
       {
         "id": "bedrift-2",
@@ -141,7 +147,13 @@
         "employeeIds": [],
         "isEWavesMember": false,
         "crawlOptIn": true,
-        "crawlSuggestions": []
+        "crawlSuggestions": [
+          "ferdighet-6",
+          "ferdighet-12",
+          "ferdighet-5",
+          "ferdighet-10"
+        ],
+        "crawlSuggestionsUpdatedAt": "2026-11-09T09:00:00+01:00"
       },
       {
         "id": "bedrift-4",
@@ -151,7 +163,13 @@
         "employeeIds": [],
         "isEWavesMember": true,
         "crawlOptIn": true,
-        "crawlSuggestions": []
+        "crawlSuggestions": [
+          "ferdighet-3",
+          "ferdighet-16",
+          "ferdighet-12",
+          "ferdighet-6"
+        ],
+        "crawlSuggestionsUpdatedAt": "2026-11-09T09:00:00+01:00"
       },
       {
         "id": "bedrift-5",
@@ -1668,7 +1686,7 @@
       },
       {
         "id": "aktivitet-87",
-        "at": "2026-11-09T10:00:00+01:00",
+        "at": "2026-11-09T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
         "text": "Tilbudet til Mats Johansen på «Nyhetsbrev med fin design til kaffeabonnentene» har utløpt",
@@ -1685,6 +1703,54 @@
       },
       {
         "id": "aktivitet-88",
+        "at": "2026-11-09T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-15",
+        "text": "Nye forslag til ferdigheter (simulert)",
+        "target": {
+          "route": "/bedrift"
+        },
+        "audience": {
+          "personIds": [
+            "person-1"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-89",
+        "at": "2026-11-09T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-15",
+        "text": "Nye forslag til ferdigheter (simulert)",
+        "target": {
+          "route": "/bedrift"
+        },
+        "audience": {
+          "personIds": [
+            "person-4"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-90",
+        "at": "2026-11-09T09:00:00+01:00",
+        "featureId": "marketplace",
+        "actor": "person-15",
+        "text": "Nye forslag til ferdigheter (simulert)",
+        "target": {
+          "route": "/bedrift"
+        },
+        "audience": {
+          "personIds": [
+            "person-5"
+          ],
+          "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-91",
         "at": "2026-11-09T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1702,7 +1768,7 @@
         }
       },
       {
-        "id": "aktivitet-89",
+        "id": "aktivitet-92",
         "at": "2026-11-09T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1721,7 +1787,7 @@
         }
       },
       {
-        "id": "aktivitet-90",
+        "id": "aktivitet-93",
         "at": "2026-11-10T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -1738,7 +1804,7 @@
         }
       },
       {
-        "id": "aktivitet-91",
+        "id": "aktivitet-94",
         "at": "2026-11-10T15:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1754,7 +1820,7 @@
         }
       },
       {
-        "id": "aktivitet-92",
+        "id": "aktivitet-95",
         "at": "2026-11-10T15:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1770,7 +1836,7 @@
         }
       },
       {
-        "id": "aktivitet-93",
+        "id": "aktivitet-96",
         "at": "2026-11-10T15:05:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1786,7 +1852,7 @@
         }
       },
       {
-        "id": "aktivitet-94",
+        "id": "aktivitet-97",
         "at": "2026-11-11T08:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-8",
@@ -1802,7 +1868,7 @@
         }
       },
       {
-        "id": "aktivitet-95",
+        "id": "aktivitet-98",
         "at": "2026-11-11T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-3",
@@ -1820,7 +1886,7 @@
         }
       },
       {
-        "id": "aktivitet-96",
+        "id": "aktivitet-99",
         "at": "2026-11-11T09:00:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1838,7 +1904,7 @@
         }
       },
       {
-        "id": "aktivitet-97",
+        "id": "aktivitet-100",
         "at": "2026-11-12T13:20:00+01:00",
         "featureId": "marketplace",
         "actor": "person-7",
@@ -1856,7 +1922,7 @@
         }
       },
       {
-        "id": "aktivitet-98",
+        "id": "aktivitet-101",
         "at": "2026-11-12T16:40:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1872,7 +1938,7 @@
         }
       },
       {
-        "id": "aktivitet-99",
+        "id": "aktivitet-102",
         "at": "2026-11-13T09:10:00+01:00",
         "featureId": "marketplace",
         "actor": "person-1",
@@ -1890,7 +1956,7 @@
         }
       },
       {
-        "id": "aktivitet-100",
+        "id": "aktivitet-103",
         "at": "2026-11-13T09:10:00+01:00",
         "featureId": "marketplace",
         "actor": "system",
@@ -1908,7 +1974,7 @@
         }
       },
       {
-        "id": "aktivitet-101",
+        "id": "aktivitet-104",
         "at": "2026-11-14T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -1924,7 +1990,7 @@
         }
       },
       {
-        "id": "aktivitet-102",
+        "id": "aktivitet-105",
         "at": "2026-11-14T10:00:00+01:00",
         "featureId": "marketplace",
         "actor": "person-4",
@@ -2652,14 +2718,14 @@
         "excludedWorkerIds": [],
         "log": [
           {
-            "id": "logg-102",
+            "id": "logg-104",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "person-4",
             "kind": "published",
             "text": "Anne Lie publiserte oppdraget"
           },
           {
-            "id": "logg-103",
+            "id": "logg-105",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2667,7 +2733,7 @@
             "workerId": "person-8"
           },
           {
-            "id": "logg-104",
+            "id": "logg-106",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2675,7 +2741,7 @@
             "workerId": "person-10"
           },
           {
-            "id": "logg-105",
+            "id": "logg-107",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "shortlisted",
@@ -2683,7 +2749,7 @@
             "workerId": "person-9"
           },
           {
-            "id": "logg-106",
+            "id": "logg-108",
             "at": "2026-11-09T10:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
@@ -2991,7 +3057,7 @@
           {
             "workerId": "person-8",
             "reason": "offer-expired",
-            "at": "2026-11-09T10:00:00+01:00"
+            "at": "2026-11-09T09:00:00+01:00"
           }
         ],
         "log": [
@@ -3069,16 +3135,16 @@
             "toStatus": "offered"
           },
           {
-            "id": "logg-107",
-            "at": "2026-11-09T10:00:00+01:00",
+            "id": "logg-102",
+            "at": "2026-11-09T09:00:00+01:00",
             "actor": "system",
             "kind": "offer-expired",
             "text": "Tilbudet til Mats Johansen utløp fordi det ikke ble besvart på 7 dager",
             "workerId": "person-8"
           },
           {
-            "id": "logg-108",
-            "at": "2026-11-09T10:00:00+01:00",
+            "id": "logg-103",
+            "at": "2026-11-09T09:00:00+01:00",
             "actor": "system",
             "kind": "status-changed",
             "text": "Status endret fra Tilbud sendt til Kortliste klar",
@@ -4146,7 +4212,114 @@
         "messages": []
       }
     ],
-    "crawlCatalog": [],
-    "crawlRuns": []
+    "crawlCatalog": [
+      {
+        "businessId": "bedrift-1",
+        "rounds": [
+          [
+            "ferdighet-1",
+            "ferdighet-5",
+            "ferdighet-6",
+            "ferdighet-2"
+          ],
+          [
+            "ferdighet-2",
+            "ferdighet-7",
+            "ferdighet-3",
+            "ferdighet-13"
+          ],
+          [
+            "ferdighet-5",
+            "ferdighet-6",
+            "ferdighet-11"
+          ]
+        ]
+      },
+      {
+        "businessId": "bedrift-2",
+        "rounds": [
+          [
+            "ferdighet-1",
+            "ferdighet-13",
+            "ferdighet-6"
+          ],
+          [
+            "ferdighet-4",
+            "ferdighet-18",
+            "ferdighet-17"
+          ]
+        ]
+      },
+      {
+        "businessId": "bedrift-3",
+        "rounds": [
+          [
+            "ferdighet-6",
+            "ferdighet-12",
+            "ferdighet-5",
+            "ferdighet-10"
+          ],
+          [
+            "ferdighet-16",
+            "ferdighet-11",
+            "ferdighet-6",
+            "ferdighet-2"
+          ]
+        ]
+      },
+      {
+        "businessId": "bedrift-4",
+        "rounds": [
+          [
+            "ferdighet-3",
+            "ferdighet-16",
+            "ferdighet-12",
+            "ferdighet-6"
+          ],
+          [
+            "ferdighet-9",
+            "ferdighet-15",
+            "ferdighet-8"
+          ],
+          [
+            "ferdighet-2",
+            "ferdighet-7",
+            "ferdighet-18"
+          ]
+        ]
+      },
+      {
+        "businessId": "bedrift-5",
+        "rounds": [
+          [
+            "ferdighet-14",
+            "ferdighet-10",
+            "ferdighet-5"
+          ],
+          [
+            "ferdighet-1",
+            "ferdighet-13",
+            "ferdighet-2"
+          ]
+        ]
+      }
+    ],
+    "crawlRuns": [
+      {
+        "id": "gjennomgang-1",
+        "at": "2026-11-09T09:00:00+01:00",
+        "by": "person-15",
+        "crawledBusinessIds": [
+          "bedrift-1",
+          "bedrift-3",
+          "bedrift-4"
+        ],
+        "skippedBusinessIds": [
+          "bedrift-2",
+          "bedrift-5"
+        ],
+        "simulated": true
+      }
+    ]
   }
 }

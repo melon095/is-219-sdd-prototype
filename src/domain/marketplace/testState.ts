@@ -8,6 +8,8 @@ import type {
 } from "../frame/types";
 import type {
   Conversation,
+  CrawlCatalogEntry,
+  CrawlRun,
   ShortlistEntry,
   TaskRequest,
   WorkerProfile,
@@ -157,6 +159,9 @@ export type StateOptions = {
   requests?: TaskRequest[];
   conversations?: Conversation[];
   activity?: ActivityEntry[];
+  businesses?: Business[];
+  crawlCatalog?: CrawlCatalogEntry[];
+  crawlRuns?: CrawlRun[];
 };
 
 export function createState(options: StateOptions = {}): DemoState {
@@ -168,7 +173,7 @@ export function createState(options: StateOptions = {}): DemoState {
     },
     frame: {
       people: testPeople,
-      businesses: testBusinesses,
+      businesses: options.businesses ?? testBusinesses,
       skills: testSkills,
       activity: options.activity ?? [],
     },
@@ -176,8 +181,8 @@ export function createState(options: StateOptions = {}): DemoState {
       workerProfiles: options.workers ?? [],
       requests: options.requests ?? [],
       conversations: options.conversations ?? [],
-      crawlCatalog: [],
-      crawlRuns: [],
+      crawlCatalog: options.crawlCatalog ?? [],
+      crawlRuns: options.crawlRuns ?? [],
     },
   };
 }

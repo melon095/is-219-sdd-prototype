@@ -2,13 +2,15 @@ import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { describe, expect, it } from "vitest";
+import type { DemoState } from "../../../domain/frame/types";
+import { testSeedState } from "../../../frame/test-utils";
 import { RequestFormPage } from "./RequestFormPage";
-import { renderPage } from "./renderPage";
+import { renderPage, withBusiness } from "./renderPage";
 
 const newOptions = {
   path: "oppdrag/ny",
   route: "/oppdrag/ny",
-  userId: "person-1",
+  userId: "person-3",
 };
 
 const requestPage = {
@@ -247,6 +249,180 @@ describe("RequestFormPage", () => {
       screen.getByRole("button", { name: "Publiser oppdraget" }),
     );
     await screen.findByText("Skriv en tittel på 1–100 tegn.");
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+const suggestionNote =
+  "Foreslått fra en simulert gjennomgang av nettsiden deres";
+
+function stateWithSuggestions(
+  businessId: string,
+  suggestions: string[],
+): DemoState {
+  return withBusiness(testSeedState(), businessId, {
+    crawlSuggestions: suggestions,
+  });
+}
+
+describe("RequestFormPage med forslag fra gjennomgangen", () => {
+  const suggestedOptions = {
+    path: "oppdrag/ny",
+    route: "/oppdrag/ny",
+    userId: "person-1",
+    state: stateWithSuggestions("bedrift-1", ["ferdighet-6", "ferdighet-5"]),
+  };
+
+  it("forhåndsvelger forslagene med Forslag-merke, notat og Simulert-merke", () => {
+    renderPage(<RequestFormPage />, suggestedOptions);
+
+    expect(
+      screen.getByRole("row", { name: "Sosiale medier (Forslag)" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("row", { name: "Innholdsproduksjon (Forslag)" }),
+    ).toBeTruthy();
+    expect(screen.getAllByText("Forslag")).toHaveLength(2);
+    const note = screen.getByText(suggestionNote);
+    expect(note.textContent).toContain("Simulert");
+  });
+
+  it("lar eieren fjerne forslag og legge til andre ferdigheter", async () => {
+    const user = userEvent.setup();
+    renderPage(<RequestFormPage />, suggestedOptions);
+
+    await user.click(
+      screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
+    );
+    await user.type(
+      screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
+      "Regnskap",
+    );
+    await user.keyboard("{ArrowDown}{Enter}");
+
+    expect(screen.queryByRole("row", { name: /Innholdsproduksjon/ })).toBe(
+      null,
+    );
+    expect(
+      screen.getByRole("row", { name: "Sosiale medier (Forslag)" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("row", { name: "Regnskap" })).toBeTruthy();
+  });
+
+  it("merker ikke et forslag som eieren har fjernet og lagt til igjen selv", async () => {
+    const user = userEvent.setup();
+    renderPage(<RequestFormPage />, suggestedOptions);
+
+    await user.click(
+      screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
+    );
+    await user.type(
+      screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
+      "Innholdsproduksjon",
+    );
+    await user.keyboard("{ArrowDown}{Enter}");
+
+    expect(
+      screen.getByRole("row", { name: "Innholdsproduksjon" }),
+    ).toBeTruthy();
+    expect(screen.getAllByText("Forslag")).toHaveLength(1);
+  });
+
+  it("lagrer forslagene som er beholdt, og alle valgte ferdigheter", async () => {
+    const user = userEvent.setup();
+    const { store } = renderPage(<RequestFormPage />, {
+      ...suggestedOptions,
+      extraPages: [requestPage],
+    });
+
+    await user.click(
+      screen.getByRole("button", { name: /Fjern.*Innholdsproduksjon/ }),
+    );
+    await user.type(
+      screen.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
+      "Regnskap",
+    );
+    await user.keyboard("{ArrowDown}{Enter}");
+    await user.type(
+      screen.getByRole("textbox", { name: "Tittel" }),
+      "Hjelp med kampanjen",
+    );
+    await user.type(
+      screen.getByRole("textbox", { name: "Beskrivelse" }),
+      "Vi trenger hjelp til å lage innlegg.",
+    );
+    await user.click(screen.getByRole("button", { name: /Kalender/ }));
+    const calendar = await screen.findByRole("dialog");
+    await user.click(
+      within(calendar).getAllByRole("button", {
+        name: /20\. /,
+      })[0] as HTMLElement,
+    );
+    await user.type(screen.getByRole("textbox", { name: "Varighet" }), "6");
+    await user.tab();
+    await user.type(
+      screen.getByRole("textbox", { name: "Timer per uke" }),
+      "10",
+    );
+    await user.tab();
+    await user.click(screen.getByRole("radio", { name: "Fjernarbeid" }));
+    await user.click(
+      screen.getByRole("button", { name: "Publiser oppdraget" }),
+    );
+
+    await waitFor(() =>
+      expect(
+        store
+          .getState()
+          .marketplace.requests.some(
+            (item) => item.title === "Hjelp med kampanjen",
+          ),
+      ).toBe(true),
+    );
+    const published = store
+      .getState()
+      .marketplace.requests.find(
+        (item) => item.title === "Hjelp med kampanjen",
+      );
+    expect(published?.requiredSkillIds).toEqual(["ferdighet-6", "ferdighet-4"]);
+    expect(published?.acceptedSuggestionIds).toEqual(["ferdighet-6"]);
+  });
+
+  it("starter med tom skillevelger og ingen merknad uten forslag", () => {
+    renderPage(<RequestFormPage />, {
+      ...suggestedOptions,
+      userId: "person-3",
+    });
+
+    expect(screen.queryByRole("grid")).toBe(null);
+    expect(screen.queryByText("Forslag")).toBe(null);
+    expect(screen.queryByText(suggestionNote)).toBe(null);
+    expect(screen.queryByText("Simulert")).toBe(null);
+  });
+
+  it("forhåndsvelger aldri forslag når et oppdrag redigeres", () => {
+    renderPage(<RequestFormPage />, {
+      path: "oppdrag/:requestId/rediger",
+      route: "/oppdrag/oppdrag-7/rediger",
+      userId: "person-7",
+      state: stateWithSuggestions("bedrift-5", ["ferdighet-1", "ferdighet-2"]),
+    });
+
+    expect(
+      screen.getByRole("row", { name: "Oversettelse til engelsk" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("row", { name: "Tekstskriving" })).toBeTruthy();
+    expect(screen.queryByRole("row", { name: /Produktfotografering/ })).toBe(
+      null,
+    );
+    expect(screen.queryByRole("row", { name: /Shopify-oppsett/ })).toBe(null);
+    expect(screen.queryByText("Forslag")).toBe(null);
+    expect(screen.queryByText(suggestionNote)).toBe(null);
+  });
+
+  it("har ingen tilgjengelighetsfeil med forslag", async () => {
+    const { container } = renderPage(<RequestFormPage />, suggestedOptions);
 
     expect(await axe(container)).toHaveNoViolations();
   });

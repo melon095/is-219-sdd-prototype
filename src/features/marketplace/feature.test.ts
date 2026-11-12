@@ -24,7 +24,7 @@ function personOf(id: string) {
 }
 
 describe("marketplace feature", () => {
-  it("registers every US2, US3 and US4 command", () => {
+  it("registers every US2, US3, US4 and US5 command", () => {
     expect(Object.keys(marketplaceFeature.commandHandlers).sort()).toEqual([
       "acceptOffer",
       "cancelRequest",
@@ -39,6 +39,8 @@ describe("marketplace feature", () => {
       "rejectShortlist",
       "returnToOpen",
       "sendMessage",
+      "setCrawlOptIn",
+      "simulateCrawl",
       "simulateNavReferral",
       "simulateOfferExpiry",
       "updateWorkerProfile",

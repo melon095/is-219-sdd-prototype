@@ -8,6 +8,7 @@ import {
   ids,
   request,
   requestIn,
+  testBusinesses,
   worker,
 } from "./testState";
 
@@ -286,6 +287,32 @@ describe("publishRequest effects", () => {
       return;
     }
     expect(result.state.marketplace.requests[0]?.status).toBe("open");
+  });
+
+  it("never lets a crawl suggestion the owner dropped affect matching", () => {
+    const businesses = testBusinesses.map((business) =>
+      business.id === "bedrift-1"
+        ? { ...business, crawlSuggestions: ["ferdighet-3", "ferdighet-4"] }
+        : business,
+    );
+    const state = createState({
+      businesses,
+      workers: [
+        worker(ids.mats, { skillIds: ["ferdighet-3", "ferdighet-4"] }),
+        worker(ids.amina, { skillIds: ["ferdighet-1"] }),
+      ],
+    });
+    const result = publish(
+      { requiredSkillIds: ["ferdighet-1"], acceptedSuggestionIds: [] },
+      state,
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    const stored = result.state.marketplace.requests[0];
+    expect(stored?.acceptedSuggestionIds).toEqual([]);
+    expect(stored?.shortlist.map((item) => item.workerId)).toEqual([ids.amina]);
   });
 });
 

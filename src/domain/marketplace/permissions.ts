@@ -458,6 +458,48 @@ export function simulateExpiryBlocker(
   return undefined;
 }
 
+export function crawlOptInBlocker(
+  person: Person,
+  businessId: Id,
+  state: DemoState,
+): Blocker {
+  const business = state.frame.businesses.find(
+    (item) => item.id === businessId,
+  );
+  if (business === undefined) {
+    return blocked("not-found", "Vi finner ikke bedriften.");
+  }
+  if (business.ownerId !== person.id) {
+    return blocked(
+      "not-allowed",
+      "Bare eieren av bedriften kan endre valget om gjennomgang av nettsiden.",
+    );
+  }
+  return undefined;
+}
+
+export function crawlBlocker(person: Person): Blocker {
+  if (!isAdmin(person)) {
+    return blocked(
+      "not-allowed",
+      "Bare Varodd-administratorer kan kjøre den simulerte gjennomgangen.",
+    );
+  }
+  return undefined;
+}
+
+export function canSetCrawlOptIn(
+  person: Person,
+  businessId: Id,
+  state: DemoState,
+): boolean {
+  return crawlOptInBlocker(person, businessId, state) === undefined;
+}
+
+export function canSimulateCrawl(person: Person): boolean {
+  return crawlBlocker(person) === undefined;
+}
+
 export function canRegisterWorkerProfile(
   person: Person,
   state: DemoState,

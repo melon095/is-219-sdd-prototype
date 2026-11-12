@@ -36,6 +36,28 @@ export async function typeDate(
   await expect(segments.nth(2)).toHaveText(String(year));
 }
 
+export async function clearSkills(page: Page) {
+  const remove = page
+    .getByRole("grid", { name: /^Valgte/ })
+    .getByRole("button");
+  let remaining = await remove.count();
+  while (remaining > 0) {
+    await remove.first().click();
+    remaining -= 1;
+    await expect(remove).toHaveCount(remaining);
+  }
+}
+
+export function daysFromToday(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return {
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+  };
+}
+
 export function isMobile(page: Page): boolean {
   const size = page.viewportSize();
   return size !== null && size.width < 768;

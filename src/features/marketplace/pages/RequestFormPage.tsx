@@ -1,5 +1,6 @@
 import { type CalendarDate, parseDate } from "@internationalized/date";
 import { type FormEvent, useState } from "react";
+import type { Key } from "react-aria-components";
 import { useNavigate, useParams } from "react-router";
 import { ownedBusiness } from "../../../domain/frame/people";
 import type { Id } from "../../../domain/frame/types";
@@ -29,6 +30,7 @@ import { NumberField } from "../../../frame/ui/NumberField";
 import { PageHeading } from "../../../frame/ui/PageHeading";
 import { Radio, RadioGroup } from "../../../frame/ui/RadioGroup";
 import { Select, SelectItem } from "../../../frame/ui/Select";
+import { SimulatedLabel } from "../../../frame/ui/SimulatedLabel";
 import { TagPicker } from "../../../frame/ui/TagPicker";
 import { TextArea } from "../../../frame/ui/TextArea";
 import { TextField } from "../../../frame/ui/TextField";
@@ -59,9 +61,10 @@ function Explanation() {
 type FormProps = {
   businessId: Id;
   request?: TaskRequest;
+  suggestions?: Id[];
 };
 
-function RequestForm({ businessId, request }: FormProps) {
+function RequestForm({ businessId, request, suggestions = [] }: FormProps) {
   const state = useDemoState();
   const dispatch = useDispatch();
   const announce = useAnnounce();
@@ -71,8 +74,9 @@ function RequestForm({ businessId, request }: FormProps) {
   const [title, setTitle] = useState(request?.title ?? "");
   const [description, setDescription] = useState(request?.description ?? "");
   const [skillIds, setSkillIds] = useState<string[]>(
-    request?.requiredSkillIds ?? [],
+    request?.requiredSkillIds ?? suggestions,
   );
+  const [dropped, setDropped] = useState<Id[]>([]);
   const [additional, setAdditional] = useState(
     request?.additionalRequirements ?? "",
   );
@@ -93,6 +97,18 @@ function RequestForm({ businessId, request }: FormProps) {
   const [formError, setFormError] = useState<string | undefined>(undefined);
 
   const notice = durationNotice({ amount, unit });
+  const markedIds = (request?.acceptedSuggestionIds ?? suggestions).filter(
+    (id) => !dropped.includes(id),
+  );
+  const changeSkills = (keys: Key[]) => {
+    const next = keys.map(String);
+    const removed = markedIds.filter((id) => !next.includes(id));
+    if (removed.length > 0) {
+      setDropped([...dropped, ...removed]);
+    }
+    setSkillIds(next);
+  };
+  const showSuggestionNote = request === undefined && suggestions.length > 0;
 
   const skillItems = state.frame.skills.map((skill) => ({
     id: skill.id,
@@ -105,9 +121,7 @@ function RequestForm({ businessId, request }: FormProps) {
       title,
       description,
       requiredSkillIds: skillIds,
-      acceptedSuggestionIds: (request?.acceptedSuggestionIds ?? []).filter(
-        (id) => skillIds.includes(id),
-      ),
+      acceptedSuggestionIds: markedIds.filter((id) => skillIds.includes(id)),
       additionalRequirements: additional,
       desiredStartDate: startDate?.toString(),
       estimatedDuration: { amount, unit },
@@ -157,9 +171,17 @@ function RequestForm({ businessId, request }: FormProps) {
         label="Nødvendige ferdigheter"
         items={skillItems}
         selectedKeys={skillIds}
-        onSelectionChange={(keys) => setSkillIds(keys.map(String))}
+        onSelectionChange={changeSkills}
+        markedKeys={markedIds}
+        markLabel="Forslag"
         errorMessage={errors.requiredSkillIds}
       />
+      {showSuggestionNote && (
+        <p className="request-form-suggestion-note">
+          Foreslått fra en simulert gjennomgang av nettsiden deres{" "}
+          <SimulatedLabel />
+        </p>
+      )}
       <TextArea
         label="Tilleggskrav (valgfritt)"
         value={additional}
@@ -256,7 +278,11 @@ function NewRequestPage() {
     >
       <PageHeading>Nytt oppdrag</PageHeading>
       {business !== undefined && (
-        <RequestForm key={business.id} businessId={business.id} />
+        <RequestForm
+          key={business.id}
+          businessId={business.id}
+          suggestions={business.crawlSuggestions}
+        />
       )}
     </RequireAccess>
   );

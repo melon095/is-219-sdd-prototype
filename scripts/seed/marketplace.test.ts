@@ -385,6 +385,73 @@ describe("seeded request lifecycle", () => {
   });
 });
 
+describe("seeded crawl", () => {
+  const { crawlCatalog, crawlRuns } = seed.marketplace;
+  const skillIds = new Set(skills.map((item) => item.id));
+
+  it("has one catalog entry per business with 2–3 rounds of 3–5 known skills", () => {
+    expect(crawlCatalog.map((item) => item.businessId).sort()).toEqual(
+      businesses.map((item) => item.id).sort(),
+    );
+    for (const entry of crawlCatalog) {
+      expect(entry.rounds.length).toBeGreaterThanOrEqual(2);
+      expect(entry.rounds.length).toBeLessThanOrEqual(3);
+      for (const round of entry.rounds) {
+        expect(round.length).toBeGreaterThanOrEqual(3);
+        expect(round.length).toBeLessThanOrEqual(5);
+        expect(new Set(round).size).toBe(round.length);
+        for (const skillId of round) {
+          expect(skillIds.has(skillId)).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("has exactly one simulated crawl run by an administrator a week before the anchor date", () => {
+    expect(crawlRuns).toHaveLength(1);
+    const run = crawlRuns[0];
+    expect(run?.simulated).toBe(true);
+    expect(people.find((item) => item.id === run?.by)?.isVaroddAdmin).toBe(
+      true,
+    );
+    expect(run?.at.slice(0, 10)).toBe(daysBefore(seed.anchorDate, 7));
+    expect(run?.crawledBusinessIds.sort()).toEqual(
+      businesses
+        .filter((item) => item.crawlOptIn)
+        .map((item) => item.id)
+        .sort(),
+    );
+    expect(run?.skippedBusinessIds.sort()).toEqual(
+      businesses
+        .filter((item) => !item.crawlOptIn)
+        .map((item) => item.id)
+        .sort(),
+    );
+  });
+
+  it("gives every opted-in business suggestions and no other business any", () => {
+    for (const business of businesses) {
+      if (business.crawlOptIn) {
+        expect(business.crawlSuggestions.length).toBeGreaterThan(0);
+        expect(business.crawlSuggestions).toEqual(
+          crawlCatalog.find((item) => item.businessId === business.id)
+            ?.rounds[0],
+        );
+        expect(business.crawlSuggestionsUpdatedAt).toBe(crawlRuns[0]?.at);
+      } else {
+        expect(business.crawlSuggestions).toEqual([]);
+        expect(business.crawlSuggestionsUpdatedAt).toBeUndefined();
+      }
+    }
+  });
+
+  it("leaves every seeded request without accepted suggestions", () => {
+    for (const request of requests) {
+      expect(request.acceptedSuggestionIds).toEqual([]);
+    }
+  });
+});
+
 describe("seeded shortlists", () => {
   it("equals what fillShortlist produces from the seeded profiles", () => {
     let counter = 0;
@@ -498,7 +565,7 @@ describe("seeded references", () => {
         const requestId = entry.target.route.replace("/oppdrag/", "");
         expect(requestIds.has(requestId)).toBe(true);
       } else {
-        expect(entry.target.route).toBe("/profil");
+        expect(["/profil", "/bedrift"]).toContain(entry.target.route);
       }
     }
   });

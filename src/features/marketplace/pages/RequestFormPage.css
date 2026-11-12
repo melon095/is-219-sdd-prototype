@@ -18,6 +18,15 @@
   gap: var(--space-4);
 }
 
+.request-form-suggestion-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: calc(var(--space-3) * -1) 0 0;
+  font-size: var(--font-size-small);
+}
+
 .request-form-actions {
   display: flex;
   gap: var(--space-3);

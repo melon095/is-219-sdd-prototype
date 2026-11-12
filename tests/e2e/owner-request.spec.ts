@@ -1,6 +1,14 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { axeTags, openTab, pickSkills, switchUser, typeDate } from "./helpers";
+import {
+  axeTags,
+  clearSkills,
+  daysFromToday,
+  openTab,
+  pickSkills,
+  switchUser,
+  typeDate,
+} from "./helpers";
 
 type NewRequest = {
   title: string;
@@ -35,11 +43,13 @@ async function fillAndPublish(page: Page, request: NewRequest) {
   await page
     .getByRole("textbox", { name: "Beskrivelse" })
     .fill("Vi trenger hjelp med innhold og kampanjer i vinter.");
+  await clearSkills(page);
   await pickSkills(page, "Nødvendige ferdigheter", request.skills);
   await page
     .getByRole("textbox", { name: "Tilleggskrav (valgfritt)" })
     .fill("Gjerne erfaring fra små nettbutikker.");
-  await typeDate(page, 15, 1, 2027);
+  const start = daysFromToday(64);
+  await typeDate(page, start.day, start.month, start.year);
   await page
     .getByRole("textbox", { name: "Varighet" })
     .fill(request.durationAmount);

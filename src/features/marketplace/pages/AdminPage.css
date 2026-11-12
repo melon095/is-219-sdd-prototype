@@ -69,6 +69,36 @@
   background: var(--color-grey-50);
 }
 
+.admin-crawl-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.admin-crawl-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-crawl-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-grey-100);
+  border-radius: var(--radius);
+  background: var(--color-grey-50);
+}
+
+.admin-crawl-item time {
+  font-weight: var(--font-weight-semibold);
+}
+
 .admin-nav-person {
   display: flex;
   flex: 1 1 14rem;

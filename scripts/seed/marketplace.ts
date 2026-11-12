@@ -8,6 +8,7 @@ import type {
 import { marketplaceCommandHandlers } from "../../src/domain/marketplace/commands";
 import { expireOverdueOffers } from "../../src/domain/marketplace/offers";
 import type {
+  CrawlCatalogEntry,
   ExperienceLevel,
   MarketplaceState,
   PublishRequestInput,
@@ -146,6 +147,46 @@ const profileSpecs: ProfileSpec[] = [
   ),
 ];
 
+const crawlCatalog: CrawlCatalogEntry[] = [
+  {
+    businessId: "bedrift-1",
+    rounds: [
+      ["ferdighet-1", "ferdighet-5", "ferdighet-6", "ferdighet-2"],
+      ["ferdighet-2", "ferdighet-7", "ferdighet-3", "ferdighet-13"],
+      ["ferdighet-5", "ferdighet-6", "ferdighet-11"],
+    ],
+  },
+  {
+    businessId: "bedrift-2",
+    rounds: [
+      ["ferdighet-1", "ferdighet-13", "ferdighet-6"],
+      ["ferdighet-4", "ferdighet-18", "ferdighet-17"],
+    ],
+  },
+  {
+    businessId: "bedrift-3",
+    rounds: [
+      ["ferdighet-6", "ferdighet-12", "ferdighet-5", "ferdighet-10"],
+      ["ferdighet-16", "ferdighet-11", "ferdighet-6", "ferdighet-2"],
+    ],
+  },
+  {
+    businessId: "bedrift-4",
+    rounds: [
+      ["ferdighet-3", "ferdighet-16", "ferdighet-12", "ferdighet-6"],
+      ["ferdighet-9", "ferdighet-15", "ferdighet-8"],
+      ["ferdighet-2", "ferdighet-7", "ferdighet-18"],
+    ],
+  },
+  {
+    businessId: "bedrift-5",
+    rounds: [
+      ["ferdighet-14", "ferdighet-10", "ferdighet-5"],
+      ["ferdighet-1", "ferdighet-13", "ferdighet-2"],
+    ],
+  },
+];
+
 type Step = { at: string; order: number; exec: () => void };
 
 function createHistory(frame: FrameSeed) {
@@ -165,7 +206,10 @@ function createHistory(frame: FrameSeed) {
       workerProfiles: [],
       requests: [],
       conversations: [],
-      crawlCatalog: [],
+      crawlCatalog: crawlCatalog.map((entry) => ({
+        ...entry,
+        rounds: entry.rounds.map((round) => [...round]),
+      })),
       crawlRuns: [],
     },
   };
@@ -318,6 +362,7 @@ function renumber(
   const messageIds = new Map<Id, Id>();
   const logIds = new Map<Id, Id>();
   const activityIds = new Map<Id, Id>();
+  const crawlRunIds = new Map<Id, Id>();
   const { conversations } = state.marketplace;
   const requests = [
     ...state.marketplace.requests.filter(
@@ -339,10 +384,15 @@ function renumber(
   );
   assignIds(byTime(requests.flatMap((item) => item.log)), "logg", logIds);
   assignIds(state.frame.activity, "aktivitet", activityIds);
+  assignIds(state.marketplace.crawlRuns, "gjennomgang", crawlRunIds);
   return {
     marketplace: {
       ...state.marketplace,
       workerProfiles,
+      crawlRuns: state.marketplace.crawlRuns.map((run) => ({
+        ...run,
+        id: mapped(crawlRunIds, run.id),
+      })),
       requests: requests.map((request) => ({
         ...request,
         id: mapped(requestIds, request.id),
@@ -819,7 +869,15 @@ export function seedMarketplace(
     workerId: "person-8",
   });
 
+  run(adminId, "2026-11-09T09:00:00+01:00", { type: "simulateCrawl" });
+
   history.play();
+
+  frame.businesses.splice(
+    0,
+    frame.businesses.length,
+    ...history.current().frame.businesses,
+  );
 
   const result = renumber(
     history.current(),

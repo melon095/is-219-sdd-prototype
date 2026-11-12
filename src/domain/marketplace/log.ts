@@ -684,6 +684,22 @@ export function profileReadyActivity(
   };
 }
 
+export function crawlActivity(
+  context: CommandContext,
+  actor: Actor,
+  ownerId: Id,
+): ActivityEntry {
+  return {
+    id: context.newId(),
+    at: context.now,
+    featureId: "marketplace",
+    actor,
+    text: "Nye forslag til ferdigheter (simulert)",
+    target: { route: "/bedrift" },
+    audience: people(ownerId),
+  };
+}
+
 export function navReferralActivity(
   context: CommandContext,
   actor: Actor,

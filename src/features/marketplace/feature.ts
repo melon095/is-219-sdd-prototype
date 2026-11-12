@@ -10,6 +10,7 @@ import { expireOverdueOffers } from "../../domain/marketplace/offers";
 import { isActiveWorker } from "../../domain/marketplace/visibility";
 import { FeatureLayout } from "./components/FeatureSubNav";
 import { AdminPage } from "./pages/AdminPage";
+import { BusinessPage } from "./pages/BusinessPage";
 import { RequestFormPage } from "./pages/RequestFormPage";
 import { RequestListPage } from "./pages/RequestListPage";
 import { RequestPage } from "./pages/RequestPage";
@@ -65,6 +66,7 @@ export const marketplaceFeature: FeatureDefinition = {
           element: createElement(RequestFormPage),
         },
         { path: "/profil", element: createElement(WorkerProfilePage) },
+        { path: "/bedrift", element: createElement(BusinessPage) },
         { path: "/admin", element: createElement(AdminPage) },
       ],
     },

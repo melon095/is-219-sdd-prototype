@@ -1,4 +1,5 @@
 import type { CommandHandler } from "../frame/types";
+import { setCrawlOptIn, simulateCrawl } from "./crawl";
 import {
   cancelRequest,
   completeRequest,
@@ -43,4 +44,6 @@ export const marketplaceCommandHandlers: Record<string, CommandHandler> = {
   registerWorkerProfile,
   updateWorkerProfile,
   simulateNavReferral,
+  setCrawlOptIn,
+  simulateCrawl,
 };
