@@ -51,6 +51,10 @@ This feature is built first, so it also defines the shared frame of the whole pr
 - Q: How are Varodd and E-Waves related? → A: Varodd owns the product, including the knowledge base. E-Waves is the network whose members get the knowledge base as a membership benefit, which is why Varodd administrators moderate it.
 - Q: Must the seed data step be reproducible? → A: Yes. It uses a fixed random seed, so running it again produces exactly the same seed data file.
 
+### Session 2026-11-12
+
+- Q: What happens when a worker follows an activity feed entry to a request they can no longer see, for example after declining, after their offer expired, after their shortlist was rejected, or after a new request stopped being Open? → A: The visibility rules stay as they are. Instead of a general "no access" page, the worker sees a short page with the request's title saying that the request is no longer open to them.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Shared home page and demo controls (Priority: P1)
@@ -171,6 +175,7 @@ A business that has opted in receives skill suggestions from a simulated crawl o
 - An activity feed entry about something the current simulated user is not allowed to see, such as another pair's message conversation, is not shown to that user.
 - A person who works at a business but is not its owner cannot create requests for it and does not see its requests in this feature, but can still use the knowledge base in `002-shared-knowledge-base` if the business is an E-Waves member.
 - An owner never sees another business's requests.
+- A worker who opens a request they can no longer see, for example from an older activity feed entry, sees its title and a short message that it is no longer open to them, not its details.
 
 ## Requirements *(mandatory)*
 
