@@ -6,6 +6,7 @@ import {
   ownedBusiness,
   peopleWorkingAt,
   personById,
+  switcherSection,
   workerProfileOf,
 } from "./people";
 import type { Business, DemoState, Person } from "./types";
@@ -233,5 +234,55 @@ describe("peopleWorkingAt", () => {
   it("only counts requests for this business", () => {
     const other = peopleWorkingAt(bedrift2, state).map((p) => p.id);
     expect(other).toEqual(["person-3", "person-2"]);
+  });
+});
+
+describe("switcherSection", () => {
+  const extraPeople = [
+    person("person-9", { isVaroddAdmin: true }),
+    person("person-10", { isVaroddAdmin: true, seeksWork: true }),
+    person("person-11", { seeksWork: true }),
+    person("person-12"),
+  ];
+  const switcherState: DemoState = {
+    ...state,
+    frame: {
+      ...state.frame,
+      people: [...people, ...extraPeople],
+      businesses: [bedrift1, { ...bedrift2, employeeIds: ["person-11"] }],
+    },
+  };
+
+  function sectionOf(id: string) {
+    return switcherSection(
+      personById(id, switcherState) as Person,
+      switcherState,
+    );
+  }
+
+  it("puts an owner in Bedriftseiere", () => {
+    expect(sectionOf("person-1")).toBe("Bedriftseiere");
+  });
+
+  it("puts an employee in Ansatte", () => {
+    expect(sectionOf("person-2")).toBe("Ansatte");
+  });
+
+  it("puts a person seeking work in Arbeidssøkere", () => {
+    expect(sectionOf("person-4")).toBe("Arbeidssøkere");
+  });
+
+  it("puts an administrator in Varodd", () => {
+    expect(sectionOf("person-9")).toBe("Varodd");
+  });
+
+  it("gives the first matching section only", () => {
+    expect(sectionOf("person-3")).toBe("Bedriftseiere");
+    expect(sectionOf("person-11")).toBe("Ansatte");
+    expect(sectionOf("person-10")).toBe("Arbeidssøkere");
+  });
+
+  it("returns nothing for a person with none of the roles", () => {
+    expect(sectionOf("person-12")).toBeUndefined();
   });
 });

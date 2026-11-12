@@ -1,0 +1,68 @@
+.header {
+  --color-focus: var(--color-focus-on-navy);
+  background: var(--color-navy);
+  color: var(--color-background);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+}
+
+.header-brand .react-aria-Link {
+  color: var(--color-background);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-heading);
+  text-decoration: none;
+}
+
+.header-brand .react-aria-Link[data-hovered] {
+  color: var(--color-background);
+  text-decoration: underline;
+}
+
+.header-bar {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.header .react-aria-Button[data-variant="secondary"] {
+  border-color: var(--color-background);
+  color: var(--color-background);
+}
+
+.header .react-aria-Button[data-variant="secondary"][data-hovered] {
+  background: var(--color-navy-hover);
+  border-color: var(--color-background);
+  color: var(--color-background);
+}
+
+.header .react-aria-Button[data-variant="secondary"][data-pressed] {
+  background: var(--color-navy-pressed);
+  border-color: var(--color-background);
+  color: var(--color-background);
+}
+
+@media (min-width: 48rem) {
+  .header-inner {
+    padding-inline: var(--space-6);
+  }
+}

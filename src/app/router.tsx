@@ -6,8 +6,12 @@ import {
   useHref,
   useNavigate,
 } from "react-router";
+import { HomePage } from "../frame/home/HomePage";
+import { NotFoundPage } from "../frame/home/NotFoundPage";
+import { Footer } from "../frame/layout/Footer";
+import { Header } from "../frame/layout/Header";
 import { PageLayout } from "../frame/layout/PageLayout";
-import { PageFocusProvider, PageHeading } from "../frame/ui/PageHeading";
+import { PageFocusProvider } from "../frame/ui/PageHeading";
 import { features } from "./features";
 
 function RootRoute() {
@@ -16,7 +20,7 @@ function RootRoute() {
   return (
     <AriaRouterProvider navigate={(to) => navigate(to)} useHref={useHref}>
       <PageFocusProvider>
-        <PageLayout>
+        <PageLayout header={<Header />} footer={<Footer />}>
           <Outlet />
         </PageLayout>
       </PageFocusProvider>
@@ -29,8 +33,9 @@ const routes: RouteObject[] = [
     path: "/",
     element: <RootRoute />,
     children: [
-      { index: true, element: <PageHeading>Hjem</PageHeading> },
+      { index: true, element: <HomePage /> },
       ...features.flatMap((feature) => feature.routes),
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ];

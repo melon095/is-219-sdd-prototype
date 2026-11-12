@@ -31,6 +31,42 @@ export function workerProfileOf(
   );
 }
 
+export type SwitcherSection =
+  | "Bedriftseiere"
+  | "Ansatte"
+  | "Arbeidssøkere"
+  | "Varodd";
+
+export const switcherSections: SwitcherSection[] = [
+  "Bedriftseiere",
+  "Ansatte",
+  "Arbeidssøkere",
+  "Varodd",
+];
+
+export function switcherSection(
+  person: Person,
+  state: DemoState,
+): SwitcherSection | undefined {
+  if (ownedBusiness(person.id, state) !== undefined) {
+    return "Bedriftseiere";
+  }
+  if (
+    state.frame.businesses.some((business) =>
+      business.employeeIds.includes(person.id),
+    )
+  ) {
+    return "Ansatte";
+  }
+  if (person.seeksWork) {
+    return "Arbeidssøkere";
+  }
+  if (isAdmin(person)) {
+    return "Varodd";
+  }
+  return undefined;
+}
+
 export function peopleWorkingAt(
   business: Business,
   state: DemoState,

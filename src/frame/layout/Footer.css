@@ -1,0 +1,23 @@
+.footer {
+  width: 100%;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-small);
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer p + p {
+  margin-top: var(--space-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (min-width: 48rem) {
+  .footer {
+    padding-inline: var(--space-6);
+  }
+}
