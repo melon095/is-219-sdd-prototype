@@ -192,6 +192,21 @@ test.describe("Den delte rammen", () => {
     ).toBeVisible();
   });
 
+  test("brukerbytteren har ingen tilgjengelighetsfeil mens den er åpen", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await openControls(page);
+    await page.getByRole("button", { name: /Bytt bruker/ }).click();
+    await expect(page.getByRole("listbox")).toBeVisible();
+    await expect(page.locator(".react-aria-Popover")).not.toHaveAttribute(
+      "data-entering",
+    );
+
+    const open = await new AxeBuilder({ page }).withTags(axeTags).analyze();
+    expect(open.violations).toEqual([]);
+  });
+
   test("forsiden og siden som ikke finnes har ingen tilgjengelighetsfeil", async ({
     page,
   }) => {

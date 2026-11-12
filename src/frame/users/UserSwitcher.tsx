@@ -1,4 +1,4 @@
-import { type Key, Text } from "react-aria-components";
+import type { Key } from "react-aria-components";
 import { switcherSection, switcherSections } from "../../domain/frame/people";
 import { useDemoState, useStore } from "../store/store";
 import { useAnnounce } from "../ui/LiveAnnouncer";
@@ -45,8 +45,10 @@ export function UserSwitcher() {
                 id={person.id}
                 textValue={person.name}
               >
-                <Text slot="label">{person.name}</Text>
-                <Text slot="description">{person.description}</Text>
+                <span className="user-option-name">{person.name}</span>{" "}
+                <span className="user-option-description">
+                  {person.description}
+                </span>
               </SelectItem>
             ))}
           </SelectSection>

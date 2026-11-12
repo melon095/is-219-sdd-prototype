@@ -7,7 +7,11 @@ import {
 } from "../../domain/frame/people";
 import { marketplaceCommandHandlers } from "../../domain/marketplace/commands";
 import { isActiveWorker } from "../../domain/marketplace/visibility";
-import { PageHeading } from "../../frame/ui/PageHeading";
+import { FeatureLayout } from "./components/FeatureSubNav";
+import { AdminPage } from "./pages/AdminPage";
+import { RequestFormPage } from "./pages/RequestFormPage";
+import { RequestListPage } from "./pages/RequestListPage";
+import { RequestPage } from "./pages/RequestPage";
 import { marketplaceStateSchema } from "./schema";
 
 const ownerCard: HomeCard = {
@@ -49,8 +53,17 @@ export const marketplaceFeature: FeatureDefinition = {
   },
   routes: [
     {
-      path: "/oppdrag",
-      element: createElement(PageHeading, null, "Oppdrag"),
+      element: createElement(FeatureLayout),
+      children: [
+        { path: "/oppdrag", element: createElement(RequestListPage) },
+        { path: "/oppdrag/ny", element: createElement(RequestFormPage) },
+        { path: "/oppdrag/:requestId", element: createElement(RequestPage) },
+        {
+          path: "/oppdrag/:requestId/rediger",
+          element: createElement(RequestFormPage),
+        },
+        { path: "/admin", element: createElement(AdminPage) },
+      ],
     },
   ],
   audienceGroups: { "marketplace.workers": isActiveWorker },

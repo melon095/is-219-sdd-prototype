@@ -1,4 +1,3 @@
-import { isAdmin, personById } from "../frame/people";
 import type {
   CommandHandler,
   CommandResult,
@@ -6,12 +5,13 @@ import type {
   Notice,
 } from "../frame/types";
 import {
+  actorOf,
   addActivity,
   appendLog,
   fail,
+  failWith,
   findRequest,
   omitKey,
-  ownerIdOf,
   readText,
   replaceRequest,
   succeed,
@@ -28,6 +28,12 @@ import {
   statusChangedLog,
 } from "./log";
 import { fillShortlist } from "./matching";
+import {
+  editBlocker,
+  publishBlocker,
+  rejectBlocker,
+  returnToOpenBlocker,
+} from "./permissions";
 import type {
   EditRequestInput,
   EstimatedDuration,
@@ -186,17 +192,19 @@ function validationFailure(errors: Record<string, string>): CommandResult {
 
 export const publishRequest: CommandHandler = (state, command, context) => {
   const input = command as unknown as PublishRequestInput;
+  const blocker = publishBlocker(
+    actorOf(state, context),
+    input.businessId,
+    state,
+  );
+  if (blocker !== undefined) {
+    return failWith(blocker);
+  }
   const business = state.frame.businesses.find(
     (item) => item.id === input.businessId,
   );
   if (business === undefined) {
     return fail("not-found", "Vi finner ikke bedriften.");
-  }
-  if (business.ownerId !== context.actorId) {
-    return fail(
-      "not-allowed",
-      "Bare eieren av bedriften kan publisere oppdrag.",
-    );
   }
   const parsed = readFields(command, state);
   if (parsed.fields === undefined) {
@@ -239,14 +247,9 @@ export const editRequest: CommandHandler = (state, command, context) => {
   if (request === undefined) {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
-  if (ownerIdOf(state, request) !== context.actorId) {
-    return fail("not-allowed", "Bare eieren av bedriften kan endre oppdraget.");
-  }
-  if (request.status !== "open") {
-    return fail(
-      "invalid-status",
-      "Oppdraget kan bare endres mens det er åpent.",
-    );
+  const blocker = editBlocker(actorOf(state, context), request, state);
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const parsed = readFields(command, state);
   if (parsed.fields === undefined) {
@@ -272,17 +275,9 @@ export const rejectShortlist: CommandHandler = (state, command, context) => {
   if (request === undefined) {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
-  if (ownerIdOf(state, request) !== context.actorId) {
-    return fail(
-      "not-allowed",
-      "Bare eieren av bedriften kan avvise kortlisten.",
-    );
-  }
-  if (request.status !== "shortlisted") {
-    return fail(
-      "invalid-status",
-      "Kortlisten kan bare avvises når den er klar.",
-    );
+  const blocker = rejectBlocker(actorOf(state, context), request, state);
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const reason = readText(input.reason);
   if (reason.length < 1 || reason.length > 1000) {
@@ -339,18 +334,9 @@ export const returnToOpen: CommandHandler = (state, command, context) => {
   if (request === undefined) {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
-  const actor = personById(context.actorId, state);
-  if (actor === undefined || !isAdmin(actor)) {
-    return fail(
-      "not-allowed",
-      "Bare Varodd-administratorer kan åpne oppdraget igjen.",
-    );
-  }
-  if (request.status !== "under-review") {
-    return fail(
-      "invalid-status",
-      "Oppdraget kan bare åpnes igjen når det er til vurdering.",
-    );
+  const blocker = returnToOpenBlocker(actorOf(state, context), request);
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const reopened = appendLog({ ...request, status: "open" }, [
     returnedToOpenLog(state, context, context.actorId),

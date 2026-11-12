@@ -32,15 +32,17 @@ describe("UserSwitcher", () => {
       "Arbeidssøkere",
       "Varodd",
     ]);
-    const ownerNames = seed.frame.businesses.map(
-      (business) =>
-        seed.frame.people.find((person) => person.id === business.ownerId)
-          ?.name,
+    const owners = seed.frame.businesses.map((business) =>
+      seed.frame.people.find((person) => person.id === business.ownerId),
     );
     const first = groups[0] as HTMLElement;
-    expect(within(first).getAllByRole("option").map(accessibleLabelOf)).toEqual(
-      ownerNames,
-    );
+    const options = within(first).getAllByRole("option");
+    expect(options).toHaveLength(owners.length);
+    owners.forEach((owner, index) => {
+      const label = accessibleLabelOf(options[index] as HTMLElement);
+      expect(label).toContain(owner?.name);
+      expect(label).toContain(owner?.description);
+    });
   });
 
   it("viser hver person én gang", async () => {
@@ -63,7 +65,7 @@ describe("UserSwitcher", () => {
     });
 
     await user.click(screen.getByRole("button", { name: /Bytt bruker/ }));
-    await user.click(await screen.findByRole("option", { name: "Marte Vik" }));
+    await user.click(await screen.findByRole("option", { name: /Marte Vik/ }));
 
     expect(store.getSelectedUserId()).toBe("person-15");
     expect(router.state.location.pathname).toBe("/oppdrag");

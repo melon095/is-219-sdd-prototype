@@ -14,5 +14,5 @@ export function RequireAccess({
   const state = useDemoState();
   const person = useCurrentPerson();
 
-  return allowed(person, state) ? <>{children}</> : <NoAccessPage />;
+  return allowed(person, state) ? children : <NoAccessPage />;
 }

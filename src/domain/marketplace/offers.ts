@@ -6,14 +6,15 @@ import type {
   Id,
 } from "../frame/types";
 import {
+  actorOf,
   addActivity,
   appendLog,
   byCreatedAt,
   fail,
+  failWith,
   findRequest,
   liveEntry,
   omitKey,
-  ownerIdOf,
   replaceRequest,
   succeed,
 } from "./helpers";
@@ -32,6 +33,7 @@ import {
   statusChangedLog,
 } from "./log";
 import { fillShortlist } from "./matching";
+import { acceptBlocker, inviteBlocker, offerBlocker } from "./permissions";
 import type {
   AcceptOfferInput,
   InviteToInterviewInput,
@@ -101,36 +103,22 @@ export const inviteToInterview: CommandHandler = (state, command, context) => {
   if (request === undefined) {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
-  if (ownerIdOf(state, request) !== context.actorId) {
-    return fail(
-      "not-allowed",
-      "Bare eieren av bedriften kan invitere til intervju.",
-    );
-  }
-  if (request.status !== "shortlisted" && request.status !== "offered") {
-    return fail(
-      "invalid-status",
-      "Du kan bare invitere til intervju når kortlisten er klar.",
-    );
-  }
-  const entry = liveEntry(request, input.workerId);
-  if (entry === undefined || entry.state !== "active") {
-    return fail(
-      "invalid-status",
-      "Denne personen står ikke lenger på kortlisten.",
-    );
-  }
-  if (entry.interviewInvitedAt !== undefined) {
-    return fail(
-      "invalid-status",
-      "Du har allerede invitert denne personen til intervju.",
-    );
+  const blocker = inviteBlocker(
+    actorOf(state, context),
+    request,
+    state,
+    input.workerId,
+  );
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const updated = appendLog(
     {
       ...request,
       shortlist: request.shortlist.map((item) =>
-        item === entry ? { ...item, interviewInvitedAt: context.now } : item,
+        item.workerId === input.workerId && item.state !== "removed"
+          ? { ...item, interviewInvitedAt: context.now }
+          : item,
       ),
     },
     [interviewInvitedLog(state, context, context.actorId, input.workerId)],
@@ -154,21 +142,14 @@ export const makeOffer: CommandHandler = (state, command, context) => {
   if (request === undefined) {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
-  if (ownerIdOf(state, request) !== context.actorId) {
-    return fail("not-allowed", "Bare eieren av bedriften kan gi et tilbud.");
-  }
-  if (request.status !== "shortlisted") {
-    return fail(
-      "invalid-status",
-      "Du kan bare gi et tilbud når kortlisten er klar og ingen tilbud er sendt.",
-    );
-  }
-  const entry = liveEntry(request, input.workerId);
-  if (entry === undefined || entry.state !== "active") {
-    return fail(
-      "invalid-status",
-      "Denne personen står ikke lenger på kortlisten.",
-    );
+  const blocker = offerBlocker(
+    actorOf(state, context),
+    request,
+    state,
+    input.workerId,
+  );
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const updated = appendLog(
     {
@@ -176,7 +157,7 @@ export const makeOffer: CommandHandler = (state, command, context) => {
       status: "offered",
       offeredWorkerId: input.workerId,
       shortlist: request.shortlist.map((item) =>
-        item === entry
+        item.workerId === input.workerId && item.state !== "removed"
           ? { ...item, state: "offered" as const, offeredAt: context.now }
           : item,
       ),
@@ -270,27 +251,9 @@ export const acceptOffer: CommandHandler = (state, command, context) => {
     return fail("not-found", "Vi finner ikke oppdraget.");
   }
   const workerId = context.actorId;
-  if (request.status !== "offered") {
-    const isOnShortlist = request.shortlist.some(
-      (item) => item.workerId === workerId,
-    );
-    return fail(
-      isOnShortlist ? "invalid-status" : "not-allowed",
-      isOnShortlist
-        ? "Det finnes ikke noe tilbud å godta på dette oppdraget akkurat nå."
-        : "Bare personen som har fått tilbudet kan godta det.",
-    );
-  }
-  const entry = liveEntry(request, workerId);
-  if (
-    request.offeredWorkerId !== workerId ||
-    entry === undefined ||
-    entry.state !== "offered"
-  ) {
-    return fail(
-      "not-allowed",
-      "Bare personen som har fått tilbudet kan godta det.",
-    );
+  const blocker = acceptBlocker(actorOf(state, context), request, state);
+  if (blocker !== undefined) {
+    return failWith(blocker);
   }
   const agreed = appendLog(
     {
@@ -298,7 +261,7 @@ export const acceptOffer: CommandHandler = (state, command, context) => {
       status: "agreed",
       agreement: {
         workerId,
-        ownerAgreedAt: entry.offeredAt ?? context.now,
+        ownerAgreedAt: liveEntry(request, workerId)?.offeredAt ?? context.now,
         workerAgreedAt: context.now,
       },
     },

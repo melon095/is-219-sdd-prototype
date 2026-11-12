@@ -1,0 +1,73 @@
+.shortlist-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.shortlist-panel h2 {
+  margin: 0;
+  font-size: var(--font-size-h2);
+}
+
+.shortlist-entries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shortlist-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-grey-200);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  box-shadow: var(--shadow-card);
+}
+
+.shortlist-entry p {
+  margin: 0;
+}
+
+.shortlist-entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.shortlist-entry-head h3 {
+  margin: 0;
+  font-size: var(--font-size-h3);
+}
+
+.shortlist-entry-rank {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.shortlist-entry-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.shortlist-entry-badges:empty {
+  display: none;
+}
+
+.shortlist-entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.shortlist-reject {
+  display: flex;
+}

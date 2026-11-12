@@ -1,10 +1,14 @@
+import { personById } from "../frame/people";
 import type {
   ActivityEntry,
+  CommandContext,
+  CommandError,
   CommandErrorCode,
   CommandResult,
   DemoState,
   Id,
   Notice,
+  Person,
 } from "../frame/types";
 import type { LogEvent, ShortlistEntry, TaskRequest } from "./types";
 
@@ -24,6 +28,22 @@ export function fail(
         ? { code, message }
         : { code, message, fieldErrors },
   };
+}
+
+export function failWith(error: CommandError): CommandResult {
+  return fail(error.code, error.message, error.fieldErrors);
+}
+
+export function actorOf(state: DemoState, context: CommandContext): Person {
+  return (
+    personById(context.actorId, state) ?? {
+      id: context.actorId,
+      name: "",
+      isVaroddAdmin: false,
+      seeksWork: false,
+      description: "",
+    }
+  );
 }
 
 export function succeed(

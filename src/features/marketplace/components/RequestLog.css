@@ -1,0 +1,40 @@
+.request-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.request-log h2 {
+  margin: 0;
+  font-size: var(--font-size-h2);
+}
+
+.request-log-events {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.request-log-event {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-grey-100);
+}
+
+.request-log-event p {
+  margin: 0;
+}
+
+.request-log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.request-log-text {
+  overflow-wrap: anywhere;
+}
