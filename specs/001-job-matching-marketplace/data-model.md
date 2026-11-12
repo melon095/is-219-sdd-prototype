@@ -93,7 +93,8 @@ Audience rules for feature 001 entries:
 | Interview invitation, offer | Owner + that worker |
 | Offer accepted, declined, or expired | Owner + that worker |
 | Message sent | The two conversation participants only |
-| Shortlist rejected, Under review, Cancelled | Owner + every worker with an active shortlist entry at that moment |
+| Shortlist rejected, Under review | Owner + every worker with an active shortlist entry at that moment |
+| Cancelled | Owner + every worker with an active shortlist entry at that moment + the agreed worker, if any |
 | Started, Completed, Withdrawn | Owner + the agreed worker |
 | NAV referral created | The referred person |
 | Crawl finished | The owner of each crawled business |
@@ -147,7 +148,7 @@ Work requested by a business owner (FR-001).
 | `shortlist` | `ShortlistEntry[]` | Every worker ever listed, including removed entries. |
 | `excludedWorkerIds` | `{ workerId: Id; reason: ExclusionReason; at: IsoDateTime }[]` | Workers who must never be listed for this request again (FR-008). |
 | `offeredWorkerId?` | `Id` | Set while status is Offered. |
-| `agreement?` | `{ workerId: Id; ownerAgreedAt: IsoDateTime; workerAgreedAt: IsoDateTime }` | Recorded when the status becomes Agreed (FR-006). The owner's agreement is the time they made the offer. |
+| `agreement?` | `{ workerId: Id; ownerAgreedAt: IsoDateTime; workerAgreedAt: IsoDateTime }` | Recorded when the status becomes Agreed (FR-006). The owner's agreement is the time they made the offer, the entry's `offeredAt`. |
 | `actualStartDate?` | `IsoDate` | Recorded by the owner; moves the status to In progress. |
 | `outcome?` | `"as-planned" \| "extended" \| "permanent" \| "not-completed"` | `not-completed` is set when a request is cancelled after Agreed. |
 | `rejection?` | `{ reason: string; at: IsoDateTime }` | The most recent whole-shortlist rejection (FR-009). |
@@ -174,10 +175,13 @@ A worker listed for a request.
 | `matchedSkillIds` | `Id[]` | Worked out when the entry is added. |
 | `missingSkillIds` | `Id[]` | |
 | `interviewInvitedAt?` | `IsoDateTime` | Inviting does not change the status (US2-4). |
+| `offeredAt?` | `IsoDateTime` | Set when the owner makes the offer. Starts the 7-day expiry (FR-016) and is the owner's agreement time (FR-006). |
 | `state` | `"active" \| "offered" \| "removed"` | |
 | `removedReason?` | `ExclusionReason \| "accepted-elsewhere"` | `accepted-elsewhere` removes the entry without excluding the worker from the request. |
 
 At most 3 entries are `active` or `offered` at a time.
+
+The agreed worker's entry stays `offered` after they accept, through Agreed, In progress, Completed, and Cancelled. When the agreed worker withdraws, their entry becomes `removed` with reason `withdrew`.
 
 ### Conversation
 
@@ -286,7 +290,7 @@ Matching is one pure function, `fillShortlist(request, state, now)`, run for one
 
    Experience level, NAV referral, hours per week, work location, and additional requirements are not inputs to the function at all (FR-003, FR-019, US2-10).
 5. **Fill**: add candidates in ranked order until the request has 3 `active` or `offered` entries. Each added worker gets a new entry, `lastShortlistedAt = now`, and a conversation with the owner if none exists yet.
-6. **Status**: an Open request with at least 1 entry after filling becomes Shortlisted. A Shortlisted request with 0 `active` entries after filling becomes Open. An Offered request keeps its status while filling.
+6. **Status**: an Open request with at least 1 `active` entry after filling becomes Shortlisted. Removed entries do not count. A Shortlisted request with 0 `active` entries after filling becomes Open. An Offered request keeps its status while filling.
 7. **Order across requests**: when one event affects several requests (for example, a newly eligible worker), requests are filled in `createdAt` order, oldest first, so the result is always the same.
 
 When a worker **accepts** an offer, their `active` entries on other requests are removed with reason `accepted-elsewhere` (not excluded), any other `offered` entries for them count as declined (excluded with reason `declined`, and those requests return to Shortlisted), and every affected request is filled again (US3-6).

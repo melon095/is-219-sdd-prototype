@@ -67,7 +67,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 |---|---|
 | **Input** | `requestId`, `workerId` |
 | **Allowed** | Owner; status Shortlisted; the worker's entry is `active`. |
-| **Effects** | Entry becomes `offered`; `offeredWorkerId` set; status → Offered. |
+| **Effects** | Entry becomes `offered` with `offeredAt = now`; `offeredWorkerId` set; status → Offered. |
 | **Log** | `offered`, `status-changed`. |
 | **Activity** | "Du har fått et tilbud" to the worker and owner. |
 | **Spec** | FR-004, FR-005, US2-5 |
@@ -78,7 +78,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 |---|---|
 | **Input** | `requestId` |
 | **Allowed** | The offered worker; status Offered. |
-| **Effects** | Status → Agreed; `agreement` recorded with both times (FR-006). The worker is now busy: their `active` entries elsewhere are removed with `accepted-elsewhere`, and their `offered` entries elsewhere count as declined. Every affected request runs `fillShortlist` (US3-6). |
+| **Effects** | Status → Agreed; `agreement` recorded with `ownerAgreedAt` = the entry's `offeredAt` and `workerAgreedAt` = now (FR-006). The worker's entry stays `offered`; `offeredWorkerId` cleared. The worker is now busy: their `active` entries elsewhere are removed with `accepted-elsewhere`, and their `offered` entries elsewhere count as declined. Every affected request runs `fillShortlist` (US3-6). |
 | **Log** | `offer-accepted`, `status-changed`; on other requests `shortlist-entry-removed` or `offer-declined`. |
 | **Activity** | To owner and worker; to the owners of the other affected requests. |
 | **Spec** | FR-006, US2-6, US3-6 |
@@ -97,7 +97,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 
 | | |
 |---|---|
-| **Trigger** | `expireOverdueOffers` finds an `offered` entry whose `offered` log event is more than 7 days before `now`. `simulateOfferExpiry { requestId }` does the same for one Offered request straight away. |
+| **Trigger** | `expireOverdueOffers` finds an `offered` entry on an Offered request whose `offeredAt` is more than 7 days before `now`. `simulateOfferExpiry { requestId }` does the same for one Offered request straight away. |
 | **Allowed** | System step: always. `simulateOfferExpiry`: anyone who can see the request page, because the button is a demo control (US1-7). |
 | **Effects** | Same as `declineOffer`, with exclusion reason `offer-expired` and actor `"system"`. |
 | **Log** | `offer-expired`. For `simulateOfferExpiry` the event has `simulated: true` and text including "Simulert med feilsøkingsknappen" (FR-033). |
@@ -140,7 +140,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 |---|---|
 | **Input** | `requestId` |
 | **Allowed** | The agreed worker; status Agreed. |
-| **Effects** | Worker excluded with reason `withdrew`; `agreement` cleared; status → Open; then `fillShortlist` for this request and for every request the now-free worker might match. |
+| **Effects** | Worker excluded with reason `withdrew`; their entry `removed` with reason `withdrew`; `agreement` cleared; status → Open; then `fillShortlist` for this request and for every request the now-free worker might match. |
 | **Log** | `withdrew`, `status-changed`. |
 | **Spec** | FR-008, FR-017, US4-5 |
 
@@ -162,6 +162,7 @@ Error codes: `not-allowed`, `not-found`, `invalid-status`, `validation`, `exclud
 | **Allowed** | Owner or admin; any status except Completed and Cancelled. |
 | **Effects** | `cancellation` recorded; status → Cancelled. From Agreed or In progress, `outcome = not-completed`, and the worker is free again, so matching runs for other requests. |
 | **Log** | `cancelled`, `status-changed`. |
+| **Activity** | To the owner, every worker with an `active` entry, and the agreed worker, if any. |
 | **Spec** | FR-013, US4-7 |
 
 ### `sendMessage`
