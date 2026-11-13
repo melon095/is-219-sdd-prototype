@@ -40,6 +40,8 @@ export type FlagReason =
 
 export type TargetKind = "question" | "answer";
 
+export type ContentTarget = { targetKind: TargetKind; targetId: Id };
+
 export type Flag = {
   id: Id;
   reviewId: Id;
