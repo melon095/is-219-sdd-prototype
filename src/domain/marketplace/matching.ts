@@ -1,6 +1,6 @@
+import { addActivity } from "../frame/commandHelpers";
 import type { CommandContext, DemoState, Id } from "../frame/types";
 import {
-  addActivity,
   appendLog,
   byCreatedAt,
   maxShortlistSize,

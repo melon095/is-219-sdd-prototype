@@ -1,10 +1,3 @@
-import { workerProfileOf } from "../frame/people";
-import type {
-  CommandContext,
-  CommandHandler,
-  DemoState,
-  Id,
-} from "../frame/types";
 import {
   actorOf,
   addActivity,
@@ -13,7 +6,14 @@ import {
   readText,
   succeed,
   validationFailure,
-} from "./helpers";
+} from "../frame/commandHelpers";
+import { workerProfileOf } from "../frame/people";
+import type {
+  CommandContext,
+  CommandHandler,
+  DemoState,
+  Id,
+} from "../frame/types";
 import { navReferralActivity, profileReadyActivity } from "./log";
 import { fillRequestsWithRoom, isEligibleForMatching } from "./matching";
 import {

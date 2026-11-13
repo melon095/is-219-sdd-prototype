@@ -8,6 +8,7 @@ import { KnowledgeBaseLayout } from "./components/KnowledgeBaseLayout";
 import { ForumPage } from "./pages/ForumPage";
 import { QuestionFormPage } from "./pages/QuestionFormPage";
 import { QuestionPage } from "./pages/QuestionPage";
+import { TopicPage } from "./pages/TopicPage";
 import { knowledgeBaseStateSchema } from "./schema";
 
 const memberCard: HomeCard = {
@@ -42,6 +43,10 @@ export const knowledgeBaseFeature: FeatureDefinition = {
       element: createElement(KnowledgeBaseLayout),
       children: [
         { path: "/kunnskapsbank", element: createElement(ForumPage) },
+        {
+          path: "/kunnskapsbank/tema/:topicId",
+          element: createElement(TopicPage),
+        },
         {
           path: "/kunnskapsbank/sporsmal/ny",
           element: createElement(QuestionFormPage),

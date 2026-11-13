@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { DemoState } from "../../src/domain/frame/types";
+import { similarQuestions } from "../../src/domain/knowledge-base/search";
 import { questionStatus } from "../../src/domain/knowledge-base/status";
-import { tokenize, wordsMatch } from "../../src/domain/knowledge-base/text";
+import {
+  matchScore,
+  tokenize,
+  wordsMatch,
+} from "../../src/domain/knowledge-base/text";
 import { knowledgeBaseStateSchema } from "../../src/features/knowledge-base/schema";
 import { marketplaceStateSchema } from "../../src/features/marketplace/schema";
 import { buildSeedFileSchema } from "../../src/frame/store/schema";
@@ -252,6 +257,72 @@ describe("knowledge base activity", () => {
     expect(entries.map((entry) => entry.id)).toEqual(
       entries.map((_, index) => `aktivitet-kb-${index + 1}`),
     );
+  });
+});
+
+describe("near-duplicate examples", () => {
+  const examples = kb.nearDuplicateExamples;
+
+  function targetOf(matchesQuestionId: string) {
+    return kb.questions.find((item) => item.id === matchesQuestionId);
+  }
+
+  it("has exactly 3 examples with the ids duplikat-1 to duplikat-3", () => {
+    expect(examples.map((example) => example.id)).toEqual([
+      "duplikat-1",
+      "duplikat-2",
+      "duplikat-3",
+    ]);
+  });
+
+  it("points each example at a visible seeded question", () => {
+    for (const example of examples) {
+      const target = targetOf(example.matchesQuestionId);
+      expect(target, example.id).toBeDefined();
+      expect(target?.moderation, example.id).not.toBe("removed");
+    }
+  });
+
+  it("points the three examples at three different questions", () => {
+    expect(
+      new Set(examples.map((example) => example.matchesQuestionId)).size,
+    ).toBe(3);
+  });
+
+  it("words each example differently from the title of its target", () => {
+    for (const example of examples) {
+      expect(example.title, example.id).not.toBe(
+        targetOf(example.matchesQuestionId)?.title,
+      );
+    }
+  });
+
+  it("shares at least 2 content words with the title or description of its target", () => {
+    for (const example of examples) {
+      const target = targetOf(example.matchesQuestionId);
+      const shared = matchScore(
+        tokenize(`${example.title} ${example.description}`),
+        tokenize(`${target?.title} ${target?.description}`),
+      );
+      expect(shared, example.id).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("finds the target of each example among the similar questions", () => {
+    for (const example of examples) {
+      const found = similarQuestions(example.title, example.description, state);
+      expect(
+        found.map((item) => item.id),
+        example.id,
+      ).toContain(example.matchesQuestionId);
+    }
+  });
+
+  it("keeps every title within 120 characters", () => {
+    for (const example of examples) {
+      expect(example.title.length, example.id).toBeGreaterThan(0);
+      expect(example.title.length, example.id).toBeLessThanOrEqual(120);
+    }
   });
 });
 

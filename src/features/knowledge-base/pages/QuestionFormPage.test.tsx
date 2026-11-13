@@ -1,8 +1,15 @@
-import { screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  answer,
   kbState,
   people,
   question,
@@ -264,5 +271,280 @@ describe("QuestionFormPage tilgjengelighet", () => {
     const { container } = openEdit(people.jonas);
 
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+const longAnswer = `${"x".repeat(160)} resten av svaret`;
+
+const similarState = kbState({
+  questions: [
+    question("sporsmal-1", { createdAt: "2026-11-10T09:00:00+01:00" }),
+    question("sporsmal-2", {
+      title: "Betalingsmåter i nettbutikken",
+      description: "Vipps, kort og faktura.",
+      authorId: people.per,
+      businessId: "bedrift-2",
+      createdAt: "2026-11-11T09:00:00+01:00",
+    }),
+    question("sporsmal-3", {
+      title: "Frakt med Bring",
+      description: "Pakker til hele landet.",
+      authorId: people.ola,
+      businessId: "bedrift-4",
+      createdAt: "2026-11-12T09:00:00+01:00",
+    }),
+    question("sporsmal-4", {
+      title: "Fjernet frakt til hele landet",
+      description: "Frakt og pakker til hele landet.",
+      createdAt: "2026-11-13T09:00:00+01:00",
+      moderation: "removed",
+    }),
+  ],
+  answers: [
+    answer("svar-1", "sporsmal-1", {
+      text: "Skjult svar",
+      createdAt: "2026-11-10T10:00:00+01:00",
+      moderation: "removed",
+    }),
+    answer("svar-2", "sporsmal-1", {
+      text: longAnswer,
+      createdAt: "2026-11-10T11:00:00+01:00",
+    }),
+    answer("svar-3", "sporsmal-3", {
+      text: "Kort svar.",
+      createdAt: "2026-11-12T10:00:00+01:00",
+    }),
+  ],
+});
+
+const panelTitle = "Har noen spurt om dette før?";
+
+function openSimilar(
+  userId: string,
+  layout: "desktop" | "mobile" = "desktop",
+  route = "/kunnskapsbank/sporsmal/ny",
+) {
+  return renderPage(<QuestionFormPage />, {
+    path: "kunnskapsbank/sporsmal/ny",
+    route,
+    userId,
+    state: similarState,
+    layout,
+    extraPages: [questionPage],
+  });
+}
+
+function liveRegion(): HTMLElement {
+  const region = document.querySelector<HTMLElement>('[aria-live="polite"]');
+  if (region === null) {
+    throw new Error("Fant ikke området som kunngjør endringer");
+  }
+  return region;
+}
+
+function write(field: HTMLElement, value: string) {
+  fireEvent.change(field, { target: { value } });
+}
+
+function settle() {
+  act(() => {
+    vi.advanceTimersByTime(300);
+  });
+}
+
+describe("QuestionFormPage lignende spørsmål", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("viser panelet først 300 ms etter at skrivingen stopper", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas);
+
+    write(titleField(), "Frakt til hele landet");
+    act(() => {
+      vi.advanceTimersByTime(299);
+    });
+    expect(screen.queryByText(panelTitle)).toBe(null);
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(screen.getByText(panelTitle)).toBeTruthy();
+  });
+
+  it("lister opptil tre like spørsmål med tittel, status, bedrift og starten av første synlige svar", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas);
+
+    write(titleField(), "Frakt til hele landet");
+    write(descriptionField(), "Keramikk");
+    settle();
+
+    const panel = within(
+      screen.getByRole("complementary", { name: panelTitle }),
+    );
+    const items = panel.getAllByRole("listitem");
+    expect(items).toHaveLength(2);
+
+    const first = within(items[0] as HTMLElement);
+    expect(
+      first.getByRole("link", { name: "Frakt med Bring" }).getAttribute("href"),
+    ).toBe("/kunnskapsbank/sporsmal/sporsmal-3");
+    expect(first.getByText("Besvart")).toBeTruthy();
+    expect(first.getByText("Kvadraturen Kaffebrenneri")).toBeTruthy();
+    expect(first.getByText("Kort svar.")).toBeTruthy();
+
+    const second = within(items[1] as HTMLElement);
+    expect(
+      second.getByRole("link", {
+        name: "Hvordan setter jeg opp frakt i nettbutikken?",
+      }),
+    ).toBeTruthy();
+    expect(second.getByText("Fjordlys Keramikk")).toBeTruthy();
+    expect(second.getByText(`${"x".repeat(160)}…`)).toBeTruthy();
+    expect(second.queryByText(/Skjult svar/)).toBe(null);
+
+    expect(
+      panel.getByText("Du kan fortsatt publisere spørsmålet ditt."),
+    ).toBeTruthy();
+    expect(screen.queryByText("Fjernet frakt til hele landet")).toBe(null);
+  });
+
+  it("viser Åpent for et like spørsmål uten svar", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas);
+
+    write(titleField(), "Betalingsmåter nettbutikken");
+    write(descriptionField(), "Vipps");
+    settle();
+
+    const panel = within(
+      screen.getByRole("complementary", { name: panelTitle }),
+    );
+    expect(panel.getByText("Åpent")).toBeTruthy();
+    expect(panel.getByText("Sørlandet Honning")).toBeTruthy();
+  });
+
+  it("kunngjør endringer i antall treff", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas);
+
+    write(titleField(), "Frakt til hele landet");
+    settle();
+    expect(liveRegion().textContent).toBe("Vi fant 2 lignende spørsmål");
+
+    write(titleField(), "Frakt med Bring");
+    write(descriptionField(), "Pakker");
+    settle();
+    expect(liveRegion().textContent).toBe("Vi fant 1 lignende spørsmål");
+
+    write(titleField(), "");
+    write(descriptionField(), "");
+    settle();
+    expect(screen.queryByText(panelTitle)).toBe(null);
+    expect(liveRegion().textContent).toBe("Vi fant ingen lignende spørsmål");
+  });
+
+  it("har ikke panelet når ingenting passer", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas);
+
+    write(titleField(), "Helt andre ting");
+    settle();
+
+    expect(screen.queryByText(panelTitle)).toBe(null);
+    expect(screen.queryByRole("complementary")).toBe(null);
+  });
+
+  it("har ikke panelet når et spørsmål redigeres", () => {
+    vi.useFakeTimers();
+    renderPage(<QuestionFormPage />, {
+      path: "kunnskapsbank/sporsmal/:questionId/rediger",
+      route: "/kunnskapsbank/sporsmal/sporsmal-1/rediger",
+      userId: people.jonas,
+      state: similarState,
+      extraPages: [questionPage],
+    });
+
+    write(titleField(), "Frakt til hele landet");
+    write(descriptionField(), "Keramikk");
+    settle();
+
+    expect(screen.queryByText(panelTitle)).toBe(null);
+  });
+
+  it("lar medlemmet publisere mens panelet vises", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { router, store } = openSimilar(
+      people.jonas,
+      "desktop",
+      "/kunnskapsbank/sporsmal/ny?tema=tema-1",
+    );
+
+    await user.type(titleField(), "Frakt til hele landet");
+    await user.type(descriptionField(), "Keramikk");
+    await screen.findByText(panelTitle);
+    await user.click(
+      screen.getByRole("button", { name: "Publiser spørsmålet" }),
+    );
+
+    const created = store.getState().knowledgeBase.questions.at(-1);
+    expect(created?.title).toBe("Frakt til hele landet");
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe(
+        `/kunnskapsbank/sporsmal/${created?.id}`,
+      ),
+    );
+  });
+
+  it("viser panelet ved siden av skjemaet på skrivebord", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas, "desktop");
+
+    write(titleField(), "Frakt til hele landet");
+    write(descriptionField(), "Keramikk");
+    settle();
+
+    const panel = screen.getByRole("complementary", { name: panelTitle });
+    const form = descriptionField().closest("form") as HTMLElement;
+    expect(form.contains(panel)).toBe(false);
+    expect(
+      form.compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("viser panelet mellom Tittel og Beskriv spørsmålet på mobil", () => {
+    vi.useFakeTimers();
+    openSimilar(people.jonas, "mobile");
+
+    write(titleField(), "Frakt til hele landet");
+    write(descriptionField(), "Keramikk");
+    settle();
+
+    expect(screen.queryByRole("complementary")).toBe(null);
+    const heading = screen.getByRole("heading", { level: 2, name: panelTitle });
+    expect(
+      titleField().compareDocumentPosition(heading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      heading.compareDocumentPosition(descriptionField()) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("har ingen tilgjengelighetsfeil med panelet på skrivebord og mobil", async () => {
+    for (const layout of ["desktop", "mobile"] as const) {
+      const user = userEvent.setup({ delay: null });
+      const { container, unmount } = openSimilar(people.jonas, layout);
+
+      await user.type(titleField(), "Frakt til hele landet");
+      await user.type(descriptionField(), "Keramikk");
+      await screen.findByText(panelTitle);
+
+      expect(await axe(container), layout).toHaveNoViolations();
+      unmount();
+    }
   });
 });

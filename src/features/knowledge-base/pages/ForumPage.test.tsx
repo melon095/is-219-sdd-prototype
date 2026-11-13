@@ -226,3 +226,191 @@ describe("ForumPage", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+const searchState = kbState({
+  questions: [
+    question("sporsmal-1", {
+      title: "Frakt til hele landet",
+      description: "Vi sender keramikk med Posten.",
+      createdAt: day(1),
+    }),
+    question("sporsmal-2", {
+      title: "Treg nettbutikk på mobil",
+      description: "Siden laster sakte.",
+      topicId: "tema-2",
+      createdAt: day(2),
+    }),
+    question("sporsmal-3", {
+      title: "Frakt og toll til Sverige",
+      description: "Hva må vi fylle ut?",
+      createdAt: day(3),
+    }),
+    question("sporsmal-4", {
+      title: "Fjernet frakt",
+      description: "Frakt som er fjernet.",
+      createdAt: day(4),
+      moderation: "removed",
+    }),
+  ],
+  answers: [answer("svar-1", "sporsmal-1", { text: "Pakk i bobleplast." })],
+});
+
+function openSearch(
+  userId: string,
+  route = "/kunnskapsbank",
+  layout: "desktop" | "mobile" = "desktop",
+) {
+  return renderPage(<ForumPage />, {
+    path: "kunnskapsbank",
+    route,
+    userId,
+    state: searchState,
+    layout,
+  });
+}
+
+function searchbox(): HTMLInputElement {
+  return screen.getByRole<HTMLInputElement>("searchbox", {
+    name: "Søk i forumet",
+  });
+}
+
+function liveRegion(): HTMLElement {
+  const region = document.querySelector<HTMLElement>('[aria-live="polite"]');
+  if (region === null) {
+    throw new Error("Fant ikke området som kunngjør endringer");
+  }
+  return region;
+}
+
+describe("ForumPage søk", () => {
+  it("har et søkefelt Søk i forumet", () => {
+    openSearch(people.kari);
+
+    expect(searchbox()).toBeTruthy();
+  });
+
+  it("skriver søket i adressen, viser antall treff og treffene i rekkefølge", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { router } = openSearch(people.kari);
+
+    await user.type(searchbox(), "frakt{Enter}");
+
+    expect(router.state.location.search).toBe("?sok=frakt");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "2 treff for «frakt»" }),
+    ).toBeTruthy();
+    const list = screen.getByRole("list", { name: "2 treff for «frakt»" });
+    const titles = within(list)
+      .getAllByRole("listitem")
+      .map((item) => within(item).getAllByRole("link")[0]?.textContent);
+    expect(titles).toEqual([
+      "Frakt og toll til Sverige",
+      "Frakt til hele landet",
+    ]);
+    expect(liveRegion().textContent).toBe("2 treff for «frakt»");
+    expect(screen.queryByRole("heading", { name: "Nyeste spørsmål" })).toBe(
+      null,
+    );
+  });
+
+  it("finner et spørsmål på et ord som bare står i et svar", async () => {
+    const user = userEvent.setup({ delay: null });
+    openSearch(people.kari);
+
+    await user.type(searchbox(), "bobleplast{Enter}");
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "1 treff for «bobleplast»",
+      }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Frakt til hele landet" }),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("link", { name: "Treg nettbutikk på mobil" }),
+    ).toBe(null);
+  });
+
+  it("viser en tom tilstand når ingenting passer", async () => {
+    const user = userEvent.setup({ delay: null });
+    openSearch(people.kari);
+
+    await user.type(searchbox(), "zzzzz{Enter}");
+
+    expect(
+      screen.getByText(
+        "Vi fant ingen spørsmål som passer. Prøv andre ord, eller still spørsmålet selv.",
+      ),
+    ).toBeTruthy();
+    expect(liveRegion().textContent).toBe("0 treff for «zzzzz»");
+  });
+
+  it("går tilbake til temaene og de nyeste spørsmålene når feltet tømmes", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { router } = openSearch(people.kari);
+    await user.type(searchbox(), "frakt{Enter}");
+    expect(screen.queryByRole("link", { name: "Nettbutikk" })).toBe(null);
+
+    await user.click(screen.getByRole("button", { name: "Tøm søket" }));
+
+    expect(router.state.location.search).toBe("");
+    expect(searchbox().value).toBe("");
+    expect(screen.getByRole("link", { name: "Nettbutikk" })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Nyeste spørsmål" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: /treff for/ })).toBe(null);
+  });
+
+  it("viser treffene når siden åpnes direkte med søket i adressen", () => {
+    openSearch(people.kari, "/kunnskapsbank?sok=frakt");
+
+    expect(searchbox().value).toBe("frakt");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "2 treff for «frakt»" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Frakt og toll til Sverige" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Fjernet frakt" })).toBe(null);
+  });
+
+  it("lar administratorer søke uten Still et spørsmål", async () => {
+    const user = userEvent.setup({ delay: null });
+    openSearch(people.marte);
+
+    await user.type(searchbox(), "frakt{Enter}");
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "2 treff for «frakt»" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Still et spørsmål" })).toBe(
+      null,
+    );
+  });
+
+  it("har søkefeltet først på mobil", () => {
+    openSearch(people.kari, "/kunnskapsbank", "mobile");
+
+    const tema = screen.getByRole("button", { name: "Tema" });
+    expect(
+      searchbox().compareDocumentPosition(tema) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("har ingen tilgjengelighetsfeil med treff, uten treff og på mobil", async () => {
+    for (const [route, layout] of [
+      ["/kunnskapsbank?sok=frakt", "desktop"],
+      ["/kunnskapsbank?sok=zzzzz", "desktop"],
+      ["/kunnskapsbank?sok=frakt", "mobile"],
+    ] as const) {
+      const { container, unmount } = openSearch(people.kari, route, layout);
+      expect(await axe(container), `${route} ${layout}`).toHaveNoViolations();
+      unmount();
+    }
+  });
+});

@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "2da7e780af56c3c2505af8ed9088f372a19fdc1d3bc5d13d177a4b0084d1b5b2",
+  "seedId": "d08cedb5d02de638d4151ce40e834432ba7f9db4d8b77902f058af3c0b64fcdc",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -5205,6 +5205,25 @@
     "flags": [],
     "reviews": [],
     "chatbotQuestions": [],
-    "nearDuplicateExamples": []
+    "nearDuplicateExamples": [
+      {
+        "id": "duplikat-1",
+        "title": "Hvordan sender vi keramikk billig til kunder i hele Norge?",
+        "description": "Vi har bare brukt Posten, men trenger bedre fraktpriser for pakker som kan gå i stykker. Hva anbefaler dere?",
+        "matchesQuestionId": "sporsmal-1"
+      },
+      {
+        "id": "duplikat-2",
+        "title": "Hvorfor laster siden vår så sakte på telefonen?",
+        "description": "Kundene klager over at det tar lang tid å åpne siden på mobilen. Bildene våre er ganske store.",
+        "matchesQuestionId": "sporsmal-3"
+      },
+      {
+        "id": "duplikat-3",
+        "title": "Kan Claude lage bedre tekster til produktene våre?",
+        "description": "Vi skriver alle produktbeskrivelsene selv, og det tar mye tid. Kan Claude hjelpe oss med å lage tekster som høres menneskelige ut?",
+        "matchesQuestionId": "sporsmal-4"
+      }
+    ]
   }
 }

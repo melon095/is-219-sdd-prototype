@@ -1,4 +1,3 @@
-import type { CommandHandler, DemoState } from "../frame/types";
 import {
   actorOf,
   addActivity,
@@ -6,7 +5,8 @@ import {
   readText,
   succeed,
   validationFailure,
-} from "../marketplace/helpers";
+} from "../frame/commandHelpers";
+import type { CommandHandler, DemoState } from "../frame/types";
 import { questionPostedActivity } from "./activity";
 import { canEditQuestion, canPost, memberBusinessOf } from "./permissions";
 import type {

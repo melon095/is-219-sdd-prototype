@@ -5,10 +5,10 @@ import {
   canEditQuestion,
   canPost,
 } from "../../../domain/knowledge-base/permissions";
+import { questionsByTopic } from "../../../domain/knowledge-base/search";
 import {
   questionStatus,
   visibleAnswers,
-  visibleQuestions,
 } from "../../../domain/knowledge-base/status";
 import type { Question } from "../../../domain/knowledge-base/types";
 import { NotFoundPage } from "../../../frame/home/NotFoundPage";
@@ -25,7 +25,6 @@ import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { AnswerItem } from "../components/AnswerItem";
 import { QuestionStatusBadge } from "../components/QuestionStatusBadge";
 import { formatDate, formatDateTime } from "../format";
-import { newestFirst } from "../lists";
 import "./QuestionPage.css";
 
 const sideLimit = 5;
@@ -170,11 +169,8 @@ function SidePanel({ question }: { question: Question }) {
     (item) => item.id === question.topicId,
   );
   const answerCount = visibleAnswers(question.id, state).length;
-  const others = visibleQuestions(state)
-    .filter(
-      (item) => item.topicId === question.topicId && item.id !== question.id,
-    )
-    .sort(newestFirst)
+  const others = questionsByTopic(question.topicId, state)
+    .filter((item) => item.id !== question.id)
     .slice(0, sideLimit);
 
   const content = (

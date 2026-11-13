@@ -72,6 +72,7 @@ describe("knowledgeBaseFeature", () => {
     expect(knowledgeBaseFeature.routes).toHaveLength(1);
     expect(layout?.children?.map((route) => route.path)).toEqual([
       "/kunnskapsbank",
+      "/kunnskapsbank/tema/:topicId",
       "/kunnskapsbank/sporsmal/ny",
       "/kunnskapsbank/sporsmal/:questionId/rediger",
       "/kunnskapsbank/sporsmal/:questionId",

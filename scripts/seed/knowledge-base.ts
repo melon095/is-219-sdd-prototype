@@ -9,6 +9,7 @@ import { knowledgeBaseCommandHandlers } from "../../src/domain/knowledge-base/co
 import {
   emptyKnowledgeBaseState,
   type KnowledgeBaseState,
+  type NearDuplicateExample,
   type Topic,
 } from "../../src/domain/knowledge-base/types";
 import type { FrameSeed } from "./frame";
@@ -66,6 +67,12 @@ type AnswerSpec = {
   authorId: Id;
   at: string;
   text: string;
+};
+
+type NearDuplicateSpec = {
+  questionKey: string;
+  title: string;
+  description: string;
 };
 
 const kari = "person-1";
@@ -320,6 +327,27 @@ const answerSpecs: AnswerSpec[] = [
   },
 ];
 
+const nearDuplicateSpecs: NearDuplicateSpec[] = [
+  {
+    questionKey: "frakt",
+    title: "Hvordan sender vi keramikk billig til kunder i hele Norge?",
+    description:
+      "Vi har bare brukt Posten, men trenger bedre fraktpriser for pakker som kan gå i stykker. Hva anbefaler dere?",
+  },
+  {
+    questionKey: "tregmobil",
+    title: "Hvorfor laster siden vår så sakte på telefonen?",
+    description:
+      "Kundene klager over at det tar lang tid å åpne siden på mobilen. Bildene våre er ganske store.",
+  },
+  {
+    questionKey: "produkttekster",
+    title: "Kan Claude lage bedre tekster til produktene våre?",
+    description:
+      "Vi skriver alle produktbeskrivelsene selv, og det tar mye tid. Kan Claude hjelpe oss med å lage tekster som høres menneskelige ut?",
+  },
+];
+
 type Step = { at: string; order: number; exec: () => void };
 
 function mapped(map: Map<Id, Id>, id: Id): Id {
@@ -426,10 +454,13 @@ function createHistory(frame: FrameSeed) {
       });
   }
 
-  return { current: () => state, ask, reply, play };
+  return { current: () => state, ask, reply, play, questionIdOf };
 }
 
-function renumber(state: DemoState): {
+function renumber(
+  state: DemoState,
+  examples: NearDuplicateExample[],
+): {
   knowledgeBase: KnowledgeBaseState;
   activity: ActivityEntry[];
 } {
@@ -452,6 +483,10 @@ function renumber(state: DemoState): {
         ...item,
         id: mapped(answerIds, item.id),
         questionId: mapped(questionIds, item.questionId),
+      })),
+      nearDuplicateExamples: examples.map((example) => ({
+        ...example,
+        matchesQuestionId: mapped(questionIds, example.matchesQuestionId),
       })),
     },
     activity: state.frame.activity.map((entry) => ({
@@ -476,7 +511,13 @@ export function seedKnowledgeBase(
   questionSpecs.forEach(history.ask);
   answerSpecs.forEach(history.reply);
   history.play();
-  const result = renumber(history.current());
+  const examples = nearDuplicateSpecs.map((spec, index) => ({
+    id: `duplikat-${index + 1}`,
+    title: spec.title,
+    description: spec.description,
+    matchesQuestionId: history.questionIdOf(spec.questionKey),
+  }));
+  const result = renumber(history.current(), examples);
   return {
     key: "knowledgeBase",
     data: result.knowledgeBase,

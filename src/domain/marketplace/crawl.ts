@@ -1,11 +1,11 @@
-import type { CommandHandler, DemoState } from "../frame/types";
 import {
   actorOf,
   addActivity,
   failWith,
   succeed,
   validationFailure,
-} from "./helpers";
+} from "../frame/commandHelpers";
+import type { CommandHandler, DemoState } from "../frame/types";
 import { crawlActivity } from "./log";
 import { crawlBlocker, crawlOptInBlocker } from "./permissions";
 import type { CrawlRun, SetCrawlOptInInput } from "./types";
