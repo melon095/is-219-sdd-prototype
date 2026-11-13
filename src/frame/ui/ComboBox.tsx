@@ -20,7 +20,7 @@ import "./ListBox.css";
 export interface ComboBoxProps<T extends object>
   extends Omit<AriaComboBoxProps<T>, "children"> {
   label: string;
-  description?: string;
+  description?: ReactNode;
   errorMessage?: string | ((validation: ValidationResult) => string);
   placeholder?: string;
   items?: Iterable<T>;

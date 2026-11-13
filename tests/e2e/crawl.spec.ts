@@ -2,6 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 import { axeTags, switchUser } from "./helpers";
 
+const suggestionNote =
+  "Vi har lagt inn noen ferdigheter vi tror du trenger, ut fra det vi fant på nettsiden til bedriften din. De er merket «Forslag». Fjern dem som ikke passer, og legg til andre om du vil.";
+
 const switchName =
   "Vi vil gjerne få forslag fra en simulert gjennomgang av nettsiden vår";
 
@@ -43,11 +46,10 @@ test.describe("Simulert gjennomgang og forslag til ferdigheter", () => {
     const suggested = page.getByRole("row", { name: /\(Forslag\)$/ });
     await expect(suggested.first()).toBeVisible();
     expect(await suggested.count()).toBeGreaterThanOrEqual(3);
+    await expect(page.getByText(suggestionNote)).toBeVisible();
     await expect(
-      page.getByText(
-        "Foreslått fra en simulert gjennomgang av nettsiden deres",
-      ),
-    ).toBeVisible();
+      page.getByRole("combobox", { name: "Nødvendige ferdigheter" }),
+    ).toHaveAccessibleDescription(`${suggestionNote} Simulert`);
   });
 
   test("en eier uten valget på får ingen forslag", async ({ page }) => {
@@ -95,9 +97,8 @@ test.describe("Simulert gjennomgang og forslag til ferdigheter", () => {
 
     await switchUser(page, "Marte Vik");
     const latest = await runCrawl(page);
-    const skipped = (await latest.innerText()).split("Hoppet over:")[1] ?? "";
-    expect(skipped).toContain("Fjordlys Keramikk");
-    expect(skipped).toContain("Sørlandet Honning");
+    await expect(latest).toContainText(/Hoppet over:[\s\S]*Fjordlys Keramikk/);
+    await expect(latest).toContainText(/Hoppet over:[\s\S]*Sørlandet Honning/);
   });
 
   test("Min bedrift har ingen tilgjengelighetsfeil", async ({ page }) => {

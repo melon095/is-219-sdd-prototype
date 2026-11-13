@@ -248,7 +248,7 @@ describe("RequestFormPage", () => {
 });
 
 const suggestionNote =
-  "Foreslått fra en simulert gjennomgang av nettsiden deres";
+  "Vi har lagt inn noen ferdigheter vi tror du trenger, ut fra det vi fant på nettsiden til bedriften din. De er merket «Forslag». Fjern dem som ikke passer, og legg til andre om du vil.";
 
 function stateWithSuggestions(
   businessId: string,
@@ -279,6 +279,19 @@ describe("RequestFormPage med forslag fra gjennomgangen", () => {
     expect(screen.getAllByText("Forslag")).toHaveLength(2);
     const note = screen.getByText(suggestionNote);
     expect(note.textContent).toContain("Simulert");
+    expect(note.textContent?.trim().endsWith("Simulert")).toBe(true);
+  });
+
+  it("kobler notatet til ferdighetsvelgeren for skjermlesere", () => {
+    renderPage(<RequestFormPage />, suggestedOptions);
+
+    const note = screen.getByText(suggestionNote);
+    const picker = screen.getByRole("combobox", {
+      name: "Nødvendige ferdigheter",
+    });
+    const describedBy = picker.getAttribute("aria-describedby") ?? "";
+    expect(describedBy.split(" ")).toContain(note.id);
+    expect(note.id).not.toBe("");
   });
 
   it("lar eieren fjerne forslag og legge til andre ferdigheter", async () => {

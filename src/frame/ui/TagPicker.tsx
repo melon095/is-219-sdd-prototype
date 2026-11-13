@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import {
   Button,
   type Key,
@@ -21,7 +21,7 @@ export interface TagPickerProps {
   onSelectionChange: (keys: Key[]) => void;
   markedKeys?: Key[];
   markLabel?: string;
-  description?: string;
+  description?: ReactNode;
   errorMessage?: string;
   placeholder?: string;
 }

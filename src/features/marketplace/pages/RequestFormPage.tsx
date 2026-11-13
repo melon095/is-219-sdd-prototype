@@ -174,14 +174,19 @@ function RequestForm({ businessId, request, suggestions = [] }: FormProps) {
         onSelectionChange={changeSkills}
         markedKeys={markedIds}
         markLabel="Forslag"
+        description={
+          showSuggestionNote ? (
+            <>
+              Vi har lagt inn noen ferdigheter vi tror du trenger, ut fra det vi
+              fant på nettsiden til bedriften din. De er merket «Forslag». Fjern
+              dem som ikke passer, og legg til andre om du vil.{" "}
+              <SimulatedLabel />
+            </>
+          ) : undefined
+        }
         errorMessage={errors.requiredSkillIds}
       />
-      {showSuggestionNote && (
-        <p className="request-form-suggestion-note">
-          Foreslått fra en simulert gjennomgang av nettsiden deres{" "}
-          <SimulatedLabel />
-        </p>
-      )}
+
       <TextArea
         label="Tilleggskrav (valgfritt)"
         value={additional}

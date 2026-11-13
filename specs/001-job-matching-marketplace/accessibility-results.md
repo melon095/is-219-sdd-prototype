@@ -2,12 +2,12 @@
 
 **Feature**: `001-job-matching-marketplace` | **Checks defined in**: [quickstart.md](./quickstart.md#accessibility-checks-wcag-21-aa) | **Task**: T156
 
-This file records the four manual checks from quickstart.md. Three of them could be automated and now run as Playwright tests, so they stay checked on every run of `pnpm test:e2e`. The screen reader check needs a person with a screen reader and has not been done.
+This file records the four manual checks from quickstart.md. Three of them could be automated and now run as Playwright tests, so they stay checked on every run of `pnpm test:e2e`. The screen reader check was done by the project owner with Orca and Firefox.
 
 | # | Check | Result |
 |---|---|---|
 | 1 | Keyboard only (scenarios 3, 7, 13) | Passed, automated in `tests/e2e/keyboard.spec.ts` (desktop project) |
-| 2 | Screen reader (scenario 3) | Not done, needs a person |
+| 2 | Screen reader (scenario 3) | Accepted by the project owner after a partial walkthrough with Orca and Firefox; two problems found and fixed |
 | 3 | Zoom and reflow | Passed, automated in `tests/e2e/reflow.spec.ts` (both projects) |
 | 4 | Colour | Passed, checked from the code (see below) |
 
@@ -49,13 +49,11 @@ Component tests in `src/features/marketplace/pages/focusAfterAction.test.tsx` ch
 
 ## 2. Screen reader
 
-**Ikke utført – krever manuell test med skjermleser av en person.**
+quickstart.md names NVDA or VoiceOver. The project owner works on Linux with KDE Plasma, so this check was done with **Orca and Firefox** instead, with the Orca voice set to Norwegian Bokmål (`nb`). Orca reads some React Aria widgets differently from NVDA and VoiceOver, so the result is recorded as an Orca result. VoiceOver on iOS was not used, so the mobile layout has not been checked with a screen reader.
 
-No screen reader was used. Nothing below has been checked by listening.
+The project owner went through the start of the steps below (the user switcher and the new-request form), found the two problems recorded in the table, and then judged the screen reader support good enough without completing every step. Steps 6–10 (the duration notice, error messages, the "Oppdraget er publisert" announcement, the status and shortlist after publishing, and the timing) were not listened to one by one. The keyboard test in section 1 checks that the "Oppdraget er publisert" announcement reaches the live region, but not how a screen reader speaks it.
 
-quickstart.md names NVDA or VoiceOver. The project owner works on Linux with KDE Plasma, so this check is planned with **Orca and Firefox** instead, with the Orca voice set to Norwegian Bokmål (`nb`). Orca reads some React Aria widgets differently from NVDA and VoiceOver, so the result is recorded as an Orca result. If an iPhone is available, VoiceOver in Safari also covers the mobile layout.
-
-Steps for the project owner, from quickstart.md scenario 3 and the screen reader check:
+Steps, from quickstart.md scenario 3 and the screen reader check:
 
 1. Start the app (`pnpm dev`, then open `http://localhost:5173` in Firefox, or `pnpm build && pnpm preview`) and start Orca (`orca`; settings with `orca -s`).
 2. Press "Tilbakestill demo" and confirm, so the data is the seed data.
@@ -71,12 +69,12 @@ Steps for the project owner, from quickstart.md scenario 3 and the screen reader
 
 | | |
 |---|---|
-| Tested by | |
-| Date | |
-| Screen reader and browser | |
-| Result | |
-| Problems found | |
-| How they were fixed | |
+| Tested by | The project owner |
+| Date | 2026-11-13 |
+| Screen reader and browser | Orca with Firefox on Linux (KDE Plasma), Norwegian Bokmål voice |
+| Result | Accepted as good enough by the project owner after a partial walkthrough (steps 1–5) |
+| Problems found | 1. In "Bytt bruker", the selected person was read only as "Avkrysningsmerke" (check mark) instead of their name and description. 2. The note above pre-filled skill suggestions on `/oppdrag/ny` ("Foreslått fra en simulert gjennomgang av nettsiden deres") was confusing: it did not say what was suggested, where it came from, or what to do with it. |
+| How they were fixed | 1. The check mark is drawn with CSS generated content, which browsers include in the accessible name. `src/frame/ui/ListBox.css` now uses `content: "✓" / ""`, so the mark is shown but not spoken; selection is still exposed through `aria-selected`. This applies to every list (user switcher, selects, skill picker). The "·" separator in the activity feed (`src/frame/activity/ActivityFeed.css`) was silenced the same way. Playwright tests in `tests/e2e/frame.spec.ts` and `tests/e2e/owner-request.spec.ts` check that selected options' names contain no "✓". 2. The note was rewritten, with the project owner's approval, as "Vi har lagt inn noen ferdigheter vi tror du trenger, ut fra det vi fant på nettsiden til bedriften din. De er merket «Forslag». Fjern dem som ikke passer, og legg til andre om du vil.", followed by the "Simulert" label. tasks.md T140 and contracts/routes.md were updated to match. |
 
 ## 3. Zoom and reflow
 
@@ -118,9 +116,9 @@ Two statuses share a tone (for example "Avtalt" and "Pågår"), which is fine be
 
 **NAV labels.** The shortlist shows the badge "Henvist fra NAV" (`ShortlistPanel.tsx`). The worker's profile page says "Du er henvist fra NAV (simulert)", and the admin button reads "Henvis fra NAV (simulert)". All are plain text.
 
-**"Simulert" label** (`src/frame/ui/SimulatedLabel.tsx`). It is the word "Simulert" in a small box, so the word carries the meaning, not the blue. It is used next to the NAV referral, the crawl, the crawl suggestions, and simulated log entries. Simulated log entries also say it in the sentence ("Simulert med feilsøkingsknappen"). Crawl suggestions on the new-request form carry the tag text "Forslag", which is part of the tag's accessible name, and the sentence "Foreslått fra en simulert gjennomgang av nettsiden deres". The demo time button starts with the word "Demo:" and has a dashed border, so it is not recognised by colour either.
+**"Simulert" label** (`src/frame/ui/SimulatedLabel.tsx`). It is the word "Simulert" in a small box, so the word carries the meaning, not the blue. It is used next to the NAV referral, the crawl, the crawl suggestions, and simulated log entries. Simulated log entries also say it in the sentence ("Simulert med feilsøkingsknappen"). Crawl suggestions on the new-request form carry the tag text "Forslag", which is part of the tag's accessible name, and a note explaining that the skills marked «Forslag» come from the business's website, followed by the "Simulert" label. The demo time button starts with the word "Demo:" and has a dashed border, so it is not recognised by colour either.
 
-**Other places where colour could be the only signal.** None found. Selected options in lists have a "✓" mark. Links in the page text are underlined (`src/frame/ui/Link.css`).
+**Other places where colour could be the only signal.** None found. Selected options in lists have a visible "✓" mark (not spoken by screen readers, which announce the selected state instead). Links in the page text are underlined (`src/frame/ui/Link.css`).
 
 **Result.** Passed. Statuses, errors, NAV labels, and "Simulert" labels can all be understood without colour. This is a read-through of the code, not a test with a colour-blindness simulator.
 
