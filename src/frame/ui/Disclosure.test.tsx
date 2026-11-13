@@ -56,6 +56,26 @@ describe("Disclosure", () => {
     expect(screen.getByText("Synlig innhold.")).toBeTruthy();
   });
 
+  it("har overskriftsnivå 3 som standard og kan få et annet nivå", () => {
+    render(
+      <>
+        <Disclosure title="Standard">
+          <p>Innhold.</p>
+        </Disclosure>
+        <Disclosure title="Nivå to" headingLevel={2}>
+          <p>Innhold.</p>
+        </Disclosure>
+      </>,
+    );
+
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Standard" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Nivå to" }),
+    ).toBeTruthy();
+  });
+
   it("har ingen tilgjengelighetsfeil", async () => {
     const { container } = render(
       <>

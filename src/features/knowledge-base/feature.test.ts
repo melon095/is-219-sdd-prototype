@@ -67,11 +67,14 @@ describe("knowledgeBaseFeature", () => {
     expect(ids).toEqual(["marketplace", "knowledgeBase"]);
   });
 
-  it("har ett oppsett med tre sider under kunnskapsbanken", () => {
+  it("har ett oppsett med sidene under kunnskapsbanken", () => {
     const layout = knowledgeBaseFeature.routes[0];
     expect(knowledgeBaseFeature.routes).toHaveLength(1);
     expect(layout?.children?.map((route) => route.path)).toEqual([
       "/kunnskapsbank",
+      "/kunnskapsbank/sporsmal/ny",
+      "/kunnskapsbank/sporsmal/:questionId/rediger",
+      "/kunnskapsbank/sporsmal/:questionId",
       "/kunnskapsbank/chatbot",
       "/kunnskapsbank/vurdering",
     ]);

@@ -15,7 +15,7 @@ function open(userId: string, route = "/kunnskapsbank") {
 }
 
 describe("rutene til kunnskapsbanken", () => {
-  it("viser plassholderen til Kari", () => {
+  it("viser forumet til Kari", () => {
     open("person-1");
 
     expect(

@@ -1,0 +1,133 @@
+.question-columns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.question-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.question-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.question-details-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.question-details-facts,
+.question-side-facts {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.question-details-facts dt,
+.question-side-facts dt {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.question-details-facts dd,
+.question-side-facts dd {
+  margin: 0;
+}
+
+.question-details p {
+  margin: 0;
+}
+
+.question-details-edited {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+.question-details-description {
+  max-width: var(--width-reading);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.question-answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.question-answers h2,
+.question-side h2 {
+  margin: 0;
+  font-size: var(--font-size-h2);
+}
+
+.question-answers p {
+  margin: 0;
+}
+
+.question-answer-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: var(--width-reading);
+}
+
+.answer-form .react-aria-TextField {
+  width: 100%;
+}
+
+.question-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-navy-200);
+  border-radius: var(--radius);
+  background: var(--color-navy-50);
+}
+
+.question-side h3 {
+  margin: 0;
+  font-size: var(--font-size-h4);
+}
+
+.question-side-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+@media (min-width: 48rem) {
+  .question-columns[data-layout="desktop"] {
+    display: grid;
+    grid-template-columns: minmax(0, var(--width-reading)) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-7);
+  }
+
+  .question-side {
+    position: sticky;
+    top: var(--space-5);
+    max-width: 24rem;
+  }
+}

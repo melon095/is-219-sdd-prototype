@@ -5,6 +5,9 @@ import { knowledgeBaseCommandHandlers } from "../../domain/knowledge-base/comman
 import { isMember } from "../../domain/knowledge-base/permissions";
 import { PageHeading } from "../../frame/ui/PageHeading";
 import { KnowledgeBaseLayout } from "./components/KnowledgeBaseLayout";
+import { ForumPage } from "./pages/ForumPage";
+import { QuestionFormPage } from "./pages/QuestionFormPage";
+import { QuestionPage } from "./pages/QuestionPage";
 import { knowledgeBaseStateSchema } from "./schema";
 
 const memberCard: HomeCard = {
@@ -38,9 +41,18 @@ export const knowledgeBaseFeature: FeatureDefinition = {
     {
       element: createElement(KnowledgeBaseLayout),
       children: [
+        { path: "/kunnskapsbank", element: createElement(ForumPage) },
         {
-          path: "/kunnskapsbank",
-          element: createElement(PageHeading, null, "Kunnskapsbank"),
+          path: "/kunnskapsbank/sporsmal/ny",
+          element: createElement(QuestionFormPage),
+        },
+        {
+          path: "/kunnskapsbank/sporsmal/:questionId/rediger",
+          element: createElement(QuestionFormPage),
+        },
+        {
+          path: "/kunnskapsbank/sporsmal/:questionId",
+          element: createElement(QuestionPage),
         },
         {
           path: "/kunnskapsbank/chatbot",

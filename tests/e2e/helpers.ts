@@ -85,6 +85,14 @@ export async function switchUser(page: Page, name: string) {
   await closeControls(page);
 }
 
+export async function pressFeatureLink(page: Page, name: string) {
+  await openControls(page);
+  const scope = isMobile(page)
+    ? page.getByRole("dialog", { name: "Meny" })
+    : page.getByRole("banner");
+  await scope.getByRole("link", { name, exact: true }).click();
+}
+
 export async function openTab(page: Page, name: string) {
   if (isMobile(page)) {
     await page.getByRole("tab", { name, exact: true }).click();
