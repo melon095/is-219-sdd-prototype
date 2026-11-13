@@ -1,5 +1,6 @@
 import type { CommandHandler } from "../frame/types";
 import { editAnswer, postAnswer } from "./answers";
+import { flagContent, reviewContent } from "./moderation";
 import { editQuestion, postQuestion } from "./questions";
 
 export const knowledgeBaseCommandHandlers: Record<string, CommandHandler> = {
@@ -7,4 +8,6 @@ export const knowledgeBaseCommandHandlers: Record<string, CommandHandler> = {
   editQuestion,
   postAnswer,
   editAnswer,
+  flagContent,
+  reviewContent,
 };

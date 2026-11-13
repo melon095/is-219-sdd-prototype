@@ -8,8 +8,10 @@ import type {
 import { knowledgeBaseCommandHandlers } from "../../src/domain/knowledge-base/commands";
 import {
   emptyKnowledgeBaseState,
+  type FlagReason,
   type KnowledgeBaseState,
   type NearDuplicateExample,
+  type ReviewDecision,
   type Topic,
 } from "../../src/domain/knowledge-base/types";
 import type { FrameSeed } from "./frame";
@@ -75,10 +77,27 @@ type NearDuplicateSpec = {
   description: string;
 };
 
+type FlagSpec = {
+  questionKey: string;
+  answerAuthorId: Id;
+  flaggedBy: Id;
+  at: string;
+  reason: FlagReason;
+  note?: string;
+};
+
+type ReviewSpec = {
+  questionKey: string;
+  answerAuthorId: Id;
+  at: string;
+  decision: ReviewDecision;
+};
+
 const kari = "person-1";
 const jonas = "person-2";
 const per = "person-3";
 const ola = "person-5";
+const marte = "person-15";
 
 const questionSpecs: QuestionSpec[] = [
   {
@@ -348,6 +367,46 @@ const nearDuplicateSpecs: NearDuplicateSpec[] = [
   },
 ];
 
+const flagSpecs: FlagSpec[] = [
+  {
+    questionKey: "bilder",
+    answerAuthorId: kari,
+    flaggedBy: per,
+    at: "2026-11-10T09:30:00+01:00",
+    reason: "incorrect",
+    note: "Blitsen kan fungere fint hvis den spretter mot taket, så dette stemmer ikke helt.",
+  },
+  {
+    questionKey: "lagertelling",
+    answerAuthorId: jonas,
+    flaggedBy: ola,
+    at: "2026-11-11T14:00:00+01:00",
+    reason: "off-topic",
+  },
+  {
+    questionKey: "regnskap",
+    answerAuthorId: kari,
+    flaggedBy: ola,
+    at: "2026-11-12T10:15:00+01:00",
+    reason: "outdated",
+  },
+];
+
+const reviewSpecs: ReviewSpec[] = [
+  {
+    questionKey: "bilder",
+    answerAuthorId: kari,
+    at: "2026-11-11T08:45:00+01:00",
+    decision: "clear",
+  },
+  {
+    questionKey: "lagertelling",
+    answerAuthorId: jonas,
+    at: "2026-11-12T09:00:00+01:00",
+    decision: "remove",
+  },
+];
+
 type Step = { at: string; order: number; exec: () => void };
 
 function mapped(map: Map<Id, Id>, id: Id): Id {
@@ -446,6 +505,49 @@ function createHistory(frame: FrameSeed) {
     );
   }
 
+  function answerOf(questionKey: string, authorId: Id): Id {
+    const found = state.knowledgeBase.answers.find(
+      (item) =>
+        item.questionId === questionIdOf(questionKey) &&
+        item.authorId === authorId,
+    );
+    if (found === undefined) {
+      throw new Error(`Seed-svaret på ${questionKey} er ikke postet ennå`);
+    }
+    return found.id;
+  }
+
+  function flagAnswer(spec: FlagSpec): void {
+    schedule(spec.at, () =>
+      execute(spec.flaggedBy, spec.at, {
+        type: "flagContent",
+        targetKind: "answer",
+        targetId: answerOf(spec.questionKey, spec.answerAuthorId),
+        reason: spec.reason,
+        ...(spec.note === undefined ? {} : { note: spec.note }),
+      }),
+    );
+  }
+
+  function reviewAnswer(spec: ReviewSpec): void {
+    schedule(spec.at, () => {
+      const targetId = answerOf(spec.questionKey, spec.answerAuthorId);
+      const open = state.knowledgeBase.reviews.find(
+        (item) => item.targetId === targetId && item.outcome === undefined,
+      );
+      if (open === undefined) {
+        throw new Error(
+          `Seed-svaret ${spec.questionKey} har ingen åpen vurdering`,
+        );
+      }
+      execute(marte, spec.at, {
+        type: "reviewContent",
+        reviewId: open.id,
+        decision: spec.decision,
+      });
+    });
+  }
+
   function play(): void {
     [...steps]
       .sort((a, b) => Date.parse(a.at) - Date.parse(b.at) || a.order - b.order)
@@ -454,7 +556,15 @@ function createHistory(frame: FrameSeed) {
       });
   }
 
-  return { current: () => state, ask, reply, play, questionIdOf };
+  return {
+    current: () => state,
+    ask,
+    reply,
+    flagAnswer,
+    reviewAnswer,
+    play,
+    questionIdOf,
+  };
 }
 
 function renumber(
@@ -467,14 +577,32 @@ function renumber(
   const questionIds = new Map<Id, Id>();
   const answerIds = new Map<Id, Id>();
   const activityIds = new Map<Id, Id>();
-  const { questions, answers } = state.knowledgeBase;
+  const flagIds = new Map<Id, Id>();
+  const reviewIds = new Map<Id, Id>();
+  const { questions, answers, flags, reviews } = state.knowledgeBase;
   assignIds(questions, "sporsmal", questionIds);
   assignIds(answers, "svar", answerIds);
+  assignIds(flags, "flagg", flagIds);
+  assignIds(reviews, "vurdering", reviewIds);
   assignIds(state.frame.activity, "aktivitet-kb", activityIds);
   const routePrefix = "/kunnskapsbank/sporsmal/";
+  const targetIdOf = (targetKind: string, targetId: Id): Id =>
+    mapped(targetKind === "question" ? questionIds : answerIds, targetId);
   return {
     knowledgeBase: {
       ...state.knowledgeBase,
+      flags: flags.map((item) => ({
+        ...item,
+        id: mapped(flagIds, item.id),
+        reviewId: mapped(reviewIds, item.reviewId),
+        targetId: targetIdOf(item.targetKind, item.targetId),
+      })),
+      reviews: reviews.map((item) => ({
+        ...item,
+        id: mapped(reviewIds, item.id),
+        targetId: targetIdOf(item.targetKind, item.targetId),
+        flagIds: item.flagIds.map((flagId) => mapped(flagIds, flagId)),
+      })),
       questions: questions.map((item) => ({
         ...item,
         id: mapped(questionIds, item.id),
@@ -510,6 +638,8 @@ export function seedKnowledgeBase(
   const history = createHistory(frame);
   questionSpecs.forEach(history.ask);
   answerSpecs.forEach(history.reply);
+  flagSpecs.forEach(history.flagAnswer);
+  reviewSpecs.forEach(history.reviewAnswer);
   history.play();
   const examples = nearDuplicateSpecs.map((spec, index) => ({
     id: `duplikat-${index + 1}`,

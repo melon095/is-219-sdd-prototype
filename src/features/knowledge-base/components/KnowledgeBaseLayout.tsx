@@ -1,3 +1,4 @@
+import { openReviews } from "../../../domain/knowledge-base/moderation";
 import { canReview, canView } from "../../../domain/knowledge-base/permissions";
 import { type SubNavItem, SubNavLayout } from "../../../frame/layout/SubNav";
 import { useDemoState } from "../../../frame/store/store";
@@ -15,13 +16,10 @@ function useKnowledgeBaseLinks(): SubNavItem[] {
     { label: "Spør chatboten", path: "/kunnskapsbank/chatbot" },
   ];
   if (canReview(person)) {
-    const openReviews = state.knowledgeBase.reviews.filter(
-      (review) => review.outcome === undefined,
-    ).length;
     links.push({
       label: "Til vurdering",
       path: "/kunnskapsbank/vurdering",
-      badge: String(openReviews),
+      badge: String(openReviews(state).length),
     });
   }
   return links;

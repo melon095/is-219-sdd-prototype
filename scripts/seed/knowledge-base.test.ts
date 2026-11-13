@@ -141,10 +141,12 @@ describe("seeded questions", () => {
     }
   });
 
-  it("starts every item as current with no edits", () => {
+  it("has no edits, and keeps every item without a review as current", () => {
     for (const item of [...kb.questions, ...kb.answers]) {
-      expect(item.moderation).toBe("current");
       expect(item.editedAt).toBeUndefined();
+      if (!kb.reviews.some((review) => review.targetId === item.id)) {
+        expect(item.moderation).toBe("current");
+      }
     }
   });
 
@@ -183,8 +185,9 @@ describe("seeded answers", () => {
     const questionWords = kb.questions.flatMap((item) =>
       tokenize(`${item.title} ${item.description}`),
     );
-    const found = kb.answers.some((item) => {
-      const others = kb.answers
+    const shown = kb.answers.filter((item) => item.moderation !== "removed");
+    const found = shown.some((item) => {
+      const others = shown
         .filter((other) => other.id !== item.id)
         .flatMap((other) => tokenize(other.text));
       return tokenize(item.text).some(
@@ -234,8 +237,11 @@ describe("knowledge base activity", () => {
     (entry) => entry.featureId === "knowledgeBase",
   );
 
-  it("has one entry per question and answer", () => {
-    expect(entries).toHaveLength(kb.questions.length + kb.answers.length);
+  it("has one entry per question, answer, flag, and closed review", () => {
+    const closed = kb.reviews.filter((review) => review.outcome !== undefined);
+    expect(entries).toHaveLength(
+      kb.questions.length + kb.answers.length + kb.flags.length + closed.length,
+    );
   });
 
   it("requires the members group on every entry", () => {
@@ -322,6 +328,176 @@ describe("near-duplicate examples", () => {
     for (const example of examples) {
       expect(example.title.length, example.id).toBeGreaterThan(0);
       expect(example.title.length, example.id).toBeLessThanOrEqual(120);
+    }
+  });
+});
+
+describe("seeded moderation history", () => {
+  const personIds = new Set(people.map((person) => person.id));
+  const reservedQuestionIds = [
+    "sporsmal-1",
+    "sporsmal-3",
+    "sporsmal-6",
+    "sporsmal-9",
+    "sporsmal-13",
+  ];
+
+  function itemOf(targetKind: string, targetId: string) {
+    return targetKind === "question"
+      ? kb.questions.find((item) => item.id === targetId)
+      : kb.answers.find((item) => item.id === targetId);
+  }
+
+  function questionIdOfTarget(targetKind: string, targetId: string) {
+    return targetKind === "question"
+      ? targetId
+      : kb.answers.find((item) => item.id === targetId)?.questionId;
+  }
+
+  it("has an open review on an answer that is not a chatbot source", () => {
+    const sources = chatbotSourceAnswerIds();
+    const open = kb.reviews.filter(
+      (review) =>
+        review.outcome === undefined &&
+        review.targetKind === "answer" &&
+        !sources.has(review.targetId),
+    );
+    expect(open.length).toBeGreaterThanOrEqual(1);
+    for (const review of open) {
+      expect(itemOf(review.targetKind, review.targetId)?.moderation).toBe(
+        "flagged",
+      );
+    }
+  });
+
+  it("has a closed review with the outcome cleared", () => {
+    const cleared = kb.reviews.filter((review) => review.outcome === "cleared");
+    expect(cleared.length).toBeGreaterThanOrEqual(1);
+    for (const review of cleared) {
+      expect(itemOf(review.targetKind, review.targetId)?.moderation).toBe(
+        "cleared",
+      );
+    }
+  });
+
+  it("has a removed answer with a closed review removed", () => {
+    const removed = kb.answers.filter((item) => item.moderation === "removed");
+    expect(removed.length).toBeGreaterThanOrEqual(1);
+    for (const item of removed) {
+      expect(
+        kb.reviews.some(
+          (review) =>
+            review.targetKind === "answer" &&
+            review.targetId === item.id &&
+            review.outcome === "removed",
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("points every flaggedBy and reviewedBy at an existing person", () => {
+    for (const flag of kb.flags) {
+      expect(personIds.has(flag.flaggedBy)).toBe(true);
+      expect(authors).toContain(flag.flaggedBy);
+    }
+    for (const review of kb.reviews) {
+      if (review.reviewedBy !== undefined) {
+        expect(personIds.has(review.reviewedBy)).toBe(true);
+        expect(review.reviewedBy).toBe("person-15");
+      }
+    }
+  });
+
+  it("never puts a flag on the flagger's own content", () => {
+    for (const flag of kb.flags) {
+      const item = itemOf(flag.targetKind, flag.targetId);
+      expect(item, flag.id).toBeDefined();
+      expect(item?.authorId, flag.id).not.toBe(flag.flaggedBy);
+    }
+  });
+
+  it("links every flag and review to each other and to the same target", () => {
+    for (const flag of kb.flags) {
+      const review = kb.reviews.find((item) => item.id === flag.reviewId);
+      expect(review, flag.id).toBeDefined();
+      expect(review?.flagIds).toContain(flag.id);
+      expect(review?.targetKind).toBe(flag.targetKind);
+      expect(review?.targetId).toBe(flag.targetId);
+    }
+    for (const review of kb.reviews) {
+      expect(review.flagIds.length).toBeGreaterThanOrEqual(1);
+      for (const flagId of review.flagIds) {
+        expect(kb.flags.some((flag) => flag.id === flagId)).toBe(true);
+      }
+      expect(Boolean(review.outcome)).toBe(Boolean(review.reviewedBy));
+      expect(Boolean(review.outcome)).toBe(Boolean(review.reviewedAt));
+    }
+  });
+
+  it("has at most one open review for each item", () => {
+    const open = kb.reviews.filter((review) => review.outcome === undefined);
+    const keys = open.map(
+      (review) => `${review.targetKind}:${review.targetId}`,
+    );
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("uses counter ids for flags and reviews", () => {
+    kb.flags.forEach((flag, index) => {
+      expect(flag.id).toBe(`flagg-${index + 1}`);
+    });
+    kb.reviews.forEach((review, index) => {
+      expect(review.id).toBe(`vurdering-${index + 1}`);
+    });
+  });
+
+  it("flags and reviews after the content was posted and before the anchor date", () => {
+    for (const flag of kb.flags) {
+      const item = itemOf(flag.targetKind, flag.targetId);
+      expect(Date.parse(flag.at), flag.id).toBeGreaterThan(
+        Date.parse(item?.createdAt ?? ""),
+      );
+      expect(Date.parse(flag.at), flag.id).toBeLessThan(anchor);
+    }
+    for (const review of kb.reviews) {
+      if (review.reviewedAt !== undefined) {
+        expect(Date.parse(review.reviewedAt), review.id).toBeGreaterThan(
+          Date.parse(review.openedAt),
+        );
+        expect(Date.parse(review.reviewedAt), review.id).toBeLessThan(anchor);
+      }
+    }
+  });
+
+  it("keeps flags away from the questions reserved for chatbot sources", () => {
+    for (const review of kb.reviews) {
+      expect(reservedQuestionIds, review.id).not.toContain(
+        questionIdOfTarget(review.targetKind, review.targetId),
+      );
+    }
+  });
+
+  it("keeps an answer by Ola that is not a chatbot source and still current", () => {
+    const sources = chatbotSourceAnswerIds();
+    const free = kb.answers.filter(
+      (item) =>
+        item.authorId === "person-5" &&
+        !sources.has(item.id) &&
+        item.moderation === "current",
+    );
+    expect(free.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("matches each item's moderation to its latest review", () => {
+    for (const review of kb.reviews) {
+      const item = itemOf(review.targetKind, review.targetId);
+      const expected =
+        review.outcome === undefined
+          ? "flagged"
+          : review.outcome === "cleared"
+            ? "cleared"
+            : "removed";
+      expect(item?.moderation, review.id).toBe(expected);
     }
   });
 });

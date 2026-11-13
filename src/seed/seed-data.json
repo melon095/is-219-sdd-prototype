@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "d08cedb5d02de638d4151ce40e834432ba7f9db4d8b77902f058af3c0b64fcdc",
+  "seedId": "c0cda2ab8609794b10881ba62b55c443aa3a655d7a839de4bd606dc3bb967b04",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -2534,6 +2534,24 @@
       },
       {
         "id": "aktivitet-kb-32",
+        "at": "2026-11-10T09:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Et innlegg i «Hvordan får vi bedre produktbilder uten å leie inn fotograf?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-3"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-33",
         "at": "2026-11-10T10:45:00+01:00",
         "featureId": "knowledgeBase",
         "actor": "person-2",
@@ -2546,6 +2564,78 @@
           "groups": [
             "knowledgeBase.members"
           ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-34",
+        "at": "2026-11-11T08:45:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-15",
+        "text": "Varodd har vurdert et flagget innlegg i «Hvordan får vi bedre produktbilder uten å leie inn fotograf?»: det er beholdt",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-3"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-35",
+        "at": "2026-11-11T14:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Et innlegg i «Hvordan teller vi opp lageret uten å bruke hele dagen?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [
+            "person-2",
+            "person-5"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-36",
+        "at": "2026-11-12T09:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-15",
+        "text": "Varodd har vurdert et flagget innlegg i «Hvordan teller vi opp lageret uten å bruke hele dagen?»: det er fjernet",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [
+            "person-2",
+            "person-5"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-37",
+        "at": "2026-11-12T10:15:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Et innlegg i «Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-10"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-5"
+          ],
+          "groups": [],
           "requiredGroup": "knowledgeBase.members"
         }
       }
@@ -5172,7 +5262,7 @@
         "authorId": "person-1",
         "businessId": "bedrift-1",
         "createdAt": "2026-10-30T14:40:00+01:00",
-        "moderation": "current"
+        "moderation": "flagged"
       },
       {
         "id": "svar-14",
@@ -5190,7 +5280,7 @@
         "authorId": "person-1",
         "businessId": "bedrift-1",
         "createdAt": "2026-11-06T15:50:00+01:00",
-        "moderation": "current"
+        "moderation": "cleared"
       },
       {
         "id": "svar-16",
@@ -5199,11 +5289,74 @@
         "authorId": "person-2",
         "businessId": "bedrift-1",
         "createdAt": "2026-11-09T13:15:00+01:00",
-        "moderation": "current"
+        "moderation": "removed"
       }
     ],
-    "flags": [],
-    "reviews": [],
+    "flags": [
+      {
+        "id": "flagg-1",
+        "reviewId": "vurdering-1",
+        "targetKind": "answer",
+        "targetId": "svar-15",
+        "flaggedBy": "person-3",
+        "reason": "incorrect",
+        "note": "Blitsen kan fungere fint hvis den spretter mot taket, så dette stemmer ikke helt.",
+        "at": "2026-11-10T09:30:00+01:00"
+      },
+      {
+        "id": "flagg-2",
+        "reviewId": "vurdering-2",
+        "targetKind": "answer",
+        "targetId": "svar-16",
+        "flaggedBy": "person-5",
+        "reason": "off-topic",
+        "at": "2026-11-11T14:00:00+01:00"
+      },
+      {
+        "id": "flagg-3",
+        "reviewId": "vurdering-3",
+        "targetKind": "answer",
+        "targetId": "svar-13",
+        "flaggedBy": "person-5",
+        "reason": "outdated",
+        "at": "2026-11-12T10:15:00+01:00"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "vurdering-1",
+        "targetKind": "answer",
+        "targetId": "svar-15",
+        "openedAt": "2026-11-10T09:30:00+01:00",
+        "flagIds": [
+          "flagg-1"
+        ],
+        "outcome": "cleared",
+        "reviewedBy": "person-15",
+        "reviewedAt": "2026-11-11T08:45:00+01:00"
+      },
+      {
+        "id": "vurdering-2",
+        "targetKind": "answer",
+        "targetId": "svar-16",
+        "openedAt": "2026-11-11T14:00:00+01:00",
+        "flagIds": [
+          "flagg-2"
+        ],
+        "outcome": "removed",
+        "reviewedBy": "person-15",
+        "reviewedAt": "2026-11-12T09:00:00+01:00"
+      },
+      {
+        "id": "vurdering-3",
+        "targetKind": "answer",
+        "targetId": "svar-13",
+        "openedAt": "2026-11-12T10:15:00+01:00",
+        "flagIds": [
+          "flagg-3"
+        ]
+      }
+    ],
     "chatbotQuestions": [],
     "nearDuplicateExamples": [
       {
