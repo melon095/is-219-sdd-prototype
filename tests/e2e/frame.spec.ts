@@ -207,6 +207,23 @@ test.describe("Den delte rammen", () => {
     expect(open.violations).toEqual([]);
   });
 
+  test("det valgte alternativet i brukerbytteren leses opp uten avkrysningsmerket", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await openControls(page);
+    await page.getByRole("button", { name: /Bytt bruker/ }).click();
+    await expect(page.getByRole("listbox")).toBeVisible();
+
+    const selected = page.locator('[role="option"][aria-selected="true"]');
+    await expect(selected).toHaveCount(1);
+    await expect(selected).toHaveAccessibleName(/Kari Nordmann/);
+    await expect(selected).not.toHaveAccessibleName(/✓/);
+    await expect(
+      page.getByRole("option", { name: /Kari Nordmann/, selected: true }),
+    ).toHaveCount(1);
+  });
+
   test("forsiden og siden som ikke finnes har ingen tilgjengelighetsfeil", async ({
     page,
   }) => {

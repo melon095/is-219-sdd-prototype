@@ -308,6 +308,25 @@ test.describe("Eier ber om hjelp og velger en arbeider", () => {
     expect(skills.violations).toEqual([]);
   });
 
+  test("det valgte alternativet i enhetsvalget leses opp uten avkrysningsmerket", async ({
+    page,
+  }) => {
+    await page.goto("/#/oppdrag/ny");
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Nytt oppdrag" }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: /Enhet/ }).click();
+    await page.getByRole("option", { name: "måneder" }).click();
+    await expect(page.getByRole("listbox")).toBeHidden();
+
+    await page.getByRole("button", { name: /Enhet/ }).click();
+    const selected = page.locator('[role="option"][aria-selected="true"]');
+    await expect(selected).toHaveCount(1);
+    await expect(selected).toHaveAccessibleName("måneder");
+    await expect(selected).not.toHaveAccessibleName(/✓/);
+  });
+
   test("sidene har ingen tilgjengelighetsfeil", async ({ page }) => {
     await page.goto("/#/oppdrag");
     await expect(

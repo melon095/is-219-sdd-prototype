@@ -47,7 +47,7 @@
 }
 
 .activity-feed-meta span + time::before {
-  content: "·";
+  content: "·" / "";
   margin-inline-end: var(--space-2);
 }
 

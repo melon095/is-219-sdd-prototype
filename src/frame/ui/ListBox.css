@@ -254,7 +254,7 @@
 }
 
 .react-aria-ListBoxItem[data-selected]::before {
-  content: "✓";
+  content: "✓" / "";
   flex: none;
   width: 1em;
 }
