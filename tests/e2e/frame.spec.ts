@@ -129,6 +129,31 @@ test.describe("Den delte rammen", () => {
     }
   });
 
+  test("Varodd ligger på samme linje som knappene i toppen på skrivebord", async ({
+    page,
+  }) => {
+    test.skip(isMobile(page), "Gjelder bare skrivebordsoppsettet");
+    await page.goto("/");
+    const banner = page.getByRole("banner");
+    const brand = await banner
+      .getByRole("link", { name: "Varodd", exact: true })
+      .boundingBox();
+    const home = await banner
+      .getByRole("link", { name: "Hjem", exact: true })
+      .boundingBox();
+    const reset = await banner
+      .getByRole("button", { name: "Tilbakestill demo" })
+      .boundingBox();
+    if (brand === null || home === null || reset === null) {
+      throw new Error("Fant ikke plasseringen til elementene i toppen");
+    }
+    const centre = (box: { y: number; height: number }) =>
+      box.y + box.height / 2;
+
+    expect(Math.abs(centre(brand) - centre(home))).toBeLessThanOrEqual(4);
+    expect(Math.abs(centre(brand) - centre(reset))).toBeLessThanOrEqual(4);
+  });
+
   test("Tilbakestill demo gjenoppretter seed-dataene og beholder valgt bruker", async ({
     page,
   }) => {

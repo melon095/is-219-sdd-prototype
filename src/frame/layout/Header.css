@@ -63,6 +63,13 @@
 
 @media (min-width: 48rem) {
   .header-inner {
+    align-items: flex-end;
     padding-inline: var(--space-6);
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    min-height: var(--target-size-min);
   }
 }
