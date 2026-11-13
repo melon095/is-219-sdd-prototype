@@ -56,6 +56,7 @@ The frame builds the router, the header buttons, the home page cards, `applyComm
 - Entries are `ActivityEntry` records in `frame.activity` (see [data-model.md](../data-model.md#activityentry)). Features add them only through their command handlers.
 - A feature registers audience groups with a function that is checked when the feed is shown. Varodd administrators see every entry.
 - Feature 002 registers its own group (for example, `"knowledgeBase.members"`), so knowledge base entries are shown only to people who can use the knowledge base (002 FR-022).
+- `Audience` has an optional `requiredGroup`. When set, an entry is shown only to a person for whom that group's check is true, even if the person is listed in `audience.personIds` or matches another group. Varodd administrators still see every entry. Entries without it behave as before.
 
 ## Demo controls
 
@@ -144,6 +145,8 @@ Motion: transitions are short (150 ms) and turned off under `prefers-reduced-mot
 
 In `src/frame/ui/`. Each is a React Aria component from the Vanilla CSS starter kit, with its own CSS file using the tokens above. Later features use these and do not style React Aria components themselves.
 
-`Button` (primary, secondary, and quiet), `Link`, `TextField`, `TextArea`, `NumberField`, `Select`, `ComboBox`, `TagPicker` (searchable multi-select with removable tags), `RadioGroup`, `Switch`, `DatePicker` (`nb-NO`), `Dialog`, `AlertDialog` (with an optional required reason field), `Menu`, `Disclosure`, `Tabs`, `Card`, `StatusBadge` (text plus colour, never colour alone), `Notice` (info, success, warning, error), `SimulatedLabel`, `TimeDebugButton`, `EmptyState`, `LiveAnnouncer` (polite live region used after commands), `PageHeading` (the focus target after navigation).
+`Button` (primary, secondary, and quiet), `Link`, `TextField`, `TextArea`, `NumberField`, `Select`, `ComboBox`, `TagPicker` (searchable multi-select with removable tags), `RadioGroup`, `Switch`, `DatePicker` (`nb-NO`), `Dialog`, `AlertDialog` (with an optional required reason field), `Menu`, `Disclosure`, `Tabs`, `Card`, `StatusBadge` (text plus colour, never colour alone), `Notice` (info, success, warning, error), `SimulatedLabel`, `TimeDebugButton`, `EmptyState`, `LiveAnnouncer` (polite live region used after commands), `PageHeading` (the focus target after navigation), and `SearchField` (a search box with a clear button, added by feature 002).
+
+`src/frame/layout/` also holds `SubNav` (the secondary row of links under the header, with an optional badge on each link) and `SubNavLayout` (the `SubNav` above an `<Outlet />`). Feature 001 and feature 002 both use them; they were first built inside 001's marketplace feature and moved to the frame by 002.
 
 Every component has a component test with a `jest-axe` check, and its CSS has visible hover, pressed, focus-visible, disabled, and invalid states where they apply.
