@@ -38,7 +38,7 @@ describe("rutene til kunnskapsbanken", () => {
     expect(screen.queryByRole("navigation")).toBe(null);
   });
 
-  it("har en plassholder for chatboten og vurderingen", () => {
+  it("viser chatbotsiden til administratoren", () => {
     open("person-15", "/kunnskapsbank/chatbot");
     expect(
       screen.getByRole("heading", { level: 1, name: "Spør chatboten" }),

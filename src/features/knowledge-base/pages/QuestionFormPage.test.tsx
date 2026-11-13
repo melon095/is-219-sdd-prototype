@@ -274,6 +274,58 @@ describe("QuestionFormPage tilgjengelighet", () => {
   });
 });
 
+const longChatbotText = `${"Hvordan ".repeat(20)}slutter dette?`;
+
+const chatbotState = kbState({
+  chatbotQuestions: [
+    { id: "chatbot-1", text: "Hvordan lager jeg et kaffeabonnement?" },
+    { id: "chatbot-2", text: longChatbotText },
+  ],
+});
+
+function openFromChatbot(route: string) {
+  return renderPage(<QuestionFormPage />, {
+    path: "kunnskapsbank/sporsmal/ny",
+    route,
+    userId: people.jonas,
+    state: chatbotState,
+    extraPages: [questionPage],
+  });
+}
+
+describe("QuestionFormPage fra chatboten", () => {
+  it("fyller ut tittelen med teksten til det ferdige spørsmålet", () => {
+    openFromChatbot("/kunnskapsbank/sporsmal/ny?fra=chatbot-1");
+
+    expect(titleField().value).toBe("Hvordan lager jeg et kaffeabonnement?");
+    expect(descriptionField().value).toBe("");
+    expect(screen.getByText("37 av 120 tegn")).toBeTruthy();
+  });
+
+  it("kutter tittelen til 120 tegn", () => {
+    openFromChatbot("/kunnskapsbank/sporsmal/ny?fra=chatbot-2");
+
+    expect(longChatbotText.length).toBeGreaterThan(120);
+    expect(titleField().value).toBe(longChatbotText.slice(0, 120));
+    expect(screen.getByText("120 av 120 tegn")).toBeTruthy();
+  });
+
+  it("lar tittelen stå tom for en ukjent id", () => {
+    openFromChatbot("/kunnskapsbank/sporsmal/ny?fra=chatbot-99");
+
+    expect(titleField().value).toBe("");
+  });
+
+  it("kan kombineres med et valgt tema", () => {
+    openFromChatbot("/kunnskapsbank/sporsmal/ny?fra=chatbot-1&tema=tema-2");
+
+    expect(titleField().value).toBe("Hvordan lager jeg et kaffeabonnement?");
+    expect(screen.getByRole("button", { name: /Tema/ }).textContent).toContain(
+      "Teknisk hjelp",
+    );
+  });
+});
+
 const longAnswer = `${"x".repeat(160)} resten av svaret`;
 
 const similarState = kbState({

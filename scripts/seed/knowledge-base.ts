@@ -7,6 +7,7 @@ import type {
 } from "../../src/domain/frame/types";
 import { knowledgeBaseCommandHandlers } from "../../src/domain/knowledge-base/commands";
 import {
+  type ChatbotQuestion,
   emptyKnowledgeBaseState,
   type FlagReason,
   type KnowledgeBaseState,
@@ -75,6 +76,15 @@ type NearDuplicateSpec = {
   questionKey: string;
   title: string;
   description: string;
+};
+
+type ChatbotSpec = {
+  text: string;
+  answer?: {
+    text: string;
+    questionKeys: string[];
+    answerSources: { questionKey: string; authorId: Id }[];
+  };
 };
 
 type FlagSpec = {
@@ -367,6 +377,54 @@ const nearDuplicateSpecs: NearDuplicateSpec[] = [
   },
 ];
 
+const chatbotSpecs: ChatbotSpec[] = [
+  {
+    text: "Hvordan kan jeg bruke KI til å skrive produkttekster?",
+    answer: {
+      text: "Gi Claude noen av tekstene dine som eksempel, så skriver den i samme stil. Fortell hvem som skal lese teksten, og gi fakta om produktet, som størrelse og materiale. En fast mal med tone og lengde gjør at alle tekstene blir like. Les alltid gjennom teksten, for Claude kan finne på detaljer som ikke stemmer.",
+      questionKeys: ["produkttekster"],
+      answerSources: [
+        { questionKey: "produkttekster", authorId: per },
+        { questionKey: "produkttekster", authorId: ola },
+        { questionKey: "produkttekster", authorId: jonas },
+      ],
+    },
+  },
+  {
+    text: "Kan jeg la Claude skrive svar til kundene mine på e-post?",
+    answer: {
+      text: "Ja, Claude kan lage utkast til svar. Fjern navn, adresser og bestillingsnummer før du limer inn e-posten. Les gjennom svaret og send det selv.",
+      questionKeys: ["kundeepost"],
+      answerSources: [{ questionKey: "kundeepost", authorId: kari }],
+    },
+  },
+  {
+    text: "Hvordan får jeg flere til å lese nyhetsbrevet vårt?",
+    answer: {
+      text: "Send nyhetsbrevet én gang i måneden. Skriv om det som skjer bak kulissene, som nye produkter, hva som er på lager og en liten historie. Gratisplanen hos Mailchimp holder lenge.",
+      questionKeys: ["nyhetsbrev"],
+      answerSources: [{ questionKey: "nyhetsbrev", authorId: ola }],
+    },
+  },
+  {
+    text: "Jeg vil lære meg å bruke KI i bedriften, hvor bør jeg starte?",
+    answer: {
+      text: "Velg én oppgave du gjør ofte og synes er kjedelig, for eksempel å skrive varebeskrivelser eller svare på de samme spørsmålene fra kunder. Prøv Claude på akkurat den oppgaven i to uker før du prøver noe nytt.",
+      questionKeys: ["kiihverdagen"],
+      answerSources: [{ questionKey: "kiihverdagen", authorId: kari }],
+    },
+  },
+  {
+    text: "Hvordan kan jeg la kundene abonnere på kaffen vår?",
+  },
+  {
+    text: "Må jeg ta med moms når jeg selger til kunder i Sverige?",
+  },
+  {
+    text: "Hvordan søker vi om støtte til å digitalisere bedriften?",
+  },
+];
+
 const flagSpecs: FlagSpec[] = [
   {
     questionKey: "bilder",
@@ -564,12 +622,14 @@ function createHistory(frame: FrameSeed) {
     reviewAnswer,
     play,
     questionIdOf,
+    answerOf,
   };
 }
 
 function renumber(
   state: DemoState,
   examples: NearDuplicateExample[],
+  chatbotQuestions: ChatbotQuestion[],
 ): {
   knowledgeBase: KnowledgeBaseState;
   activity: ActivityEntry[];
@@ -616,6 +676,22 @@ function renumber(
         ...example,
         matchesQuestionId: mapped(questionIds, example.matchesQuestionId),
       })),
+      chatbotQuestions: chatbotQuestions.map((item) =>
+        item.answer === undefined
+          ? item
+          : {
+              ...item,
+              answer: {
+                ...item.answer,
+                sourceQuestionIds: item.answer.sourceQuestionIds.map((id) =>
+                  mapped(questionIds, id),
+                ),
+                sourceAnswerIds: item.answer.sourceAnswerIds.map((id) =>
+                  mapped(answerIds, id),
+                ),
+              },
+            },
+      ),
     },
     activity: state.frame.activity.map((entry) => ({
       ...entry,
@@ -647,7 +723,26 @@ export function seedKnowledgeBase(
     description: spec.description,
     matchesQuestionId: history.questionIdOf(spec.questionKey),
   }));
-  const result = renumber(history.current(), examples);
+  const chatbotQuestions: ChatbotQuestion[] = chatbotSpecs.map(
+    (spec, index) => ({
+      id: `chatbot-${index + 1}`,
+      text: spec.text,
+      ...(spec.answer === undefined
+        ? {}
+        : {
+            answer: {
+              text: spec.answer.text,
+              sourceQuestionIds: spec.answer.questionKeys.map(
+                history.questionIdOf,
+              ),
+              sourceAnswerIds: spec.answer.answerSources.map((source) =>
+                history.answerOf(source.questionKey, source.authorId),
+              ),
+            },
+          }),
+    }),
+  );
+  const result = renumber(history.current(), examples, chatbotQuestions);
   return {
     key: "knowledgeBase",
     data: result.knowledgeBase,

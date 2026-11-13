@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { DemoState } from "../../src/domain/frame/types";
-import { similarQuestions } from "../../src/domain/knowledge-base/search";
+import { chatbotResponse } from "../../src/domain/knowledge-base/chatbot";
+import {
+  searchQuestions,
+  similarQuestions,
+} from "../../src/domain/knowledge-base/search";
 import { questionStatus } from "../../src/domain/knowledge-base/status";
 import {
   matchScore,
@@ -336,7 +340,7 @@ describe("seeded moderation history", () => {
   const personIds = new Set(people.map((person) => person.id));
   const reservedQuestionIds = [
     "sporsmal-1",
-    "sporsmal-3",
+    "sporsmal-4",
     "sporsmal-6",
     "sporsmal-9",
     "sporsmal-13",
@@ -499,6 +503,148 @@ describe("seeded moderation history", () => {
             : "removed";
       expect(item?.moderation, review.id).toBe(expected);
     }
+  });
+});
+
+describe("prepared chatbot questions", () => {
+  const prepared = kb.chatbotQuestions;
+  const withAnswer = prepared.filter((item) => item.answer !== undefined);
+  const withoutAnswer = prepared.filter((item) => item.answer === undefined);
+
+  it("has 7 questions with the ids chatbot-1 to chatbot-7", () => {
+    expect(prepared.map((item) => item.id)).toEqual([
+      "chatbot-1",
+      "chatbot-2",
+      "chatbot-3",
+      "chatbot-4",
+      "chatbot-5",
+      "chatbot-6",
+      "chatbot-7",
+    ]);
+  });
+
+  it("has at least 4 with an answer and at least 2 without", () => {
+    expect(withAnswer.length).toBeGreaterThanOrEqual(4);
+    expect(withoutAnswer.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("keeps every text within its length limit", () => {
+    for (const item of prepared) {
+      expect(item.text.length, item.id).toBeGreaterThanOrEqual(1);
+      expect(item.text.length, item.id).toBeLessThanOrEqual(200);
+      if (item.answer !== undefined) {
+        expect(item.answer.text.length, item.id).toBeGreaterThanOrEqual(1);
+        expect(item.answer.text.length, item.id).toBeLessThanOrEqual(1000);
+      }
+    }
+  });
+
+  it("writes every prepared answer as 2 to 4 sentences", () => {
+    for (const item of withAnswer) {
+      const sentences = (item.answer?.text.match(/[.!?](\s|$)/g) ?? []).length;
+      expect(sentences, item.id).toBeGreaterThanOrEqual(2);
+      expect(sentences, item.id).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it("points every source at an existing question or answer that is current or cleared", () => {
+    for (const item of withAnswer) {
+      expect(item.answer?.sourceQuestionIds.length, item.id).toBeGreaterThan(0);
+      for (const id of item.answer?.sourceQuestionIds ?? []) {
+        const found = kb.questions.find((candidate) => candidate.id === id);
+        expect(found, `${item.id} ${id}`).toBeDefined();
+        expect(["current", "cleared"], `${item.id} ${id}`).toContain(
+          found?.moderation,
+        );
+      }
+      for (const id of item.answer?.sourceAnswerIds ?? []) {
+        const found = kb.answers.find((candidate) => candidate.id === id);
+        expect(found, `${item.id} ${id}`).toBeDefined();
+        expect(["current", "cleared"], `${item.id} ${id}`).toContain(
+          found?.moderation,
+        );
+      }
+    }
+  });
+
+  it("lets every source answer belong to one of the source questions", () => {
+    for (const item of withAnswer) {
+      for (const id of item.answer?.sourceAnswerIds ?? []) {
+        const found = kb.answers.find((candidate) => candidate.id === id);
+        expect(item.answer?.sourceQuestionIds, `${item.id} ${id}`).toContain(
+          found?.questionId,
+        );
+      }
+    }
+  });
+
+  it("has no source that is the target of an open review", () => {
+    const open = kb.reviews.filter((review) => review.outcome === undefined);
+    for (const item of withAnswer) {
+      for (const review of open) {
+        const ids =
+          review.targetKind === "question"
+            ? (item.answer?.sourceQuestionIds ?? [])
+            : (item.answer?.sourceAnswerIds ?? []);
+        expect(ids, `${item.id} ${review.id}`).not.toContain(review.targetId);
+      }
+    }
+  });
+
+  it("has an answer with a source answer that Per did not write and has not flagged", () => {
+    const found = withAnswer.some((item) =>
+      (item.answer?.sourceAnswerIds ?? []).some((id) => {
+        const source = kb.answers.find((candidate) => candidate.id === id);
+        return (
+          source !== undefined &&
+          source.authorId !== "person-3" &&
+          !kb.flags.some(
+            (flag) => flag.targetId === id && flag.flaggedBy === "person-3",
+          )
+        );
+      }),
+    );
+    expect(found).toBe(true);
+  });
+
+  it("gives an answer for each prepared answer and no answer for the rest", () => {
+    for (const item of withAnswer) {
+      const response = chatbotResponse(item, state);
+      expect(response.kind, item.id).toBe("answer");
+      if (response.kind === "answer") {
+        expect(response.text, item.id).toBe(item.answer?.text);
+        expect(
+          response.sources.map((source) => source.id),
+          item.id,
+        ).toEqual(item.answer?.sourceQuestionIds);
+      }
+    }
+    for (const item of withoutAnswer) {
+      expect(chatbotResponse(item, state).kind, item.id).toBe("no-answer");
+    }
+  });
+
+  it("gives every question without an answer closest questions from the search", () => {
+    for (const item of withoutAnswer) {
+      const response = chatbotResponse(item, state);
+      if (response.kind === "no-answer") {
+        expect(
+          response.closest.map((question) => question.id),
+          item.id,
+        ).toEqual(
+          searchQuestions(item.text, state)
+            .slice(0, 3)
+            .map((question) => question.id),
+        );
+      }
+    }
+  });
+
+  it("uses each source question for only one prepared answer", () => {
+    const allSources = withAnswer.flatMap(
+      (item) => item.answer?.sourceQuestionIds ?? [],
+    );
+    expect(new Set(allSources).size).toBe(allSources.length);
   });
 });
 

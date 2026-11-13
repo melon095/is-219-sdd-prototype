@@ -1,0 +1,54 @@
+.chatbot-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.chatbot-intro p {
+  margin: 0;
+  max-width: var(--width-reading);
+}
+
+.chatbot-columns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.chatbot-questions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.chatbot-questions h2 {
+  margin: 0;
+  font-size: var(--font-size-h2);
+}
+
+.chatbot-question-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chatbot-question-list .react-aria-Button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+@media (min-width: 48rem) {
+  .chatbot-columns[data-layout="desktop"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+    gap: var(--space-7);
+  }
+}

@@ -27,9 +27,10 @@ const titleLimit = 120;
 type FormProps = {
   question?: Question;
   initialTopicId?: Id;
+  initialTitle?: string;
 };
 
-function QuestionForm({ question, initialTopicId }: FormProps) {
+function QuestionForm({ question, initialTopicId, initialTitle }: FormProps) {
   const state = useDemoState();
   const dispatch = useDispatch();
   const announce = useAnnounce();
@@ -39,7 +40,7 @@ function QuestionForm({ question, initialTopicId }: FormProps) {
   const [topicId, setTopicId] = useState<string | null>(
     question?.topicId ?? initialTopicId ?? null,
   );
-  const [title, setTitle] = useState(question?.title ?? "");
+  const [title, setTitle] = useState(question?.title ?? initialTitle ?? "");
   const [description, setDescription] = useState(question?.description ?? "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | undefined>(undefined);
@@ -137,6 +138,9 @@ function NewQuestionPage() {
   const initialTopicId = state.knowledgeBase.topics.find(
     (topic) => topic.id === requested,
   )?.id;
+  const initialTitle = state.knowledgeBase.chatbotQuestions
+    .find((item) => item.id === params.get("fra"))
+    ?.text.slice(0, titleLimit);
 
   return (
     <RequireAccess allowed={canView}>
@@ -147,7 +151,10 @@ function NewQuestionPage() {
         </Notice>
       ) : (
         <div className="question-form-layout">
-          <QuestionForm initialTopicId={initialTopicId} />
+          <QuestionForm
+            initialTopicId={initialTopicId}
+            initialTitle={initialTitle}
+          />
         </div>
       )}
     </RequireAccess>

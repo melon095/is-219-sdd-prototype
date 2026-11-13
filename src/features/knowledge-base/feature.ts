@@ -3,8 +3,8 @@ import type { FeatureDefinition, HomeCard } from "../../app/features";
 import { isAdmin } from "../../domain/frame/people";
 import { knowledgeBaseCommandHandlers } from "../../domain/knowledge-base/commands";
 import { isMember } from "../../domain/knowledge-base/permissions";
-import { PageHeading } from "../../frame/ui/PageHeading";
 import { KnowledgeBaseLayout } from "./components/KnowledgeBaseLayout";
+import { ChatbotPage } from "./pages/ChatbotPage";
 import { ForumPage } from "./pages/ForumPage";
 import { QuestionFormPage } from "./pages/QuestionFormPage";
 import { QuestionPage } from "./pages/QuestionPage";
@@ -62,7 +62,7 @@ export const knowledgeBaseFeature: FeatureDefinition = {
         },
         {
           path: "/kunnskapsbank/chatbot",
-          element: createElement(PageHeading, null, "Spør chatboten"),
+          element: createElement(ChatbotPage),
         },
         {
           path: "/kunnskapsbank/vurdering",
