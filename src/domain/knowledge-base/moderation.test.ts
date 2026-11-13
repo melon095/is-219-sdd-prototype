@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { CommandResult, DemoState } from "../frame/types";
 import { editAnswer } from "./answers";
-import { flagContent, openReviews, reviewContent } from "./moderation";
+import {
+  closedReviews,
+  flagContent,
+  openReviews,
+  reviewContent,
+} from "./moderation";
 import { editQuestion } from "./questions";
 import { questionStatus } from "./status";
 import {
@@ -825,5 +830,29 @@ describe("openReviews", () => {
 
   it("returns an empty list when nothing waits", () => {
     expect(openReviews(kbState({}))).toEqual([]);
+  });
+});
+
+describe("closedReviews", () => {
+  it("returns closed reviews newest first and leaves out open ones", () => {
+    const closed = (id: string, reviewedAt: string, outcome: "cleared") =>
+      review(id, "answer", "svar-1", ["flagg-1"], {
+        outcome,
+        reviewedBy: people.marte,
+        reviewedAt,
+      });
+    const state = kbState({
+      reviews: [
+        closed("vurdering-1", "2026-11-12T09:00:00+01:00", "cleared"),
+        review("vurdering-2", "answer", "svar-1", ["flagg-2"]),
+        closed("vurdering-3", "2026-11-14T09:00:00+01:00", "cleared"),
+        closed("vurdering-4", "2026-11-13T09:00:00+01:00", "cleared"),
+      ],
+    });
+    expect(closedReviews(state).map((item) => item.id)).toEqual([
+      "vurdering-3",
+      "vurdering-4",
+      "vurdering-1",
+    ]);
   });
 });

@@ -14,14 +14,17 @@ import type {
   Id,
 } from "../frame/types";
 import { contentFlaggedActivity, reviewFinishedActivity } from "./activity";
-import { findTarget, openReviewFor } from "./helpers";
+import {
+  findTarget,
+  flagsOfReview,
+  openReviewFor,
+  threadQuestion,
+} from "./helpers";
 import { canFlag, canPost, canReview } from "./permissions";
 import type {
-  Answer,
   Flag,
   FlagContentInput,
   FlagReason,
-  Question,
   Review,
   ReviewContentInput,
   ReviewOutcome,
@@ -36,16 +39,6 @@ const reasons: FlagReason[] = [
 ];
 
 const noteError = "Fortell kort hva som er galt";
-
-function threadQuestion(
-  state: DemoState,
-  item: Question | Answer,
-): Question | undefined {
-  const questionId = "questionId" in item ? item.questionId : item.id;
-  return state.knowledgeBase.questions.find(
-    (candidate) => candidate.id === questionId,
-  );
-}
 
 export const flagContent: CommandHandler = (state, command, context) => {
   const input = command as unknown as FlagContentInput;
@@ -141,10 +134,7 @@ export const flagContent: CommandHandler = (state, command, context) => {
 };
 
 function flaggersOf(state: DemoState, review: Review): Id[] {
-  return review.flagIds.flatMap((flagId) => {
-    const found = state.knowledgeBase.flags.find((flag) => flag.id === flagId);
-    return found === undefined ? [] : [found.flaggedBy];
-  });
+  return flagsOfReview(state, review).map((flag) => flag.flaggedBy);
 }
 
 function closeReview(
@@ -266,4 +256,14 @@ export function openReviews(state: DemoState): Review[] {
   return state.knowledgeBase.reviews
     .filter((review) => review.outcome === undefined)
     .sort((a, b) => Date.parse(a.openedAt) - Date.parse(b.openedAt));
+}
+
+export function closedReviews(state: DemoState): Review[] {
+  return state.knowledgeBase.reviews
+    .filter((review) => review.outcome !== undefined)
+    .sort(
+      (a, b) =>
+        Date.parse(b.reviewedAt ?? b.openedAt) -
+        Date.parse(a.reviewedAt ?? a.openedAt),
+    );
 }

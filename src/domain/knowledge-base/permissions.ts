@@ -44,6 +44,21 @@ export function canEditAnswer(person: Person, answer: Answer): boolean {
   );
 }
 
+export function hasFlagged(
+  person: Person,
+  target: ContentTarget,
+  state: DemoState,
+): boolean {
+  const review = openReviewFor(state, target);
+  return (
+    review !== undefined &&
+    state.knowledgeBase.flags.some(
+      (flag) =>
+        review.flagIds.includes(flag.id) && flag.flaggedBy === person.id,
+    )
+  );
+}
+
 export function canFlag(
   person: Person,
   target: ContentTarget,
@@ -60,13 +75,7 @@ export function canFlag(
   ) {
     return false;
   }
-  const review = openReviewFor(state, target);
-  if (review === undefined) {
-    return true;
-  }
-  return !state.knowledgeBase.flags.some(
-    (flag) => review.flagIds.includes(flag.id) && flag.flaggedBy === person.id,
-  );
+  return !hasFlagged(person, target, state);
 }
 
 export function canReview(person: Person): boolean {

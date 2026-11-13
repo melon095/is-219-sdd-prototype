@@ -17,6 +17,12 @@
   gap: var(--space-4);
 }
 
+.question-details:focus-visible,
+.question-answers h2:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .question-details-status {
   display: flex;
   flex-wrap: wrap;

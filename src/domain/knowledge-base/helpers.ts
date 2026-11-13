@@ -1,5 +1,22 @@
 import type { DemoState } from "../frame/types";
-import type { Answer, ContentTarget, Question, Review } from "./types";
+import type { Answer, ContentTarget, Flag, Question, Review } from "./types";
+
+export function threadQuestion(
+  state: DemoState,
+  item: Question | Answer,
+): Question | undefined {
+  const questionId = "questionId" in item ? item.questionId : item.id;
+  return state.knowledgeBase.questions.find(
+    (candidate) => candidate.id === questionId,
+  );
+}
+
+export function flagsOfReview(state: DemoState, review: Review): Flag[] {
+  return review.flagIds.flatMap((flagId) => {
+    const found = state.knowledgeBase.flags.find((flag) => flag.id === flagId);
+    return found === undefined ? [] : [found];
+  });
+}
 
 export function findTarget(
   state: DemoState,

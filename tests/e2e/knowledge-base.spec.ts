@@ -1,49 +1,19 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page, test } from "@playwright/test";
-import { axeTags, pressFeatureLink, switchUser } from "./helpers";
+import { expect, test } from "@playwright/test";
+import {
+  answerItem,
+  answerQuestion,
+  answersRegion,
+  askQuestion,
+  axeTags,
+  feed,
+  type NewQuestion,
+  pressFeatureLink,
+  questionRegion,
+  switchUser,
+} from "./helpers";
 
 const seededOpenTitle = "Hva gjør vi med varer som ikke selger?";
-
-type NewQuestion = { title: string; description: string; topic: string };
-
-function questionRegion(page: Page) {
-  return page.getByRole("region", { name: "Spørsmålet", exact: true });
-}
-
-function answersRegion(page: Page) {
-  return page.getByRole("region", { name: /^\d+ svar$/ });
-}
-
-function answerItem(page: Page, text: string) {
-  return answersRegion(page).getByRole("listitem").filter({ hasText: text });
-}
-
-function feed(page: Page) {
-  return page.getByRole("region", { name: "Siste aktivitet" });
-}
-
-async function askQuestion(page: Page, question: NewQuestion) {
-  await page.goto("/#/kunnskapsbank/sporsmal/ny");
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Still et spørsmål" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: /Tema/ }).click();
-  await page.getByRole("option", { name: question.topic }).click();
-  await page.getByRole("textbox", { name: "Tittel" }).fill(question.title);
-  await page
-    .getByRole("textbox", { name: "Beskriv spørsmålet" })
-    .fill(question.description);
-  await page.getByRole("button", { name: "Publiser spørsmålet" }).click();
-  await expect(
-    page.getByRole("heading", { level: 1, name: question.title }),
-  ).toBeVisible();
-}
-
-async function answerQuestion(page: Page, text: string) {
-  await page.getByRole("textbox", { name: "Skriv et svar" }).fill(text);
-  await page.getByRole("button", { name: "Publiser svar" }).click();
-  await expect(answerItem(page, text)).toBeVisible();
-}
 
 const jonasQuestion: NewQuestion = {
   title: "Hvordan sender vi pakker til utlandet?",

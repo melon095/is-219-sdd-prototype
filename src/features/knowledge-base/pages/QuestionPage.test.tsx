@@ -7,10 +7,12 @@ import {
   kbState,
   people,
   question,
+  withKnowledgeBase,
 } from "../../../domain/knowledge-base/testState";
 import { testNow } from "../../../frame/test-utils";
 import { renderPage } from "../../marketplace/pages/renderPage";
 import { formatDate, formatDateTime } from "../format";
+import { moderationState } from "../testFixtures";
 import { QuestionPage } from "./QuestionPage";
 
 function day(number: number): string {
@@ -392,6 +394,288 @@ describe("QuestionPage for ukjente og fjernede spørsmål", () => {
   });
 });
 
+const answerWarning =
+  "Dette innlegget er flagget (Utdatert, Feil) og blir vurdert av Varodd. Vær forsiktig med å stole på det.";
+const questionWarning =
+  "Dette innlegget er flagget (Spam) og blir vurdert av Varodd. Vær forsiktig med å stole på det.";
+
+function openFlagged(
+  userId: string,
+  state = moderationState(),
+  layout: "desktop" | "mobile" = "desktop",
+) {
+  return renderPage(<QuestionPage />, {
+    path: "kunnskapsbank/sporsmal/:questionId",
+    route: "/kunnskapsbank/sporsmal/sporsmal-1",
+    userId,
+    state,
+    layout,
+  });
+}
+
+type Control = "flag" | "done" | "none";
+
+function controlIn(element: HTMLElement): Control {
+  const scope = within(element);
+  if (scope.queryByRole("button", { name: "Flagg" }) !== null) {
+    return "flag";
+  }
+  if (scope.queryByText("Du har flagget dette") !== null) {
+    return "done";
+  }
+  return "none";
+}
+
+describe("QuestionPage flagging", () => {
+  it("viser Flagg på andres innlegg, men ikke på egne", () => {
+    const expected: [string, Control[]][] = [
+      [people.kari, ["flag", "flag", "done"]],
+      [people.per, ["done", "none", "flag"]],
+      [people.jonas, ["none", "flag", "done"]],
+      [people.ola, ["flag", "flag", "none"]],
+    ];
+    for (const [userId, [onQuestion, onFirst, onSecond]] of expected) {
+      const { unmount } = openFlagged(userId);
+      expect(controlIn(questionRegion()), `${userId} spørsmålet`).toBe(
+        onQuestion,
+      );
+      expect(controlIn(answerItem("svar-1")), `${userId} svar-1`).toBe(onFirst);
+      expect(controlIn(answerItem("svar-2")), `${userId} svar-2`).toBe(
+        onSecond,
+      );
+      unmount();
+    }
+  });
+
+  it("viser flaggede innlegg med advarsel og andre uten", () => {
+    openFlagged(people.per);
+
+    expect(within(questionRegion()).getByText(questionWarning)).toBeTruthy();
+    expect(within(answerItem("svar-2")).getByText(answerWarning)).toBeTruthy();
+    expect(answerItem("svar-1").querySelector(".notice")).toBe(null);
+  });
+
+  it("viser forfatteren grunnene, men ikke hvem som flagget eller notatene", () => {
+    openFlagged(people.ola);
+
+    expect(within(answerItem("svar-2")).getByText(answerWarning)).toBeTruthy();
+    expect(screen.queryByText("Prisen er feil.")).toBe(null);
+    expect(screen.queryByText("Dette er reklame.")).toBe(null);
+    expect(screen.queryByText("Kari Nordmann")).toBe(null);
+  });
+
+  it("flagger et svar fra siden, viser advarsel og flytter fokus til Du har flagget dette", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { store } = openFlagged(people.kari);
+
+    await user.click(
+      within(answerItem("svar-1")).getByRole("button", { name: "Flagg" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Flagg innlegget",
+    });
+    await user.click(within(dialog).getByText("Spam"));
+    await user.click(within(dialog).getByRole("button", { name: "Send" }));
+
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBe(null));
+    expect(
+      store
+        .getState()
+        .knowledgeBase.answers.find((item) => item.id === "svar-1")?.moderation,
+    ).toBe("flagged");
+    const item = within(answerItem("svar-1"));
+    expect(
+      item.getByText(
+        "Dette innlegget er flagget (Spam) og blir vurdert av Varodd. Vær forsiktig med å stole på det.",
+      ),
+    ).toBeTruthy();
+    const done = item.getByText("Du har flagget dette");
+    await waitFor(() => expect(document.activeElement).toBe(done));
+    expect(
+      within(questionRegion()).getByText("Åpent").getAttribute("data-tone"),
+    ).toBe("neutral");
+  });
+
+  it("viser ikke fjernede svar og teller dem ikke", () => {
+    openFlagged(people.kari);
+
+    expect(
+      within(answerRegion()).getByRole("heading", { level: 2, name: "2 svar" }),
+    ).toBeTruthy();
+    expect(screen.queryByText("Fjernet svar")).toBe(null);
+    const panel = within(
+      screen.getByRole("complementary", { name: "Om spørsmålet" }),
+    );
+    expect(panel.getByText("Antall svar").nextElementSibling?.textContent).toBe(
+      "2",
+    );
+  });
+});
+
+describe("QuestionPage vurdering for administratorer", () => {
+  it("viser Behold og Fjern på flaggede innlegg og ingen Flagg", () => {
+    openFlagged(people.marte);
+
+    for (const element of [questionRegion(), answerItem("svar-2")]) {
+      expect(
+        within(element).getByRole("button", { name: "Behold" }),
+      ).toBeTruthy();
+      expect(
+        within(element).getByRole("button", { name: "Fjern" }),
+      ).toBeTruthy();
+    }
+    expect(
+      within(answerItem("svar-1")).queryByRole("button", { name: "Behold" }),
+    ).toBe(null);
+    expect(
+      within(answerItem("svar-1")).queryByRole("button", { name: "Fjern" }),
+    ).toBe(null);
+    expect(screen.queryByRole("button", { name: "Flagg" })).toBe(null);
+    expect(screen.queryByText("Du har flagget dette")).toBe(null);
+  });
+
+  it("viser administratoren hvem som flagget og notatene", () => {
+    openFlagged(people.marte);
+
+    const warning = within(answerItem("svar-2"));
+    expect(warning.getByText("Kari Nordmann")).toBeTruthy();
+    expect(warning.getByText("Jonas Berg")).toBeTruthy();
+    expect(warning.getByText("Prisen er feil.")).toBeTruthy();
+    expect(
+      within(questionRegion()).getByText("Dette er reklame."),
+    ).toBeTruthy();
+  });
+
+  it("viser ikke Behold og Fjern til medlemmer", () => {
+    openFlagged(people.per);
+
+    expect(screen.queryByRole("button", { name: "Behold" })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Fjern" })).toBe(null);
+  });
+
+  it("beholder et svar med Behold, kunngjør det og flytter fokus til svaret", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { store } = openFlagged(people.marte);
+
+    await user.click(
+      within(answerItem("svar-2")).getByRole("button", { name: "Behold" }),
+    );
+
+    const stored = store.getState().knowledgeBase;
+    expect(
+      stored.answers.find((item) => item.id === "svar-2")?.moderation,
+    ).toBe("cleared");
+    expect(
+      stored.reviews.find((item) => item.id === "vurdering-2")?.outcome,
+    ).toBe("cleared");
+    expect(await screen.findByText("Innlegget er beholdt")).toBeTruthy();
+    expect(within(answerItem("svar-2")).queryByText(answerWarning)).toBe(null);
+    expect(
+      within(answerItem("svar-2")).queryByRole("button", { name: "Behold" }),
+    ).toBe(null);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(answerItem("svar-2")),
+    );
+  });
+
+  it("ber om bekreftelse før et svar fjernes, og flytter fokus til svarlisten", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { store } = openFlagged(people.marte);
+
+    await user.click(
+      within(answerItem("svar-2")).getByRole("button", { name: "Fjern" }),
+    );
+    const cancelDialog = await screen.findByRole("alertdialog");
+    expect(
+      within(cancelDialog).getByText("Svaret blir fjernet fra forumet."),
+    ).toBeTruthy();
+    await user.click(
+      within(cancelDialog).getByRole("button", { name: "Avbryt" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBe(null));
+    expect(
+      store
+        .getState()
+        .knowledgeBase.answers.find((item) => item.id === "svar-2")?.moderation,
+    ).toBe("flagged");
+
+    await user.click(
+      within(answerItem("svar-2")).getByRole("button", { name: "Fjern" }),
+    );
+    const dialog = await screen.findByRole("alertdialog");
+    await user.click(within(dialog).getByRole("button", { name: "Fjern" }));
+
+    expect(
+      store
+        .getState()
+        .knowledgeBase.answers.find((item) => item.id === "svar-2")?.moderation,
+    ).toBe("removed");
+    expect(await screen.findByText("Innlegget er fjernet")).toBeTruthy();
+    expect(screen.queryByText("Bruk en fast pris for hele landet.")).toBe(null);
+    const heading = within(answerRegion()).getByRole("heading", {
+      level: 2,
+      name: "1 svar",
+    });
+    await waitFor(() => expect(document.activeElement).toBe(heading));
+  });
+
+  it("fjerner hele tråden når et spørsmål fjernes", async () => {
+    const user = userEvent.setup({ delay: null });
+    const { store } = openFlagged(people.marte);
+
+    await user.click(
+      within(questionRegion()).getByRole("button", { name: "Fjern" }),
+    );
+    const dialog = await screen.findByRole("alertdialog");
+    expect(
+      within(dialog).getByText("Hele tråden blir fjernet, med alle svarene."),
+    ).toBeTruthy();
+    await user.click(within(dialog).getByRole("button", { name: "Fjern" }));
+
+    const stored = store.getState().knowledgeBase;
+    expect(
+      stored.questions.find((item) => item.id === "sporsmal-1")?.moderation,
+    ).toBe("removed");
+    expect(await screen.findByText("Innlegget er fjernet")).toBeTruthy();
+    const heading = screen.getByRole("heading", {
+      level: 1,
+      name: "Spørsmålet er fjernet",
+    });
+    expect(screen.queryByText("Bruk en fraktavtale med Posten.")).toBe(null);
+    await waitFor(() => expect(document.activeElement).toBe(heading));
+  });
+
+  it("viser Spørsmålet er fjernet uten innhold, flagg eller handlinger", () => {
+    const base = moderationState();
+    const removed = withKnowledgeBase(base, {
+      questions: base.knowledgeBase.questions.map((item) =>
+        item.id === "sporsmal-1" ? { ...item, moderation: "removed" } : item,
+      ),
+      answers: base.knowledgeBase.answers.map((item) =>
+        item.questionId === "sporsmal-1"
+          ? { ...item, moderation: "removed" }
+          : item,
+      ),
+    });
+    openFlagged(people.kari, removed);
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Spørsmålet er fjernet" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(
+        "Varodd har fjernet dette spørsmålet fordi det ikke passet i forumet.",
+      ),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: /forumet/ }).getAttribute("href"),
+    ).toBe("/kunnskapsbank");
+    expect(screen.queryByText("Bruk en fraktavtale med Posten.")).toBe(null);
+    expect(screen.queryByRole("button", { name: "Flagg" })).toBe(null);
+    expect(screen.queryByText(questionWarning)).toBe(null);
+  });
+});
+
 describe("QuestionPage tilgjengelighet", () => {
   it("har ingen tilgjengelighetsfeil på skrivebord", async () => {
     const { container } = open(people.kari);
@@ -417,6 +701,19 @@ describe("QuestionPage tilgjengelighet", () => {
     await user.click(screen.getByRole("button", { name: "Rediger" }));
 
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("har ingen tilgjengelighetsfeil med flaggede innlegg for medlem og administrator", async () => {
+    const member = openFlagged(people.per);
+    expect(await axe(member.container)).toHaveNoViolations();
+    member.unmount();
+
+    const admin = openFlagged(people.marte);
+    expect(await axe(admin.container)).toHaveNoViolations();
+    admin.unmount();
+
+    const mobile = openFlagged(people.per, moderationState(), "mobile");
+    expect(await axe(mobile.container)).toHaveNoViolations();
   });
 
   it("har ingen tilgjengelighetsfeil for et fjernet spørsmål", async () => {

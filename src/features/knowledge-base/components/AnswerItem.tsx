@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { personById } from "../../../domain/frame/people";
-import { canEditAnswer } from "../../../domain/knowledge-base/permissions";
+import { openReviewFor } from "../../../domain/knowledge-base/helpers";
+import {
+  canEditAnswer,
+  canReview,
+} from "../../../domain/knowledge-base/permissions";
 import type { Answer } from "../../../domain/knowledge-base/types";
 import { useDemoState, useDispatch } from "../../../frame/store/store";
 import { Button } from "../../../frame/ui/Button";
@@ -8,6 +12,9 @@ import { TextArea } from "../../../frame/ui/TextArea";
 import { focusAfterRender } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { formatDate, formatDateTime } from "../format";
+import { FlagDialog } from "./FlagDialog";
+import { FlagWarning } from "./FlagWarning";
+import { ReviewActions } from "./ReviewActions";
 import "./AnswerItem.css";
 
 export function AnswerItem({ answer }: { answer: Answer }) {
@@ -23,6 +30,8 @@ export function AnswerItem({ answer }: { answer: Answer }) {
   );
   const author = personById(answer.authorId, state);
   const selector = `[data-answer-id="${answer.id}"]`;
+  const target = { targetKind: "answer" as const, targetId: answer.id };
+  const openReview = openReviewFor(state, target);
 
   const startEditing = () => {
     setText(answer.text);
@@ -61,6 +70,7 @@ export function AnswerItem({ answer }: { answer: Answer }) {
           <span>Endret {formatDateTime(answer.editedAt)}</span>
         )}
       </p>
+      <FlagWarning target={target} />
       {editing ? (
         <div className="answer-item-edit">
           <TextArea
@@ -81,13 +91,21 @@ export function AnswerItem({ answer }: { answer: Answer }) {
       ) : (
         <>
           <p className="answer-item-text">{answer.text}</p>
-          {canEditAnswer(person, answer) && (
-            <div className="answer-item-actions">
+          <div className="answer-item-actions">
+            {canEditAnswer(person, answer) && (
               <Button variant="quiet" onPress={startEditing}>
                 Rediger
               </Button>
-            </div>
-          )}
+            )}
+            <FlagDialog target={target} />
+            {canReview(person) && openReview !== undefined && (
+              <ReviewActions
+                review={openReview}
+                focusAfterClear={selector}
+                focusAfterRemove="#svar-overskrift"
+              />
+            )}
+          </div>
         </>
       )}
     </li>

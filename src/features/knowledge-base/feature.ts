@@ -8,6 +8,7 @@ import { KnowledgeBaseLayout } from "./components/KnowledgeBaseLayout";
 import { ForumPage } from "./pages/ForumPage";
 import { QuestionFormPage } from "./pages/QuestionFormPage";
 import { QuestionPage } from "./pages/QuestionPage";
+import { ReviewPage } from "./pages/ReviewPage";
 import { TopicPage } from "./pages/TopicPage";
 import { knowledgeBaseStateSchema } from "./schema";
 
@@ -65,7 +66,7 @@ export const knowledgeBaseFeature: FeatureDefinition = {
         },
         {
           path: "/kunnskapsbank/vurdering",
-          element: createElement(PageHeading, null, "Til vurdering"),
+          element: createElement(ReviewPage),
         },
       ],
     },

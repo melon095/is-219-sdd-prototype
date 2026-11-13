@@ -9,6 +9,7 @@ import {
   canReview,
   canSeeFlaggers,
   canView,
+  hasFlagged,
   isMember,
   memberBusinessOf,
 } from "./permissions";
@@ -329,6 +330,50 @@ describe("canFlag", () => {
     });
     expect(canFlag(personOf(cleared, people.per), answerTarget, cleared)).toBe(
       true,
+    );
+  });
+});
+
+describe("hasFlagged", () => {
+  const q = question("sporsmal-1", { authorId: people.jonas });
+  const a = answer("svar-1", "sporsmal-1", { authorId: people.ola });
+  const target = { targetKind: "answer" as const, targetId: "svar-1" };
+  const flagged = kbState({
+    questions: [q],
+    answers: [{ ...a, moderation: "flagged" }],
+    flags: [flag("flagg-1", "vurdering-1", "answer", "svar-1")],
+    reviews: [review("vurdering-1", "answer", "svar-1", ["flagg-1"])],
+  });
+
+  it("er sann for den som har flagget i den åpne vurderingen", () => {
+    expect(hasFlagged(personOf(flagged, people.per), target, flagged)).toBe(
+      true,
+    );
+  });
+
+  it("er usann for andre og når ingenting er flagget", () => {
+    expect(hasFlagged(personOf(flagged, people.kari), target, flagged)).toBe(
+      false,
+    );
+    const plain = kbState({ questions: [q], answers: [a] });
+    expect(hasFlagged(personOf(plain, people.per), target, plain)).toBe(false);
+  });
+
+  it("er usann etter at vurderingen er avsluttet", () => {
+    const cleared = kbState({
+      questions: [q],
+      answers: [{ ...a, moderation: "cleared" }],
+      flags: [flag("flagg-1", "vurdering-1", "answer", "svar-1")],
+      reviews: [
+        review("vurdering-1", "answer", "svar-1", ["flagg-1"], {
+          outcome: "cleared",
+          reviewedBy: people.marte,
+          reviewedAt: "2026-11-12T09:00:00+01:00",
+        }),
+      ],
+    });
+    expect(hasFlagged(personOf(cleared, people.per), target, cleared)).toBe(
+      false,
     );
   });
 });

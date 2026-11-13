@@ -1,9 +1,11 @@
 import { type FormEvent, useState } from "react";
 import { useParams } from "react-router";
 import { isAdmin, personById } from "../../../domain/frame/people";
+import { openReviewFor } from "../../../domain/knowledge-base/helpers";
 import {
   canEditQuestion,
   canPost,
+  canReview,
 } from "../../../domain/knowledge-base/permissions";
 import { questionsByTopic } from "../../../domain/knowledge-base/search";
 import {
@@ -23,7 +25,10 @@ import { TextArea } from "../../../frame/ui/TextArea";
 import { focusAfterRender } from "../../../frame/ui/useFocusAfter";
 import { useCurrentPerson } from "../../../frame/users/useCurrentPerson";
 import { AnswerItem } from "../components/AnswerItem";
+import { FlagDialog } from "../components/FlagDialog";
+import { FlagWarning } from "../components/FlagWarning";
 import { QuestionStatusBadge } from "../components/QuestionStatusBadge";
+import { ReviewActions } from "../components/ReviewActions";
 import { formatDate, formatDateTime } from "../format";
 import "./QuestionPage.css";
 
@@ -39,9 +44,16 @@ function QuestionDetails({ question }: { question: Question }) {
     (item) => item.id === question.businessId,
   );
   const author = personById(question.authorId, state);
+  const target = { targetKind: "question" as const, targetId: question.id };
+  const openReview = openReviewFor(state, target);
 
   return (
-    <section className="question-details" aria-label="Spørsmålet">
+    <section
+      className="question-details"
+      aria-label="Spørsmålet"
+      data-question-id={question.id}
+      tabIndex={-1}
+    >
       <div className="question-details-status">
         <QuestionStatusBadge status={questionStatus(question, state)} />
         {canEditQuestion(person, question) && (
@@ -49,7 +61,16 @@ function QuestionDetails({ question }: { question: Question }) {
             Rediger
           </Link>
         )}
+        <FlagDialog target={target} />
+        {canReview(person) && openReview !== undefined && (
+          <ReviewActions
+            review={openReview}
+            focusAfterClear={`[data-question-id="${question.id}"]`}
+            focusAfterRemove="h1"
+          />
+        )}
       </div>
+      <FlagWarning target={target} />
       <dl className="question-details-facts">
         <div>
           <dt>Tema</dt>
@@ -92,7 +113,9 @@ function Answers({ question }: { question: Question }) {
 
   return (
     <section className="question-answers" aria-labelledby="svar-overskrift">
-      <h2 id="svar-overskrift">{answers.length} svar</h2>
+      <h2 id="svar-overskrift" tabIndex={-1}>
+        {answers.length} svar
+      </h2>
       {answers.length === 0 ? (
         <p>Ingen har svart ennå.</p>
       ) : (

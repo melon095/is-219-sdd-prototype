@@ -98,3 +98,44 @@ export async function openTab(page: Page, name: string) {
     await page.getByRole("tab", { name, exact: true }).click();
   }
 }
+
+export type NewQuestion = { title: string; description: string; topic: string };
+
+export function questionRegion(page: Page) {
+  return page.getByRole("region", { name: "Spørsmålet", exact: true });
+}
+
+export function answersRegion(page: Page) {
+  return page.getByRole("region", { name: /^\d+ svar$/ });
+}
+
+export function answerItem(page: Page, text: string) {
+  return answersRegion(page).getByRole("listitem").filter({ hasText: text });
+}
+
+export function feed(page: Page) {
+  return page.getByRole("region", { name: "Siste aktivitet" });
+}
+
+export async function askQuestion(page: Page, question: NewQuestion) {
+  await page.goto("/#/kunnskapsbank/sporsmal/ny");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Still et spørsmål" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /Tema/ }).click();
+  await page.getByRole("option", { name: question.topic }).click();
+  await page.getByRole("textbox", { name: "Tittel" }).fill(question.title);
+  await page
+    .getByRole("textbox", { name: "Beskriv spørsmålet" })
+    .fill(question.description);
+  await page.getByRole("button", { name: "Publiser spørsmålet" }).click();
+  await expect(
+    page.getByRole("heading", { level: 1, name: question.title }),
+  ).toBeVisible();
+}
+
+export async function answerQuestion(page: Page, text: string) {
+  await page.getByRole("textbox", { name: "Skriv et svar" }).fill(text);
+  await page.getByRole("button", { name: "Publiser svar" }).click();
+  await expect(answerItem(page, text)).toBeVisible();
+}
