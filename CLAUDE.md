@@ -4,9 +4,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two draft feature specs under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`). No application code has been written yet, and there is no build system, test suite, or source tree. Everything here supports **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
+This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two feature specs under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`). Work follows **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
 
-Don't assume a tech stack, test runner, or lint command exists — check `plan.md` for the feature you're working on (once one exists) for the chosen stack, since none is fixed at the repo level yet.
+Feature `001-job-matching-marketplace` and the shared frame are built. `002-shared-knowledge-base` is still a draft spec with no code.
+
+### Stack
+
+One static single-page app at the repository root, used by every feature (see `specs/001-job-matching-marketplace/plan.md` and `research.md` for the reasons):
+
+- React 19 + TypeScript (strict), built with Vite, managed with pnpm on Node.js 26
+- React Aria Components copied into `src/frame/ui/` and styled with plain CSS and the tokens in `src/frame/design/tokens.css`
+- React Router with hash URLs; Zod for checking stored data and the seed file
+- Vitest + React Testing Library + `jest-axe` for unit and component tests; Playwright + `@axe-core/playwright` for end-to-end tests at desktop and mobile sizes
+- Biome for linting and formatting (no ESLint or Prettier)
+
+No server: demo data lives in each browser's `localStorage`, loaded from the committed `src/seed/seed-data.json`.
+
+### Commands
+
+Run from the repository root:
+
+| Command | What it does |
+|---|---|
+| `pnpm install` | Install dependencies from the lockfile. |
+| `pnpm seed` | Regenerate `src/seed/seed-data.json` after changing `scripts/seed/`. Running it twice must leave `git status` clean. |
+| `pnpm dev` | Start the dev server at `http://localhost:5173`. |
+| `pnpm test` | Vitest: domain rules, seed checks, component tests with `jest-axe`. |
+| `pnpm test:e2e` | Build, serve, and run Playwright at desktop (1280×800, Chromium) and mobile (390×844, WebKit) sizes. Use `pnpm exec playwright test --workers=2` to keep CPU use down. |
+| `pnpm lint` / `pnpm format` | Biome check / apply fixes. |
+| `pnpm typecheck` | `tsc --noEmit`. |
+| `pnpm build` / `pnpm preview` | Build the static site to `dist/` / serve it. |
+
+Playwright browsers live in Playwright's own cache: `pnpm exec playwright install chromium webkit`.
+
+### Code layout
+
+- `src/domain/` — pure TypeScript business rules driven by commands (no React, clock, storage, DOM, or crypto). `src/domain/marketplace/permissions.ts` holds the "is this allowed" checks used by both commands and UI.
+- `src/frame/` — the shared frame: design tokens, UI kit, layout, user switcher, activity feed, demo reset, store.
+- `src/features/<feature>/` — each feature's registry entry (`feature.ts`), pages and components. `src/app/features.ts` lists the features.
+- `scripts/seed/` — one seed module per feature, combined by `generate.ts`.
+
+Project rules: no comments in code, interface text in Norwegian Bokmål, and colours only through the design tokens.
 
 `001-job-matching-marketplace` is built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, time debug buttons, and the shared design language taken from https://varodd.no/ (see the Design Language section of its spec and constitution principle IV). `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
 

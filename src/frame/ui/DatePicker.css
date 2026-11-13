@@ -1,0 +1,277 @@
+.react-aria-DatePicker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  max-width: var(--width-reading);
+}
+
+.react-aria-DatePicker .react-aria-Group {
+  display: flex;
+  width: fit-content;
+  min-width: 14rem;
+  min-height: var(--target-size-min);
+  border: 1px solid var(--color-grey-300);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  box-shadow: var(--shadow-field);
+  overflow: hidden;
+}
+
+.react-aria-DatePicker .react-aria-Group[data-hovered] {
+  border-color: var(--color-grey-500);
+}
+
+.react-aria-DatePicker .react-aria-Group[data-focus-within] {
+  border-color: var(--color-navy);
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-navy);
+}
+
+.react-aria-DatePicker .react-aria-Group[data-invalid] {
+  border-color: var(--color-error-text);
+}
+
+.react-aria-DatePicker .react-aria-Group[data-invalid][data-focus-within] {
+  box-shadow:
+    var(--shadow-field),
+    0 0 0 1px var(--color-error-text);
+}
+
+.react-aria-DatePicker .react-aria-Group[data-disabled] {
+  background: var(--color-grey-50);
+  border-color: var(--color-grey-200);
+  box-shadow: none;
+}
+
+.react-aria-DateInput {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  white-space: nowrap;
+}
+
+.react-aria-DateSegment {
+  padding: 0 1px;
+  border-radius: 2px;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  outline: none;
+}
+
+.react-aria-DateSegment[data-type="literal"] {
+  padding: 0;
+}
+
+.react-aria-DateSegment[data-placeholder] {
+  color: var(--color-text-secondary);
+}
+
+.react-aria-DateSegment[data-focused] {
+  background: var(--color-navy);
+  color: var(--color-background);
+}
+
+.react-aria-DateSegment[data-focused][data-placeholder] {
+  color: var(--color-navy-100);
+}
+
+.react-aria-DateSegment[data-invalid] {
+  color: var(--color-error-text);
+}
+
+.react-aria-DateSegment[data-invalid][data-focused] {
+  background: var(--color-error-text);
+  color: var(--color-background);
+}
+
+.react-aria-DateSegment[data-disabled] {
+  color: var(--color-grey-500);
+}
+
+.date-picker-icon {
+  display: inline-flex;
+}
+
+.react-aria-Popover .react-aria-Dialog {
+  padding: var(--space-3);
+  outline: none;
+}
+
+.react-aria-Calendar {
+  width: fit-content;
+  max-width: 100%;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+}
+
+.date-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.date-picker-header .react-aria-Heading {
+  flex: 1;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.date-picker-header .react-aria-Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-size-min);
+  min-height: var(--target-size-min);
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-navy);
+  font-size: var(--font-size-h2);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.date-picker-header .react-aria-Button[data-hovered] {
+  background: var(--color-navy-50);
+  color: var(--color-navy-hover);
+}
+
+.date-picker-header .react-aria-Button[data-pressed] {
+  background: var(--color-navy-100);
+  color: var(--color-navy-pressed);
+}
+
+.date-picker-header .react-aria-Button[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.date-picker-header .react-aria-Button[data-disabled] {
+  color: var(--color-grey-400);
+  cursor: not-allowed;
+}
+
+.react-aria-DatePicker .react-aria-Group > .react-aria-Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-size-min);
+  min-height: var(--target-size-min);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-inline-start: 1px solid var(--color-grey-200);
+  background: var(--color-navy-50);
+  color: var(--color-navy);
+  cursor: pointer;
+}
+
+.react-aria-DatePicker .react-aria-Group > .react-aria-Button[data-hovered] {
+  background: var(--color-navy-100);
+  color: var(--color-navy-hover);
+}
+
+.react-aria-DatePicker .react-aria-Group > .react-aria-Button[data-pressed] {
+  background: var(--color-navy-200);
+  color: var(--color-navy-pressed);
+}
+
+.react-aria-DatePicker
+  .react-aria-Group
+  > .react-aria-Button[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.react-aria-DatePicker .react-aria-Group > .react-aria-Button[data-disabled] {
+  background: var(--color-grey-50);
+  color: var(--color-grey-400);
+  cursor: not-allowed;
+}
+
+.react-aria-CalendarGrid {
+  border-collapse: collapse;
+}
+
+.react-aria-CalendarHeaderCell {
+  padding-bottom: var(--space-1);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.react-aria-CalendarCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  margin: 1px;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  color: var(--color-text);
+  cursor: default;
+  outline: none;
+}
+
+.react-aria-CalendarCell[data-outside-month] {
+  display: none;
+}
+
+.react-aria-CalendarCell[data-hovered] {
+  background: var(--color-navy-50);
+}
+
+.react-aria-CalendarCell[data-pressed] {
+  background: var(--color-navy-100);
+}
+
+.react-aria-CalendarCell[data-focus-visible] {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.react-aria-CalendarCell[data-selected] {
+  background: var(--color-navy);
+  color: var(--color-background);
+  font-weight: var(--font-weight-semibold);
+}
+
+.react-aria-CalendarCell[data-selected][data-hovered] {
+  background: var(--color-navy-hover);
+}
+
+.react-aria-CalendarCell[data-today]:not([data-selected]) {
+  border-color: var(--color-navy-200);
+  font-weight: var(--font-weight-semibold);
+}
+
+.react-aria-CalendarCell[data-disabled] {
+  color: var(--color-grey-400);
+}
+
+.react-aria-CalendarCell[data-unavailable] {
+  color: var(--color-error-text);
+  text-decoration: line-through;
+}
+
+.react-aria-CalendarCell[data-invalid] {
+  background: var(--color-error-text);
+  color: var(--color-background);
+}

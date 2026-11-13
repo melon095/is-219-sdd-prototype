@@ -1,0 +1,64 @@
+:root {
+  --color-navy: #000082;
+  --color-navy-hover: #000070;
+  --color-navy-pressed: #000090;
+  --color-navy-50: #f6f6ff;
+  --color-navy-100: #e5e5f8;
+  --color-navy-200: #d0d0ea;
+  --color-navy-300: #9999d9;
+  --color-text: #1e1e1e;
+  --color-text-secondary: #707070;
+  --color-background: #ffffff;
+  --color-grey-50: #fafafa;
+  --color-grey-100: #eeeeee;
+  --color-grey-200: #d5d5d5;
+  --color-grey-300: #bdbdbd;
+  --color-grey-400: #8b8b8b;
+  --color-grey-500: #737373;
+  --color-success: #77ac94;
+  --color-success-text: #4a7963;
+  --color-warning: #ff8c00;
+  --color-warning-text: #a85c00;
+  --color-error: #f04438;
+  --color-error-text: #da1e10;
+  --color-info: #0000a0;
+  --color-focus: var(--color-navy);
+  --color-focus-on-navy: #ffffff;
+
+  --font-heading: "Bree Serif", Georgia, serif;
+  --font-body: "Barlow", system-ui, sans-serif;
+  --line-height-heading: 1.2;
+  --line-height-body: 1.7;
+  --font-size-body: 1.0625rem;
+  --font-size-small: 1rem;
+  --font-size-h1: 1.875rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-weight-semibold: 600;
+
+  --radius: 8px;
+  --shadow-field: 0 1px 3px rgb(0 0 0 / 0.08);
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 0.06);
+  --focus-ring: 2px solid var(--color-focus);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --width-reading: 40.625rem;
+  --width-page: 81.25rem;
+  --breakpoint-desktop: 48rem;
+  --target-size-min: 2.75rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --font-size-h1: 2.25rem;
+  }
+}

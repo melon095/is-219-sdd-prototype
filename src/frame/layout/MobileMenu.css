@@ -1,0 +1,57 @@
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.mobile-menu-panel {
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  background: var(--color-background);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  outline: none;
+}
+
+.mobile-menu-panel .react-aria-Dialog {
+  padding: var(--space-4);
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.mobile-menu-header .react-aria-Heading[slot="title"] {
+  margin: 0;
+}
+
+.mobile-menu-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.mobile-menu-body .feature-nav-list {
+  flex-direction: column;
+}
+
+.mobile-menu-body .feature-nav-list .react-aria-Link {
+  display: flex;
+  width: 100%;
+}
+
+.mobile-menu-body .user-switcher {
+  min-width: 0;
+}
+
+.mobile-menu-body .react-aria-Select {
+  max-width: none;
+}

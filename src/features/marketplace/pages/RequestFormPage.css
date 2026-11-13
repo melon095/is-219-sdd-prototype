@@ -1,0 +1,62 @@
+.request-form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.request-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: var(--width-reading);
+}
+
+.request-form-duration {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.request-form-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.request-form-explanation > :last-child {
+  margin-bottom: 0;
+}
+
+.request-form-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.request-form-aside {
+  padding: var(--space-5);
+  border: 1px solid var(--color-navy-200);
+  border-radius: var(--radius);
+  background: var(--color-navy-50);
+}
+
+.request-form-aside h2 {
+  margin-top: 0;
+  font-size: var(--font-size-h3);
+}
+
+@media (min-width: 48rem) {
+  .request-form-layout[data-layout="desktop"] {
+    display: grid;
+    grid-template-columns: minmax(0, var(--width-reading)) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-7);
+  }
+
+  .request-form-aside {
+    position: sticky;
+    top: var(--space-5);
+    max-width: 24rem;
+  }
+}
