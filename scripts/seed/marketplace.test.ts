@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DemoState } from "../../src/domain/frame/types";
+import { emptyKnowledgeBaseState } from "../../src/domain/knowledge-base/types";
 import {
   fillShortlist,
   rankCandidates,
@@ -41,6 +42,7 @@ function stateWith(replaced?: TaskRequest): DemoState {
           ? requests
           : requests.map((item) => (item.id === replaced.id ? replaced : item)),
     },
+    knowledgeBase: emptyKnowledgeBaseState(),
   };
 }
 

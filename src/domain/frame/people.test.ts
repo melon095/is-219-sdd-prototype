@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { emptyKnowledgeBaseState } from "../knowledge-base/types";
 import type { TaskRequest } from "../marketplace/types";
 import {
   isAdmin,
@@ -160,6 +161,7 @@ const state: DemoState = {
     crawlCatalog: [],
     crawlRuns: [],
   },
+  knowledgeBase: emptyKnowledgeBaseState(),
 };
 
 describe("isOwnerOf", () => {

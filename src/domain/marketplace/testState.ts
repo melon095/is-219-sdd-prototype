@@ -6,6 +6,7 @@ import type {
   Person,
   Skill,
 } from "../frame/types";
+import { emptyKnowledgeBaseState } from "../knowledge-base/types";
 import type {
   Conversation,
   CrawlCatalogEntry,
@@ -184,6 +185,7 @@ export function createState(options: StateOptions = {}): DemoState {
       crawlCatalog: options.crawlCatalog ?? [],
       crawlRuns: options.crawlRuns ?? [],
     },
+    knowledgeBase: emptyKnowledgeBaseState(),
   };
 }
 

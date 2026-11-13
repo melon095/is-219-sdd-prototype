@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { emptyKnowledgeBaseState } from "../knowledge-base/types";
 import { type AudienceGroups, canSeeEntry, visibleActivity } from "./activity";
 import type { ActivityEntry, DemoState, Person } from "./types";
 
@@ -68,13 +69,17 @@ const state: DemoState = {
     crawlCatalog: [],
     crawlRuns: [],
   },
+  knowledgeBase: emptyKnowledgeBaseState(),
 };
+
+const groupMembers = ["person-1", "person-2"];
 
 const groups: AudienceGroups = {
   "marketplace.workers": (p, s) =>
     s.marketplace.workerProfiles.some(
       (profile) => profile.personId === p.id && !profile.isDraft,
     ),
+  g: (p) => groupMembers.includes(p.id),
 };
 
 describe("canSeeEntry", () => {
@@ -112,6 +117,69 @@ describe("canSeeEntry", () => {
   it("hides entries for unknown groups from non-admins", () => {
     expect(canSeeEntry(unknownGroup, owner, state, groups)).toBe(false);
     expect(canSeeEntry(unknownGroup, worker, state, groups)).toBe(false);
+  });
+});
+
+describe("canSeeEntry with requiredGroup", () => {
+  const withWorkers: DemoState = {
+    ...state,
+    marketplace: {
+      ...state.marketplace,
+      workerProfiles: [
+        ...state.marketplace.workerProfiles,
+        { personId: "person-3", skillIds: ["ferdighet-1"], isDraft: false },
+      ],
+    },
+  };
+
+  const byPerson = entry("b-1", "2026-11-12T10:00:00+01:00", {
+    personIds: ["person-1", "person-3"],
+    groups: [],
+    requiredGroup: "g",
+  });
+  const byGroup = entry("b-2", "2026-11-12T11:00:00+01:00", {
+    personIds: [],
+    groups: ["marketplace.workers"],
+    requiredGroup: "g",
+  });
+
+  it("hides a personIds entry from a person who fails the group check", () => {
+    expect(canSeeEntry(byPerson, bystander, withWorkers, groups)).toBe(false);
+  });
+
+  it("shows a personIds entry to a person who passes the group check", () => {
+    expect(canSeeEntry(byPerson, owner, withWorkers, groups)).toBe(true);
+  });
+
+  it("hides a group entry from a person who fails the required group", () => {
+    expect(canSeeEntry(byGroup, bystander, withWorkers, groups)).toBe(false);
+  });
+
+  it("shows a group entry to a person who passes the required group", () => {
+    expect(canSeeEntry(byGroup, worker, withWorkers, groups)).toBe(true);
+  });
+
+  it("always shows the entry to a Varodd administrator", () => {
+    expect(canSeeEntry(byPerson, admin, withWorkers, groups)).toBe(true);
+    expect(canSeeEntry(byGroup, admin, withWorkers, groups)).toBe(true);
+  });
+
+  it("hides the entry when the required group is unknown", () => {
+    const unknownRequired = entry("b-3", "2026-11-12T12:00:00+01:00", {
+      personIds: ["person-1"],
+      groups: [],
+      requiredGroup: "ukjent.gruppe",
+    });
+    expect(canSeeEntry(unknownRequired, owner, withWorkers, groups)).toBe(
+      false,
+    );
+    expect(canSeeEntry(unknownRequired, admin, withWorkers, groups)).toBe(true);
+  });
+
+  it("behaves as before for an entry without requiredGroup", () => {
+    expect(canSeeEntry(direct, owner, withWorkers, groups)).toBe(true);
+    expect(canSeeEntry(forWorkers, worker, withWorkers, groups)).toBe(true);
+    expect(canSeeEntry(forWorkers, bystander, withWorkers, groups)).toBe(true);
   });
 });
 

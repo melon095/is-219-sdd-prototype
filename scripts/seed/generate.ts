@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ActivityEntry } from "../../src/domain/frame/types";
 import { buildFrameSeed, type SeedModule } from "./frame";
+import { seedKnowledgeBase } from "./knowledge-base";
 import { seedMarketplace } from "./marketplace";
 import { deriveRng } from "./random";
 
@@ -13,6 +14,7 @@ const anchorDate = "2026-11-16";
 
 const featureModules: [string, SeedModule][] = [
   ["marketplace", seedMarketplace],
+  ["knowledgeBase", seedKnowledgeBase],
 ];
 
 function serialize(data: unknown): string {

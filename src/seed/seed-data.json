@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "fe3d166de42846f557a2ddc0eeb5dbb0162a745c8e3cb465a8b3cb8434f87639",
+  "seedId": "bcee5ed9729ec051435448e47947cd73fdbb3a8e8fcba7f45c60b6b8bafb6fa7",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -4321,5 +4321,14 @@
         "simulated": true
       }
     ]
+  },
+  "knowledgeBase": {
+    "topics": [],
+    "questions": [],
+    "answers": [],
+    "flags": [],
+    "reviews": [],
+    "chatbotQuestions": [],
+    "nearDuplicateExamples": []
   }
 }

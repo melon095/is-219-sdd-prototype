@@ -1,3 +1,4 @@
+import type { KnowledgeBaseState } from "../knowledge-base/types";
 import type { MarketplaceState } from "../marketplace/types";
 
 export type Id = string;
@@ -36,6 +37,7 @@ export type Skill = {
 export type Audience = {
   personIds: Id[];
   groups: string[];
+  requiredGroup?: string;
 };
 
 export type ActivityEntry = {
@@ -65,6 +67,7 @@ export type DemoState = {
   meta: DemoMeta;
   frame: FrameState;
   marketplace: MarketplaceState;
+  knowledgeBase: KnowledgeBaseState;
 };
 
 export type CommandContext = {

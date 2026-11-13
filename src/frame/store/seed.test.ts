@@ -200,6 +200,79 @@ const fullSeed: SeedFile = {
       },
     ],
   },
+  knowledgeBase: {
+    topics: [
+      { id: "tema-1", name: "Nettbutikk", description: "Om nettbutikk" },
+    ],
+    questions: [
+      {
+        id: "sporsmal-1",
+        topicId: "tema-1",
+        title: "Hvordan sender jeg pakker?",
+        description: "Vi trenger en god løsning for frakt.",
+        authorId: "person-1",
+        businessId: "bedrift-1",
+        createdAt: "2026-11-05T09:00:00+01:00",
+        editedAt: "2026-11-06T09:30:00+01:00",
+        moderation: "flagged",
+      },
+    ],
+    answers: [
+      {
+        id: "svar-1",
+        questionId: "sporsmal-1",
+        text: "Bruk en fraktavtale.",
+        authorId: "person-2",
+        businessId: "bedrift-1",
+        createdAt: "2026-11-05T10:00:00+01:00",
+        editedAt: "2026-11-05T11:00:00+01:00",
+        moderation: "removed",
+      },
+    ],
+    flags: [
+      {
+        id: "flagg-1",
+        reviewId: "vurdering-1",
+        targetKind: "answer",
+        targetId: "svar-1",
+        flaggedBy: "person-3",
+        reason: "other",
+        note: "Dette er utdatert.",
+        at: "2026-11-07T08:00:00+01:00",
+      },
+    ],
+    reviews: [
+      {
+        id: "vurdering-1",
+        targetKind: "answer",
+        targetId: "svar-1",
+        openedAt: "2026-11-07T08:00:00+01:00",
+        flagIds: ["flagg-1"],
+        outcome: "removed",
+        reviewedBy: "person-15",
+        reviewedAt: "2026-11-08T08:00:00+01:00",
+      },
+    ],
+    chatbotQuestions: [
+      {
+        id: "chatbot-1",
+        text: "Hvordan sender jeg pakker?",
+        answer: {
+          text: "Bruk en fraktavtale.",
+          sourceQuestionIds: ["sporsmal-1"],
+          sourceAnswerIds: ["svar-1"],
+        },
+      },
+    ],
+    nearDuplicateExamples: [
+      {
+        id: "duplikat-1",
+        title: "Hvordan sende pakker",
+        description: "Frakt av pakker",
+        matchesQuestionId: "sporsmal-1",
+      },
+    ],
+  },
 };
 
 describe("daysBetween", () => {
@@ -239,6 +312,45 @@ describe("shiftSeedDates", () => {
     checkShift(bundledSeed);
   });
 
+  it("moves every knowledge base date field by exactly the given days", () => {
+    const shifted = shiftSeedDates(fullSeed, 20).knowledgeBase;
+    expect(shifted.questions[0]?.createdAt).toBe("2026-11-25T09:00:00+01:00");
+    expect(shifted.questions[0]?.editedAt).toBe("2026-11-26T09:30:00+01:00");
+    expect(shifted.answers[0]?.createdAt).toBe("2026-11-25T10:00:00+01:00");
+    expect(shifted.answers[0]?.editedAt).toBe("2026-11-25T11:00:00+01:00");
+    expect(shifted.flags[0]?.at).toBe("2026-11-27T08:00:00+01:00");
+    expect(shifted.reviews[0]?.openedAt).toBe("2026-11-27T08:00:00+01:00");
+    expect(shifted.reviews[0]?.reviewedAt).toBe("2026-11-28T08:00:00+01:00");
+  });
+
+  it("keeps the knowledge base fields that are not dates", () => {
+    const shifted = shiftSeedDates(fullSeed, 20).knowledgeBase;
+    expect(shifted.topics).toEqual(fullSeed.knowledgeBase.topics);
+    expect(shifted.chatbotQuestions).toEqual(
+      fullSeed.knowledgeBase.chatbotQuestions,
+    );
+    expect(shifted.nearDuplicateExamples).toEqual(
+      fullSeed.knowledgeBase.nearDuplicateExamples,
+    );
+    expect(shifted.reviews[0]?.outcome).toBe("removed");
+    expect(shifted.reviews[0]?.reviewedBy).toBe("person-15");
+  });
+
+  it("leaves out optional knowledge base dates that are not set", () => {
+    const question = fullSeed.knowledgeBase.questions[0];
+    if (question === undefined) {
+      throw new Error("Mangler spørsmål");
+    }
+    const { editedAt: _editedAt, ...withoutEdit } = question;
+    const seed: SeedFile = {
+      ...fullSeed,
+      knowledgeBase: { ...fullSeed.knowledgeBase, questions: [withoutEdit] },
+    };
+    const shifted = shiftSeedDates(seed, 5).knowledgeBase.questions[0];
+    expect(shifted).toBeDefined();
+    expect(shifted && "editedAt" in shifted).toBe(false);
+  });
+
   it("does not change the seed it is given", () => {
     const copy = JSON.parse(JSON.stringify(fullSeed));
     shiftSeedDates(fullSeed, 3);
@@ -274,6 +386,28 @@ describe("loadSeedState", () => {
     expect(state.marketplace).toEqual(
       shiftSeedDates(bundledSeed, 4).marketplace,
     );
+    expect(state.knowledgeBase).toEqual(
+      shiftSeedDates(bundledSeed, 4).knowledgeBase,
+    );
+  });
+
+  it("returns a state with a knowledge base part", () => {
+    const state = loadSeedState(new Date(2026, 10, 16));
+    expect(state.knowledgeBase).toBeDefined();
+    expect(Array.isArray(state.knowledgeBase.topics)).toBe(true);
+    expect(Array.isArray(state.knowledgeBase.questions)).toBe(true);
+  });
+
+  it("walks the bundled seed's knowledge base part when checking dates", () => {
+    const shifted = shiftSeedDates(bundledSeed, 9);
+    const before = new Map<string, string>();
+    const after = new Map<string, string>();
+    collectDates(bundledSeed.knowledgeBase, "knowledgeBase", before);
+    collectDates(shifted.knowledgeBase, "knowledgeBase", after);
+    expect([...after.keys()]).toEqual([...before.keys()]);
+    for (const [path, value] of before) {
+      expect(after.get(path), path).toBe(expectedShift(value, 9));
+    }
   });
 
   it("gives a fresh object on every call", () => {
