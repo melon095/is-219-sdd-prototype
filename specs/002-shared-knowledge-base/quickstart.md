@@ -13,6 +13,8 @@ From the shared seed data ([scripts/seed/frame.ts](../../scripts/seed/frame.ts))
 | Kari Nordmann (owner) and Jonas Berg (employee), Fjordlys Keramikk | Members, colleagues |
 | Per Hansen, Sørlandet Honning | Member |
 | Ola Dahl, Kvadraturen Kaffebrenneri | Member |
+| Silje Moen, seeks work | Member, because 001's seed places her permanently at Kvadraturen Kaffebrenneri (`oppdrag-12`) |
+| Mats Johansen, seeks work | Non-member |
 | Anne Lie, Lindesnes Ullvarer | Non-member (business is not in E-Waves) |
 | Marte Vik | Varodd administrator |
 
@@ -33,8 +35,8 @@ Each scenario is covered by an automated test (Vitest for rules, Playwright for 
 | 9 | As Marte, remove a flagged question. | The whole thread, with every answer, disappears from the forum and search; its link shows "Spørsmålet er fjernet". | US3-2, FR-013 |
 | 10 | Open "Spør chatboten" and pick each prepared question. | Questions with stored content get an answer with source links and the trust notice. The rest get "Vi fant ikke noe svar på dette i forumet.", the closest questions, and "Still spørsmålet i forumet", which opens the form with the title filled in. | US4-1–US4-4, FR-006–FR-009, SC-002 |
 | 11 | Flag a source answer of a chatbot answer, ask that question again, then clear the flag as Marte and ask again. | First the no-answer response, then the answer again. A question posted during the demo never appears as a chatbot source. | US4-5, FR-010, SC-002 |
-| 12 | Look at the home feed as Anne and as a job seeker after scenarios 2 and 6. | No knowledge base entries are shown to them. | FR-022, spec edge case |
-| 13 | As the worker placed permanently at an E-Waves business in 001's seed, open Kunnskapsbank. | They have member access. | spec assumption, 001 edge case |
+| 12 | Look at the home feed as Anne and as Mats Johansen after scenarios 2 and 6. | No knowledge base entries are shown to them. | FR-022, spec edge case |
+| 13 | As Silje Moen, open Kunnskapsbank and answer a question. | She has member access, and her answer is attributed to Kvadraturen Kaffebrenneri. | spec assumption, 001 edge case |
 
 ## Accessibility checks (WCAG 2.1 AA)
 

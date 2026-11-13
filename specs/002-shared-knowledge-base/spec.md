@@ -100,7 +100,7 @@ Questions and answers are published immediately, so members can flag problems af
 
 1. **Given** a published question or answer, **When** a member flags it and gives a reason, **Then** it stays visible with a warning and is added to the review list.
 2. **Given** flagged content, **When** a Varodd administrator clears it, **Then** the warning is removed; **When** the administrator removes it, **Then** it is no longer shown; **When** the removed content is a question, **Then** the entire thread, including all of its answers, is removed.
-3. **Given** a question whose answers are all flagged or removed, **When** the last remaining answer is flagged, **Then** the question returns to open; **When** one of its answers is cleared, **Then** the question returns to answered; **When** the flagged answers are removed, **Then** the question stays open.
+3. **Given** a question with exactly one answer that is not flagged or removed, **When** that answer is flagged, **Then** the question returns to open; **When** one of its answers is cleared, **Then** the question returns to answered; **When** the flagged answers are removed, **Then** the question stays open.
 4. **Given** a question with several answers, **When** some but not all of them are flagged, **Then** the question stays answered.
 5. **Given** flagged content, **When** its author edits it, **Then** the warning stays until a Varodd administrator reviews it.
 6. **Given** flagged content, **When** a Varodd administrator clears or removes it, **Then** the author and every member who flagged it are notified in the activity feed.
