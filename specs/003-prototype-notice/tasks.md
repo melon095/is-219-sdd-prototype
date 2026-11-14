@@ -39,7 +39,7 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 **Purpose**: Confirm the starting point.
 
-- [ ] T001 Run `pnpm install`, `pnpm lint`, `pnpm typecheck`, and `pnpm test` on branch `003-prototype-notice` and confirm all pass before any change; fix any failure first
+- [X] T001 Run `pnpm install`, `pnpm lint`, `pnpm typecheck`, and `pnpm test` on branch `003-prototype-notice` and confirm all pass before any change; fix any failure first
 
 ---
 
@@ -49,9 +49,9 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T002 [P] Write failing tests in `src/frame/store/persistence.test.ts` for `NOTICE_KEY`, `loadNoticeConfirmed(storage)`, and `saveNoticeConfirmed(storage)` per data-model.md: `NOTICE_KEY` is `"varodd-prototype:notice"`; `loadNoticeConfirmed` is "`true` only when the stored text parses to exactly `true`" and "`false` when the key is missing, the text is not valid JSON, the value is anything else, or reading throws" (cover missing, `"false"`, `"\"true\""`, `"1"`, `"{"`, and a storage whose `getItem` throws); `saveNoticeConfirmed` writes the text `true` under `NOTICE_KEY` and returns `{ storageAvailable: true }`, and returns `{ storageAvailable: false }` without throwing when `setItem` throws; saving the notice leaves `STATE_KEY` and `USER_KEY` untouched
-- [ ] T003 Implement `NOTICE_KEY`, `loadNoticeConfirmed`, and `saveNoticeConfirmed` in `src/frame/store/persistence.ts`, reusing the existing `readItem`, `writeItem`, and `parseJson` helpers, so the tests from T002 pass
-- [ ] T004 [P] Change `playwright.config.ts`: set `use.storageState` to `{ cookies: [], origins: [{ origin: "http://localhost:4173", localStorage: [{ name: "varodd-prototype:notice", value: "true" }] }] }` next to `baseURL` (research.md §6)
+- [X] T002 [P] Write failing tests in `src/frame/store/persistence.test.ts` for `NOTICE_KEY`, `loadNoticeConfirmed(storage)`, and `saveNoticeConfirmed(storage)` per data-model.md: `NOTICE_KEY` is `"varodd-prototype:notice"`; `loadNoticeConfirmed` is "`true` only when the stored text parses to exactly `true`" and "`false` when the key is missing, the text is not valid JSON, the value is anything else, or reading throws" (cover missing, `"false"`, `"\"true\""`, `"1"`, `"{"`, and a storage whose `getItem` throws); `saveNoticeConfirmed` writes the text `true` under `NOTICE_KEY` and returns `{ storageAvailable: true }`, and returns `{ storageAvailable: false }` without throwing when `setItem` throws; saving the notice leaves `STATE_KEY` and `USER_KEY` untouched
+- [X] T003 Implement `NOTICE_KEY`, `loadNoticeConfirmed`, and `saveNoticeConfirmed` in `src/frame/store/persistence.ts`, reusing the existing `readItem`, `writeItem`, and `parseJson` helpers, so the tests from T002 pass
+- [X] T004 [P] Change `playwright.config.ts`: set `use.storageState` to `{ cookies: [], origins: [{ origin: "http://localhost:4173", localStorage: [{ name: "varodd-prototype:notice", value: "true" }] }] }` next to `baseURL` (research.md §6)
 
 **Checkpoint**: The confirmation can be stored and read, and every existing end-to-end test starts with the notice confirmed.
 
@@ -65,14 +65,14 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 ### Tests for User Story 1 (write first)
 
-- [ ] T005 [P] [US1] Write failing component tests in `src/frame/notice/PrototypeNotice.test.tsx`, rendering `PrototypeNotice` with an in-memory `StorageLike` (empty) and `vi.useFakeTimers()`: a dialog named "Dette er en prototype" with the three paragraphs exactly as in contracts/notice.md (US1-1, FR-002); "Jeg forstår" is disabled at 0 s and at 4.9 s, and the text "Du kan gå videre om 5 sekunder." at 0 s, "Du kan gå videre om 2 sekunder." at 3 s, and "Du kan gå videre om 1 sekund." at 4 s (US1-3, FR-005); the countdown text is not inside an element with `role="status"` or `aria-live`; the `role="status"` element inside the dialog is empty before 5 s and reads "Nå kan du gå videre." from 5 s, and the countdown text is gone (FR-010); pressing Escape before and after 5 s leaves the dialog open (US1-2, US1-5, FR-004); at 5 s "Jeg forstår" is enabled, and pressing it closes the dialog and writes `true` under `NOTICE_KEY` (US1-4, FR-006); when an `<h1 tabIndex={-1}>` is rendered next to the notice, it has focus after "Jeg forstår"; seconds left are computed from the elapsed time, so advancing the fake clock by 5 s in one step (as a throttled background tab would) makes the button enabled at the next tick; `jest-axe` passes while waiting and while ready
-- [ ] T006 [P] [US1] Write failing Playwright tests in `tests/e2e/notice.spec.ts` (both projects) with `test.use({ storageState: { cookies: [], origins: [] } })` and `page.clock.install()` before `page.goto("/")`: the dialog "Dette er en prototype" is visible with its three paragraphs (scenario 1); Escape, a click at the top-left corner of the page outside the dialog, and 10 presses of Tab leave the dialog open with focus inside it, and the header link "Kunnskapsbank" cannot be reached (scenario 2, FR-003); "Jeg forstår" is disabled after `runFor(4900)` and enabled after `runFor(100)` more (scenario 3); Escape then still leaves it open, and "Jeg forstår" closes it with the home page's `<h1>` focused (scenario 4); axe with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` finds zero violations with the dialog open; at 320 px width the dialog's text and button can be reached by scrolling inside the dialog and `document.documentElement.scrollWidth` is at most 320 (FR-010)
+- [X] T005 [P] [US1] Write failing component tests in `src/frame/notice/PrototypeNotice.test.tsx`, rendering `PrototypeNotice` with an in-memory `StorageLike` (empty) and `vi.useFakeTimers()`: a dialog named "Dette er en prototype" with the three paragraphs exactly as in contracts/notice.md (US1-1, FR-002); "Jeg forstår" is disabled at 0 s and at 4.9 s, and the text "Du kan gå videre om 5 sekunder." at 0 s, "Du kan gå videre om 2 sekunder." at 3 s, and "Du kan gå videre om 1 sekund." at 4 s (US1-3, FR-005); the countdown text is not inside an element with `role="status"` or `aria-live`; the `role="status"` element inside the dialog is empty before 5 s and reads "Nå kan du gå videre." from 5 s, and the countdown text is gone (FR-010); pressing Escape before and after 5 s leaves the dialog open (US1-2, US1-5, FR-004); at 5 s "Jeg forstår" is enabled, and pressing it closes the dialog and writes `true` under `NOTICE_KEY` (US1-4, FR-006); when an `<h1 tabIndex={-1}>` is rendered next to the notice, it has focus after "Jeg forstår"; seconds left are computed from the elapsed time, so advancing the fake clock by 5 s in one step (as a throttled background tab would) makes the button enabled at the next tick; `jest-axe` passes while waiting and while ready
+- [X] T006 [P] [US1] Write failing Playwright tests in `tests/e2e/notice.spec.ts` (both projects) with `test.use({ storageState: { cookies: [], origins: [] } })` and `page.clock.install()` before `page.goto("/")`: the dialog "Dette er en prototype" is visible with its three paragraphs (scenario 1); Escape, a click at the top-left corner of the page outside the dialog, and 10 presses of Tab leave the dialog open with focus inside it, and the header link "Kunnskapsbank" cannot be reached (scenario 2, FR-003); "Jeg forstår" is disabled after `runFor(4900)` and enabled after `runFor(100)` more (scenario 3); Escape then still leaves it open, and "Jeg forstår" closes it with the home page's `<h1>` focused (scenario 4); axe with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` finds zero violations with the dialog open; at 320 px width the dialog's text and button can be reached by scrolling inside the dialog and `document.documentElement.scrollWidth` is at most 320 (FR-010)
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement `src/frame/notice/PrototypeNotice.tsx` and `src/frame/notice/PrototypeNotice.css` per contracts/notice.md: props `{ storage: StorageLike }`; reads `loadNoticeConfirmed(storage)` once on first render into React state; renders the shared `Dialog` from `src/frame/ui/Dialog.tsx` with `title="Dette er en prototype"`, `isOpen`, `isDismissable={false}`, and `isKeyboardDismissDisabled`; records `shownAt` when first shown and recomputes seconds left as `max(0, 5 − floor((now − shownAt) / 1000))` every second with `setInterval` (cleared on unmount and when ready); the countdown paragraph, an always-present `role="status"` element that gets "Nå kan du gå videre." when ready, and the shared `Button` "Jeg forstår" in a `.dialog-actions` row, disabled while waiting; on press calls `saveNoticeConfirmed(storage)`, sets confirmed in state whatever it returns, and then focuses the first `h1` in the document, so the tests from T005 pass
-- [ ] T008 [US1] Render `<PrototypeNotice storage={window.localStorage} />` in `src/app/App.tsx` inside `LiveAnnouncer`, next to `<RouterProvider router={router} />` (research.md §5)
-- [ ] T009 [US1] Run `pnpm test` until every Vitest test passes, including those from T002 and T005
+- [X] T007 [US1] Implement `src/frame/notice/PrototypeNotice.tsx` and `src/frame/notice/PrototypeNotice.css` per contracts/notice.md: props `{ storage: StorageLike }`; reads `loadNoticeConfirmed(storage)` once on first render into React state; renders the shared `Dialog` from `src/frame/ui/Dialog.tsx` with `title="Dette er en prototype"`, `isOpen`, `isDismissable={false}`, and `isKeyboardDismissDisabled`; records `shownAt` when first shown and recomputes seconds left as `max(0, 5 − floor((now − shownAt) / 1000))` every second with `setInterval` (cleared on unmount and when ready); the countdown paragraph, an always-present `role="status"` element that gets "Nå kan du gå videre." when ready, and the shared `Button` "Jeg forstår" in a `.dialog-actions` row, disabled while waiting; on press calls `saveNoticeConfirmed(storage)`, sets confirmed in state whatever it returns, and then focuses the first `h1` in the document, so the tests from T005 pass
+- [X] T008 [US1] Render `<PrototypeNotice storage={window.localStorage} />` in `src/app/App.tsx` inside `LiveAnnouncer`, next to `<RouterProvider router={router} />` (research.md §5)
+- [X] T009 [US1] Run `pnpm test` until every Vitest test passes, including those from T002 and T005
 
 **Checkpoint**: A first-time visitor cannot use the prototype before reading and confirming the notice. This is the MVP.
 
@@ -86,12 +86,12 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 ### Tests for User Story 2 (write first)
 
-- [ ] T010 [P] [US2] Add failing tests to `src/frame/notice/PrototypeNotice.test.tsx`: with `varodd-prototype:notice` = `true` already in storage, nothing is rendered (US2-1); with a storage whose `setItem` throws, "Jeg forstår" still closes the dialog after 5 s, and re-rendering the same component instance keeps it closed (FR-008); with a storage holding `"false"` or invalid JSON, the dialog is shown
-- [ ] T011 [P] [US2] Add failing Playwright tests to `tests/e2e/notice.spec.ts` (both projects, empty storage, Playwright clock): confirm the notice, then reload and see no dialog; open a second page in the same context and see no dialog; press "Tilbakestill demo" (on mobile through "Meny") and see no dialog; switch user with `switchUser` from `tests/e2e/helpers.ts` and see no dialog (US2-1, US2-2, FR-007); open a new browser context and see the dialog again (US2-3); after confirming, `localStorage` holds `varodd-prototype:notice` = `true`, and every request made by the page during the test is to `http://localhost:4173` (FR-011)
+- [X] T010 [P] [US2] Add failing tests to `src/frame/notice/PrototypeNotice.test.tsx`: with `varodd-prototype:notice` = `true` already in storage, nothing is rendered (US2-1); with a storage whose `setItem` throws, "Jeg forstår" still closes the dialog after 5 s, and re-rendering the same component instance keeps it closed (FR-008); with a storage holding `"false"` or invalid JSON, the dialog is shown
+- [X] T011 [P] [US2] Add failing Playwright tests to `tests/e2e/notice.spec.ts` (both projects, empty storage, Playwright clock): confirm the notice, then reload and see no dialog; open a second page in the same context and see no dialog; press "Tilbakestill demo" (on mobile through "Meny") and see no dialog; switch user with `switchUser` from `tests/e2e/helpers.ts` and see no dialog (US2-1, US2-2, FR-007); open a new browser context and see the dialog again (US2-3); after confirming, `localStorage` holds `varodd-prototype:notice` = `true`, and every request made by the page during the test is to `http://localhost:4173` (FR-011)
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Make any change needed in `src/frame/notice/PrototypeNotice.tsx` or `src/frame/store/persistence.ts` so the tests from T010 and T011 pass, without changing `store.reset()` in `src/frame/store/store.ts`; run `pnpm test`
+- [X] T012 [US2] Make any change needed in `src/frame/notice/PrototypeNotice.tsx` or `src/frame/store/persistence.ts` so the tests from T010 and T011 pass, without changing `store.reset()` in `src/frame/store/store.ts`; run `pnpm test`
 
 **Checkpoint**: Returning visitors are not interrupted.
 
@@ -105,11 +105,11 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 ### Tests for User Story 3 (write first)
 
-- [ ] T013 [P] [US3] Add failing Playwright tests to `tests/e2e/notice.spec.ts` (both projects, empty storage, Playwright clock): `page.goto("/#/kunnskapsbank/sporsmal/sporsmal-1")` shows the dialog over the question page (US3-1); after `runFor(5000)` and "Jeg forstår", the URL is unchanged and the question's `<h1>` is visible and focused (US3-2); the same for `/#/oppdrag` or another 001 route listed in `tests/e2e/routes.ts`
+- [X] T013 [P] [US3] Add failing Playwright tests to `tests/e2e/notice.spec.ts` (both projects, empty storage, Playwright clock): `page.goto("/#/kunnskapsbank/sporsmal/sporsmal-1")` shows the dialog over the question page (US3-1); after `runFor(5000)` and "Jeg forstår", the URL is unchanged and the question's `<h1>` is visible and focused (US3-2); the same for `/#/oppdrag` or another 001 route listed in `tests/e2e/routes.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T014 [US3] Make any change needed in `src/frame/notice/PrototypeNotice.tsx` or `src/app/App.tsx` so the tests from T013 can pass (they run in T015)
+- [X] T014 [US3] Make any change needed in `src/frame/notice/PrototypeNotice.tsx` or `src/app/App.tsx` so the tests from T013 can pass (they run in T015)
 
 **Checkpoint**: Every way into the prototype passes through the notice.
 
@@ -117,8 +117,8 @@ The existing single frontend project at the repository root: `src/`, `tests/e2e/
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T015 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and the whole suite with `pnpm exec playwright test --workers=2`, and fix every failure until all pass; no 001 or 002 test may be weakened (quickstart scenario 9)
-- [ ] T016 [P] Update docs: in `CLAUDE.md`, add `src/frame/notice/` to the code layout and note under Commands that `playwright.config.ts` starts every test with the notice confirmed and that `tests/e2e/notice.spec.ts` clears this; in `README.md`, add one sentence to "Slik bruker du demoen" saying a notice about the prototype is shown on the first visit and how to see it again (clear the site's data or open a private window); in `specs/001-job-matching-marketplace/contracts/shared-frame.md`, list the prototype notice among the frame's parts
+- [X] T015 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and the whole suite with `pnpm exec playwright test --workers=2`, and fix every failure until all pass; no 001 or 002 test may be weakened (quickstart scenario 9)
+- [X] T016 [P] Update docs: in `CLAUDE.md`, add `src/frame/notice/` to the code layout and note under Commands that `playwright.config.ts` starts every test with the notice confirmed and that `tests/e2e/notice.spec.ts` clears this; in `README.md`, add one sentence to "Slik bruker du demoen" saying a notice about the prototype is shown on the first visit and how to see it again (clear the site's data or open a private window); in `specs/001-job-matching-marketplace/contracts/shared-frame.md`, list the prototype notice among the frame's parts
 
 ---
 

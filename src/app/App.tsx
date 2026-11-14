@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { I18nProvider } from "react-aria-components";
 import { RouterProvider } from "react-router";
 import { createApplyCommand } from "../domain/frame/commands";
+import { PrototypeNotice } from "../frame/notice/PrototypeNotice";
 import { createStore, StoreProvider } from "../frame/store/store";
 import { LiveAnnouncer } from "../frame/ui/LiveAnnouncer";
 import {
@@ -38,6 +39,7 @@ export function App() {
       <I18nProvider locale="nb-NO">
         <LiveAnnouncer>
           <RouterProvider router={router} />
+          <PrototypeNotice storage={window.localStorage} />
         </LiveAnnouncer>
       </I18nProvider>
     </StoreProvider>
