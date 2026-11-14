@@ -41,6 +41,14 @@ This feature is shown inside the shared frame defined in `001-job-matching-marke
 - Q: Does a worker placed at an E-Waves member business through `001-job-matching-marketplace` get access? → A: Yes. See the clarifications in `001-job-matching-marketplace`.
 - Q: How are Varodd and E-Waves related? → A: Varodd owns the product, including the knowledge base. E-Waves members get it as a membership benefit, and Varodd administrators moderate it.
 
+### Session 2026-11-13
+
+- Q: How does the prototype decide which existing questions closely match a question a member is about to post? → A: The member types freely. A simple word-overlap check against existing question titles and descriptions shows up to 3 of the best matches. The prepared near-duplicate questions are written so they always match.
+- Q: Does a question have a short title in addition to its description? → A: Yes. Each question has a required title of 1–120 characters and a description. The title is shown in lists, search results, matches, and activity feed entries.
+- Q: What text does forum search look through? → A: Question titles, descriptions, and the text of answers that are not removed, using simple word matching. Questions matching more words are listed first. Open and answered questions are both included; removed content is never shown.
+- Q: What are the rules when content is flagged more than once? → A: A member can flag any question or answer except their own, once each. Content already waiting for review can still be flagged by other members; their flags join the same review, and everyone who flagged it is notified of the outcome. Cleared content can be flagged again, which starts a new review.
+- Q: How much forum content does the seed data contain? → A: 4–6 topics; 12–20 questions, including open and answered ones, at least one with several answers, and at least one flagged item waiting for review; 6–8 prepared chatbot questions, at least 3 with stored content and at least 2 without; and 3 prepared near-duplicate questions.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Ask a question and get an answer from another member (Priority: P1)
@@ -57,7 +65,7 @@ An E-Waves member who is stuck on a problem — improving their webstore, a tech
 2. **Given** a simulated non-member, **When** they open the knowledge base, **Then** no questions or answers are shown and they are told it is an E-Waves membership benefit.
 3. **Given** a person working at an E-Waves member business who is not its owner, **When** they open the knowledge base, **Then** they have the same access as any other member.
 4. **Given** a Varodd administrator, **When** they open the knowledge base, **Then** they can view every question and answer, but cannot post, answer, or flag.
-5. **Given** a simulated member, **When** they post a question with a description and topic, **Then** it is published immediately with status open, shows the business name, and is visible to other members.
+5. **Given** a simulated member, **When** they post a question with a title, a description, and a topic, **Then** it is published immediately with status open, shows the business name, and is visible to other members.
 6. **Given** a published question, **When** any member, including a colleague of the asker or the asker themselves, submits an answer, **Then** the answer is published immediately, attributed to the answering business, the question is marked answered, and the asker is notified in the activity feed.
 7. **Given** a question that already has an answer, **When** a member submits another answer, **Then** both answers remain visible.
 8. **Given** a member's own question or answer, **When** they edit it, **Then** the change is applied; there are no comments on questions or answers.
@@ -92,10 +100,10 @@ Questions and answers are published immediately, so members can flag problems af
 
 1. **Given** a published question or answer, **When** a member flags it and gives a reason, **Then** it stays visible with a warning and is added to the review list.
 2. **Given** flagged content, **When** a Varodd administrator clears it, **Then** the warning is removed; **When** the administrator removes it, **Then** it is no longer shown; **When** the removed content is a question, **Then** the entire thread, including all of its answers, is removed.
-3. **Given** a question whose answers are all flagged or removed, **When** the last remaining answer is flagged, **Then** the question returns to open; **When** one of its answers is cleared, **Then** the question returns to answered; **When** the flagged answers are removed, **Then** the question stays open.
+3. **Given** a question with exactly one answer that is not flagged or removed, **When** that answer is flagged, **Then** the question returns to open; **When** one of its answers is cleared, **Then** the question returns to answered; **When** the flagged answers are removed, **Then** the question stays open.
 4. **Given** a question with several answers, **When** some but not all of them are flagged, **Then** the question stays answered.
 5. **Given** flagged content, **When** its author edits it, **Then** the warning stays until a Varodd administrator reviews it.
-6. **Given** flagged content, **When** a Varodd administrator clears or removes it, **Then** the author and the member who flagged it are notified in the activity feed.
+6. **Given** flagged content, **When** a Varodd administrator clears or removes it, **Then** the author and every member who flagged it are notified in the activity feed.
 
 ---
 
@@ -123,6 +131,8 @@ A member asks a question in their own words to a chatbot, which gives a short an
 - A member can still post a question after being shown a similar existing one.
 - A flagged answer stays visible with a warning until a Varodd administrator reviews it.
 - Spam and off-topic posts are handled through the same flagging process.
+- A member cannot flag their own question or answer, or flag the same content twice while it waits for review. Several members can flag the same content, and their flags are reviewed together.
+- Content that was cleared can be flagged again later, which starts a new review.
 - The chatbot only offers prepared questions, and it never makes up an answer.
 - Questions and answers posted during a demo are never used by the chatbot; its responses are based only on seeded forum content.
 - Knowledge base activity is not shown in the activity feed to users who cannot access the knowledge base.
@@ -131,23 +141,23 @@ A member asks a question in their own words to a chatbot, which gives a short an
 
 ### Functional Requirements
 
-- **FR-001**: System MUST allow an E-Waves member to post a question with a description and topic.
+- **FR-001**: System MUST allow an E-Waves member to post a question with a title of 1–120 characters, a description, and a topic. The title is shown wherever the question is listed or linked.
 - **FR-002**: System MUST allow any E-Waves member, including the asker and colleagues at the asker's business, to answer a posted question.
 - **FR-003**: System MUST store each question with all of its answers and keep multiple answers visible.
-- **FR-004**: System MUST provide a forum where members can search questions and browse them by topic, including both open and answered questions.
-- **FR-005**: System MUST show existing questions that closely match a question a member is about to post, and MUST still allow the member to post.
+- **FR-004**: System MUST provide a forum where members can search questions and browse them by topic, including both open and answered questions. Search MUST use simple word matching against question titles, descriptions, and the text of answers that are not removed, list questions matching more words first, and never show removed content.
+- **FR-005**: System MUST show up to 3 existing questions that closely match a question a member is about to post, found by a simple word-overlap check of the typed text against existing question titles and descriptions, and MUST still allow the member to post.
 - **FR-006**: System MUST provide a simulated chatbot where the member picks from a fixed list of prepared questions, and which gives short written answers based on seeded forum content with links to the forum threads they are based on.
 - **FR-007**: The simulated chatbot MUST make clear when the answer does not exist in the forum and link the closest questions if any exist. It MUST NOT make up an answer.
 - **FR-008**: The simulated chatbot MUST show a visible notice with every answer that it cannot be entirely trusted and should be checked against its sources.
 - **FR-009**: The simulated chatbot SHOULD offer to help post a question it cannot answer.
 - **FR-010**: The simulated chatbot MUST give the no-answer response for a prepared question when any of its source questions or answers is flagged and not cleared, or removed.
 - **FR-011**: System MUST show the name of the business that posted each question and answer.
-- **FR-012**: System MUST allow any member to flag a question or answer with a reason, including outdated, incorrect, spam, or off-topic content.
+- **FR-012**: System MUST allow any member to flag a question or answer with a reason, including outdated, incorrect, spam, or off-topic content. A member MUST NOT flag their own content, and MUST NOT flag the same content twice while it waits for review. Flags from several members on the same content join one review. Cleared content MAY be flagged again, which starts a new review.
 - **FR-013**: System MUST keep flagged content visible with a warning until a Varodd administrator clears or removes it, even if its author edits it. Removing a question MUST remove the entire thread, including all of its answers.
 - **FR-014**: System MUST show a question as answered while at least one of its answers is not flagged or removed, and as open while it has none.
 - **FR-015**: System MUST make the knowledge base available only to E-Waves members, meaning everyone working at an E-Waves member business. Varodd administrators MUST be able to view all of it and review flagged content, but MUST NOT post, answer, or flag.
 - **FR-016**: System MUST publish questions and answers immediately, without review before publication.
-- **FR-017**: System MUST notify the asker in the activity feed when their question receives an answer, and MUST notify the author and the member who flagged content when a Varodd administrator clears or removes it.
+- **FR-017**: System MUST notify the asker in the activity feed when their question receives an answer, and MUST notify the author and every member who flagged content when a Varodd administrator clears or removes it.
 - **FR-018**: System MUST allow authors to edit their own questions and answers.
 - **FR-019**: System MUST use the shared user switcher from `001-job-matching-marketplace`, instead of login, for switching between simulated E-Waves members, non-members, and Varodd administrators.
 - **FR-020**: System MUST present its user interface in Norwegian Bokmål.
@@ -158,7 +168,7 @@ A member asks a question in their own words to a chatbot, which gives a short an
 ### Key Entities
 
 - **Business**: The shared business defined in `001-job-matching-marketplace`. A business that is an E-Waves member can use the knowledge base (formerly referred to as "Member Business").
-- **Question**: A problem posted by a member, including its description, topic, business name, status (open or answered), and review state (current, flagged, cleared, or removed). Removing a question removes its entire thread.
+- **Question**: A problem posted by a member, including its title (1–120 characters), description, topic, business name, status (open or answered), and review state (current, flagged, cleared, or removed). Removing a question removes its entire thread.
 - **Answer**: A response to a Question, attributed to a business, with a review state (current, flagged, cleared, or removed).
 - **Topic**: A forum category, such as webstore, technical task, or AI adoption.
 - **Flag**: A member's report on a question or answer, including its reason and review outcome.
@@ -171,15 +181,16 @@ A member asks a question in their own words to a chatbot, which gives a short an
 
 - **SC-001**: A person trying the prototype can find an existing relevant answer, through search or the simulated chatbot, in under 2 minutes.
 - **SC-002**: Every prepared chatbot question with stored content gets an answer with a link to its forum thread and a trust notice, every prepared question without stored content gets a no-answer response, and flagging a source thread turns its answer into a no-answer response.
-- **SC-003**: Every prepared near-duplicate question shows the existing question before posting.
+- **SC-003**: Every one of the 3 prepared near-duplicate questions shows the existing question before posting.
+- **SC-004**: The seed data includes 4–6 topics, 12–20 questions with open and answered ones, at least one question with several answers, at least one flagged item waiting for review, and 6–8 prepared chatbot questions with at least 3 that have stored content and at least 2 that do not, so every forum, review, and chatbot outcome can be shown in a demo.
 
 ## Assumptions
 
 - Membership of E-Waves is the only eligibility rule for the knowledge base. Being a Varodd customer does not grant access.
 - An answer may come from any member, not just Varodd staff or designated experts.
 - There is no reward for answering in the prototype.
-- The prepared test questions define what counts as relevant or closely matching.
-- The seed data step from `001-job-matching-marketplace` also creates the fictional forum questions and answers, the prepared chatbot questions and responses (some with stored content, some without), and the prepared near-duplicate questions.
+- The prepared test questions define what counts as relevant. The prepared near-duplicate questions are written so that the word-overlap check in FR-005 always matches them to an existing question.
+- The seed data step from `001-job-matching-marketplace` also creates the fictional forum content: 4–6 topics; 12–20 questions, including open and answered ones, at least one with several answers, and at least one flagged item waiting for review; 6–8 prepared chatbot questions, at least 3 with stored content and at least 2 without; and 3 prepared near-duplicate questions.
 - Businesses and simulated users are shared with feature `001-job-matching-marketplace`. A member is any simulated user who works at a business that is an E-Waves member, whether or not they are its owner, including a worker placed there through `001-job-matching-marketplace` as described in that spec; anyone else is a non-member, except Varodd administrators, who can view the knowledge base.
 - The list of topics is fixed in the seed data and cannot be edited in the prototype. Who maintains it is an open question for later.
 - Whether authors can delete their own questions and answers is an open question for later.

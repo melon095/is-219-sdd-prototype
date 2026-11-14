@@ -10,13 +10,19 @@ import "./Navigation.css";
 
 export interface DisclosureProps extends Omit<AriaDisclosureProps, "children"> {
   title: string;
+  headingLevel?: 2 | 3 | 4;
   children: ReactNode;
 }
 
-export function Disclosure({ title, children, ...props }: DisclosureProps) {
+export function Disclosure({
+  title,
+  headingLevel = 3,
+  children,
+  ...props
+}: DisclosureProps) {
   return (
     <AriaDisclosure {...props}>
-      <Heading level={3}>
+      <Heading level={headingLevel}>
         <Button slot="trigger" variant="quiet">
           <span aria-hidden="true" className="disclosure-chevron">
             ▸

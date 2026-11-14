@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadSeedState } from "../../frame/store/seed";
+import { knowledgeBaseCommandHandlers } from "../knowledge-base/commands";
+import { searchQuestions, similarQuestions } from "../knowledge-base/search";
 import { marketplaceCommandHandlers } from "../marketplace/commands";
 import { expireOverdueOffers } from "../marketplace/offers";
 import type { TaskRequest } from "../marketplace/types";
@@ -173,6 +175,122 @@ const cases: Record<string, Case> = {
     command: () => ({ type: "simulateCrawl" }),
   },
 };
+
+const knowledgeBaseCases: Record<string, Case> = {
+  postQuestion: {
+    actorId: "person-1",
+    command: () => ({
+      type: "postQuestion",
+      topicId: "tema-1",
+      title: "Hvordan setter vi opp rabattkoder?",
+      description: "Vi vil gi kunder rabatt på den første bestillingen.",
+    }),
+  },
+  editQuestion: {
+    actorId: "person-1",
+    command: () => ({
+      type: "editQuestion",
+      questionId: "sporsmal-3",
+      topicId: "tema-2",
+      title: "Nettbutikken er treg på mobil",
+      description: "Siden bruker lang tid på å vise bildene.",
+    }),
+  },
+  postAnswer: {
+    actorId: "person-1",
+    command: () => ({
+      type: "postAnswer",
+      questionId: "sporsmal-7",
+      text: "Bruk en abonnementsapp og koble den til betalingen.",
+    }),
+  },
+  editAnswer: {
+    actorId: "person-3",
+    command: () => ({
+      type: "editAnswer",
+      answerId: "svar-1",
+      text: "Bruk en fraktavtale med et av de store transportselskapene.",
+    }),
+  },
+  flagContent: {
+    actorId: "person-3",
+    command: () => ({
+      type: "flagContent",
+      targetKind: "answer",
+      targetId: "svar-7",
+      reason: "outdated",
+    }),
+  },
+  reviewContent: {
+    actorId: "person-15",
+    command: () => ({
+      type: "reviewContent",
+      reviewId: "vurdering-3",
+      decision: "clear",
+    }),
+  },
+};
+
+const applyKnowledgeBaseCommand = createApplyCommand({
+  handlers: knowledgeBaseCommandHandlers,
+  systemSteps: [],
+});
+
+describe("ytelse for kommandoene i kunnskapsbanken", () => {
+  it("dekker alle 6 kommandoene i kunnskapsbanken", () => {
+    expect(Object.keys(knowledgeBaseCases).sort()).toEqual(
+      Object.keys(knowledgeBaseCommandHandlers).sort(),
+    );
+    expect(Object.keys(knowledgeBaseCases)).toHaveLength(6);
+  });
+
+  for (const [type, { actorId, command }] of Object.entries(
+    knowledgeBaseCases,
+  )) {
+    it(`${type} tar under ${limitMs} ms`, () => {
+      const state = seed();
+      const input = command(state);
+      let counter = 0;
+      const context = {
+        actorId,
+        now,
+        newId: () => {
+          counter += 1;
+          return `ytelse-${counter}`;
+        },
+      };
+
+      const started = performance.now();
+      const result = applyKnowledgeBaseCommand(state, input, context);
+      const elapsed = performance.now() - started;
+
+      expect(result.ok).toBe(true);
+      expect(elapsed).toBeLessThan(limitMs);
+    });
+  }
+
+  it("searchQuestions tar under 100 ms", () => {
+    const state = seed();
+    const started = performance.now();
+    const found = searchQuestions("Mailchimp", state);
+    const elapsed = performance.now() - started;
+    expect(found.length).toBeGreaterThan(0);
+    expect(elapsed).toBeLessThan(limitMs);
+  });
+
+  it("similarQuestions tar under 100 ms", () => {
+    const state = seed();
+    const example = state.knowledgeBase.nearDuplicateExamples[0];
+    if (example === undefined) {
+      throw new Error("Seed-dataene mangler et eksempel på lignende spørsmål");
+    }
+    const started = performance.now();
+    const found = similarQuestions(example.title, example.description, state);
+    const elapsed = performance.now() - started;
+    expect(found.length).toBeGreaterThan(0);
+    expect(elapsed).toBeLessThan(limitMs);
+  });
+});
 
 describe("ytelse for kommandoene", () => {
   it("dekker alle 19 kommandoene i markedsplassen", () => {

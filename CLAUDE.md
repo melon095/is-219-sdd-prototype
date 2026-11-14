@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two feature specs under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`). Work follows **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
 
-Feature `001-job-matching-marketplace` and the shared frame are built. `002-shared-knowledge-base` is still a draft spec with no code.
+Feature `001-job-matching-marketplace`, the shared frame, and feature `002-shared-knowledge-base` are built. The only open item in 002 is the manual accessibility and timing check (task T079).
 
 ### Stack
 
@@ -40,8 +40,10 @@ Playwright browsers live in Playwright's own cache: `pnpm exec playwright instal
 ### Code layout
 
 - `src/domain/` — pure TypeScript business rules driven by commands (no React, clock, storage, DOM, or crypto). `src/domain/marketplace/permissions.ts` holds the "is this allowed" checks used by both commands and UI.
-- `src/frame/` — the shared frame: design tokens, UI kit, layout, user switcher, activity feed, demo reset, store.
+- `src/domain/knowledge-base/` — pure TypeScript rules for feature 002: questions, answers, flagging and review, search, the simulated chatbot, and who is a member (`permissions.ts`).
+- `src/frame/` — the shared frame: design tokens, UI kit (including `SearchField`), layout (including `SubNav`), user switcher, activity feed, demo reset, store.
 - `src/features/<feature>/` — each feature's registry entry (`feature.ts`), pages and components. `src/app/features.ts` lists the features.
+- `src/features/knowledge-base/` — feature 002's pages (forum, topic, question, question form, chatbot, review) and components.
 - `scripts/seed/` — one seed module per feature, combined by `generate.ts`.
 
 Project rules: no comments in code, interface text in Norwegian Bokmål, and colours only through the design tokens.

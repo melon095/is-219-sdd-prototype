@@ -1,10 +1,10 @@
-.feature-subnav {
+.subnav {
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--color-grey-100);
 }
 
-.feature-subnav-list {
+.subnav-list {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -13,9 +13,10 @@
   list-style: none;
 }
 
-.feature-subnav-list .react-aria-Link {
+.subnav-list .react-aria-Link {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-2);
   min-height: var(--target-size-min);
   padding: var(--space-2) var(--space-4);
   border: 2px solid transparent;
@@ -25,16 +26,29 @@
   text-decoration: none;
 }
 
-.feature-subnav-list .react-aria-Link[data-hovered] {
+.subnav-list .react-aria-Link[data-hovered] {
   background: var(--color-navy-50);
   color: var(--color-navy-hover);
 }
 
-.feature-subnav-list .react-aria-Link[data-pressed] {
+.subnav-list .react-aria-Link[data-pressed] {
   background: var(--color-navy-100);
 }
 
-.feature-subnav-list .react-aria-Link[aria-current="page"] {
+.subnav-list .react-aria-Link[aria-current="page"] {
   background: var(--color-navy-100);
   border-color: var(--color-navy);
+}
+
+.subnav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-navy);
+  color: var(--color-background);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-body);
 }

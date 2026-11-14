@@ -7,6 +7,13 @@ import type {
   IsoDateTime,
 } from "../../domain/frame/types";
 import type {
+  Answer,
+  Flag,
+  KnowledgeBaseState,
+  Question,
+  Review,
+} from "../../domain/knowledge-base/types";
+import type {
   Conversation,
   CrawlRun,
   LogEvent,
@@ -24,6 +31,7 @@ export type SeedFile = {
   anchorDate: IsoDate;
   frame: FrameState;
   marketplace: MarketplaceState;
+  knowledgeBase: KnowledgeBaseState;
 };
 
 export const bundledSeed = seedData as SeedFile;
@@ -212,6 +220,55 @@ function shiftCrawlRun(run: CrawlRun, days: number): CrawlRun {
   return { ...run, at: shiftDate(run.at, days) };
 }
 
+function shiftQuestion(question: Question, days: number): Question {
+  return withOptional(
+    { ...question, createdAt: shiftDate(question.createdAt, days) },
+    "editedAt",
+    shiftOptional(question.editedAt, days),
+  );
+}
+
+function shiftAnswer(answer: Answer, days: number): Answer {
+  return withOptional(
+    { ...answer, createdAt: shiftDate(answer.createdAt, days) },
+    "editedAt",
+    shiftOptional(answer.editedAt, days),
+  );
+}
+
+function shiftFlag(flag: Flag, days: number): Flag {
+  return { ...flag, at: shiftDate(flag.at, days) };
+}
+
+function shiftReview(review: Review, days: number): Review {
+  return withOptional(
+    { ...review, openedAt: shiftDate(review.openedAt, days) },
+    "reviewedAt",
+    shiftOptional(review.reviewedAt, days),
+  );
+}
+
+function shiftKnowledgeBase(
+  knowledgeBase: KnowledgeBaseState,
+  days: number,
+): KnowledgeBaseState {
+  return {
+    topics: knowledgeBase.topics.map((topic) => ({ ...topic })),
+    questions: knowledgeBase.questions.map((question) =>
+      shiftQuestion(question, days),
+    ),
+    answers: knowledgeBase.answers.map((answer) => shiftAnswer(answer, days)),
+    flags: knowledgeBase.flags.map((flag) => shiftFlag(flag, days)),
+    reviews: knowledgeBase.reviews.map((review) => shiftReview(review, days)),
+    chatbotQuestions: knowledgeBase.chatbotQuestions.map((question) => ({
+      ...question,
+    })),
+    nearDuplicateExamples: knowledgeBase.nearDuplicateExamples.map(
+      (example) => ({ ...example }),
+    ),
+  };
+}
+
 export function shiftSeedDates(seed: SeedFile, days: number): SeedFile {
   return {
     format: seed.format,
@@ -243,6 +300,7 @@ export function shiftSeedDates(seed: SeedFile, days: number): SeedFile {
         shiftCrawlRun(run, days),
       ),
     },
+    knowledgeBase: shiftKnowledgeBase(seed.knowledgeBase, days),
   };
 }
 
@@ -259,5 +317,6 @@ export function loadSeedState(today: Date): DemoState {
     },
     frame: shifted.frame,
     marketplace: shifted.marketplace,
+    knowledgeBase: shifted.knowledgeBase,
   };
 }

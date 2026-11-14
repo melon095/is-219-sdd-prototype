@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DemoState } from "../../src/domain/frame/types";
+import { emptyKnowledgeBaseState } from "../../src/domain/knowledge-base/types";
 import {
   fillShortlist,
   rankCandidates,
@@ -14,6 +15,9 @@ const seed = buildSeedFileSchema({ marketplace: marketplaceStateSchema }).parse(
 );
 const { workerProfiles, requests, conversations } = seed.marketplace;
 const { people, businesses, skills } = seed.frame;
+const marketplaceActivity = seed.frame.activity.filter(
+  (entry) => entry.featureId === "marketplace",
+);
 
 function daysBefore(date: string, days: number): string {
   const [year = 0, month = 1, day = 1] = date.split("-").map(Number);
@@ -41,6 +45,7 @@ function stateWith(replaced?: TaskRequest): DemoState {
           ? requests
           : requests.map((item) => (item.id === replaced.id ? replaced : item)),
     },
+    knowledgeBase: emptyKnowledgeBaseState(),
   };
 }
 
@@ -557,7 +562,7 @@ describe("seeded references", () => {
         expect(personIds.has(message.authorId)).toBe(true);
       }
     }
-    for (const entry of seed.frame.activity) {
+    for (const entry of marketplaceActivity) {
       for (const personId of entry.audience.personIds) {
         expect(personIds.has(personId)).toBe(true);
       }
@@ -586,20 +591,20 @@ describe("seeded references", () => {
         expect(message.id).toMatch(/^melding-\d+$/);
       }
     }
-    for (const entry of seed.frame.activity) {
+    for (const entry of marketplaceActivity) {
       expect(entry.id).toMatch(/^aktivitet-\d+$/);
     }
     const allIds = [
       ...requests.map((item) => item.id),
       ...requests.flatMap((item) => item.log.map((event) => event.id)),
       ...conversations.flatMap((item) => item.messages.map((m) => m.id)),
-      ...seed.frame.activity.map((item) => item.id),
+      ...marketplaceActivity.map((item) => item.id),
     ];
     expect(new Set(allIds).size).toBe(allIds.length);
   });
 
   it("has activity entries in time order", () => {
-    const times = seed.frame.activity.map((entry) => Date.parse(entry.at));
+    const times = marketplaceActivity.map((entry) => Date.parse(entry.at));
     expect(times).toEqual([...times].sort((a, b) => a - b));
     expect(times.length).toBeGreaterThan(0);
   });

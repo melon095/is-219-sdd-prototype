@@ -1,0 +1,655 @@
+import { describe, expect, it } from "vitest";
+import type { DemoState } from "../../src/domain/frame/types";
+import { chatbotResponse } from "../../src/domain/knowledge-base/chatbot";
+import {
+  searchQuestions,
+  similarQuestions,
+} from "../../src/domain/knowledge-base/search";
+import { questionStatus } from "../../src/domain/knowledge-base/status";
+import {
+  matchScore,
+  tokenize,
+  wordsMatch,
+} from "../../src/domain/knowledge-base/text";
+import { knowledgeBaseStateSchema } from "../../src/features/knowledge-base/schema";
+import { marketplaceStateSchema } from "../../src/features/marketplace/schema";
+import { buildSeedFileSchema } from "../../src/frame/store/schema";
+import { buildSeedFile } from "./generate";
+
+const seedFileSchema = buildSeedFileSchema({
+  marketplace: marketplaceStateSchema,
+  knowledgeBase: knowledgeBaseStateSchema,
+});
+
+const seed = seedFileSchema.parse(JSON.parse(buildSeedFile()));
+const kb = seed.knowledgeBase;
+const { people, businesses } = seed.frame;
+
+const state: DemoState = {
+  meta: {
+    seedId: seed.seedId,
+    anchorDate: seed.anchorDate,
+    loadedAt: `${seed.anchorDate}T08:00:00+01:00`,
+  },
+  frame: seed.frame,
+  marketplace: seed.marketplace,
+  knowledgeBase: kb,
+};
+
+const authors = ["person-1", "person-2", "person-3", "person-5"];
+
+const day = 24 * 60 * 60 * 1000;
+
+const anchor = Date.parse(`${seed.anchorDate}T00:00:00+01:00`);
+
+function answersTo(questionId: string) {
+  return kb.answers.filter((item) => item.questionId === questionId);
+}
+
+function businessOfPerson(personId: string) {
+  return businesses.find(
+    (business) =>
+      business.ownerId === personId || business.employeeIds.includes(personId),
+  );
+}
+
+function chatbotSourceAnswerIds(): Set<string> {
+  return new Set(
+    kb.chatbotQuestions.flatMap((item) => item.answer?.sourceAnswerIds ?? []),
+  );
+}
+
+describe("seeded topics", () => {
+  it("has exactly the 5 topics, each with a description", () => {
+    expect(kb.topics.map((topic) => [topic.id, topic.name])).toEqual([
+      ["tema-1", "Nettbutikk"],
+      ["tema-2", "Teknisk hjelp"],
+      ["tema-3", "Kunstig intelligens"],
+      ["tema-4", "Markedsføring"],
+      ["tema-5", "Drift og regnskap"],
+    ]);
+    for (const topic of kb.topics) {
+      expect(topic.description.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("has at least 2 visible questions in every topic", () => {
+    for (const topic of kb.topics) {
+      const visible = kb.questions.filter(
+        (item) => item.topicId === topic.id && item.moderation !== "removed",
+      );
+      expect(visible.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
+describe("seeded questions", () => {
+  it("has 12–20 questions written only by the four members", () => {
+    expect(kb.questions.length).toBeGreaterThanOrEqual(12);
+    expect(kb.questions.length).toBeLessThanOrEqual(20);
+    for (const item of kb.questions) {
+      expect(authors).toContain(item.authorId);
+    }
+  });
+
+  it("comes from at least 3 businesses", () => {
+    expect(
+      new Set(kb.questions.map((item) => item.businessId)).size,
+    ).toBeGreaterThanOrEqual(3);
+  });
+
+  it("has both open and answered questions", () => {
+    const statuses = kb.questions.map((item) => questionStatus(item, state));
+    expect(statuses).toContain("open");
+    expect(statuses).toContain("answered");
+  });
+
+  it("has at least one question with 3 or more answers", () => {
+    expect(kb.questions.some((item) => answersTo(item.id).length >= 3)).toBe(
+      true,
+    );
+  });
+
+  it("has at least one question answered by the asker's colleague", () => {
+    expect(
+      kb.answers.some((item) => {
+        const asked = kb.questions.find(
+          (candidate) => candidate.id === item.questionId,
+        );
+        return (
+          asked !== undefined &&
+          asked.authorId !== item.authorId &&
+          asked.businessId === item.businessId
+        );
+      }),
+    ).toBe(true);
+  });
+
+  it("has at least 2 questions about using AI tools such as Claude", () => {
+    const aiQuestions = kb.questions.filter(
+      (item) => item.topicId === "tema-3" && /claude|ki\b/i.test(item.title),
+    );
+    expect(aiQuestions.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("has every author write at least one question and one answer", () => {
+    for (const author of authors) {
+      expect(kb.questions.some((item) => item.authorId === author)).toBe(true);
+      expect(kb.answers.some((item) => item.authorId === author)).toBe(true);
+    }
+  });
+
+  it("gives every author's content the business they work at", () => {
+    for (const item of [...kb.questions, ...kb.answers]) {
+      expect(businessOfPerson(item.authorId)?.id).toBe(item.businessId);
+    }
+  });
+
+  it("has no edits, and keeps every item without a review as current", () => {
+    for (const item of [...kb.questions, ...kb.answers]) {
+      expect(item.editedAt).toBeUndefined();
+      if (!kb.reviews.some((review) => review.targetId === item.id)) {
+        expect(item.moderation).toBe("current");
+      }
+    }
+  });
+
+  it("uses fixed times between 30 and 3 days before the anchor date", () => {
+    for (const item of [...kb.questions, ...kb.answers]) {
+      const at = Date.parse(item.createdAt);
+      expect(at).toBeGreaterThanOrEqual(anchor - 30 * day);
+      expect(at).toBeLessThanOrEqual(anchor - 3 * day);
+    }
+  });
+
+  it("posts every answer after its question", () => {
+    for (const item of kb.answers) {
+      const asked = kb.questions.find(
+        (candidate) => candidate.id === item.questionId,
+      );
+      expect(asked).toBeDefined();
+      expect(Date.parse(item.createdAt)).toBeGreaterThan(
+        Date.parse(asked?.createdAt ?? ""),
+      );
+    }
+  });
+
+  it("uses counter ids", () => {
+    kb.questions.forEach((item, index) => {
+      expect(item.id).toBe(`sporsmal-${index + 1}`);
+    });
+    kb.answers.forEach((item, index) => {
+      expect(item.id).toBe(`svar-${index + 1}`);
+    });
+  });
+});
+
+describe("seeded answers", () => {
+  it("has at least one answer with a word found in no question and in no other answer", () => {
+    const questionWords = kb.questions.flatMap((item) =>
+      tokenize(`${item.title} ${item.description}`),
+    );
+    const shown = kb.answers.filter((item) => item.moderation !== "removed");
+    const found = shown.some((item) => {
+      const others = shown
+        .filter((other) => other.id !== item.id)
+        .flatMap((other) => tokenize(other.text));
+      return tokenize(item.text).some(
+        (word) =>
+          !questionWords.some((candidate) => wordsMatch(word, candidate)) &&
+          !others.some((candidate) => wordsMatch(word, candidate)),
+      );
+    });
+    expect(found).toBe(true);
+  });
+
+  it("has at least two answers by Ola, one that is not a chatbot source and has no flag", () => {
+    const ola = kb.answers.filter((item) => item.authorId === "person-5");
+    expect(ola.length).toBeGreaterThanOrEqual(2);
+    const sources = chatbotSourceAnswerIds();
+    expect(
+      ola.some(
+        (item) =>
+          !sources.has(item.id) &&
+          !kb.flags.some((flag) => flag.targetId === item.id),
+      ),
+    ).toBe(true);
+  });
+});
+
+describe("references", () => {
+  it("points every authorId, businessId, topicId, and questionId at an existing record", () => {
+    const personIds = new Set(people.map((person) => person.id));
+    const businessIds = new Set(businesses.map((business) => business.id));
+    const topicIds = new Set(kb.topics.map((topic) => topic.id));
+    const questionIds = new Set(kb.questions.map((item) => item.id));
+    for (const item of kb.questions) {
+      expect(personIds.has(item.authorId)).toBe(true);
+      expect(businessIds.has(item.businessId)).toBe(true);
+      expect(topicIds.has(item.topicId)).toBe(true);
+    }
+    for (const item of kb.answers) {
+      expect(personIds.has(item.authorId)).toBe(true);
+      expect(businessIds.has(item.businessId)).toBe(true);
+      expect(questionIds.has(item.questionId)).toBe(true);
+    }
+  });
+});
+
+describe("knowledge base activity", () => {
+  const entries = seed.frame.activity.filter(
+    (entry) => entry.featureId === "knowledgeBase",
+  );
+
+  it("has one entry per question, answer, flag, and closed review", () => {
+    const closed = kb.reviews.filter((review) => review.outcome !== undefined);
+    expect(entries).toHaveLength(
+      kb.questions.length + kb.answers.length + kb.flags.length + closed.length,
+    );
+  });
+
+  it("requires the members group on every entry", () => {
+    for (const entry of entries) {
+      expect(entry.audience.requiredGroup).toBe("knowledgeBase.members");
+    }
+  });
+
+  it("links every entry to an existing question", () => {
+    const routes = new Set(
+      kb.questions.map((item) => `/kunnskapsbank/sporsmal/${item.id}`),
+    );
+    for (const entry of entries) {
+      expect(routes.has(entry.target.route)).toBe(true);
+    }
+  });
+
+  it("uses counter ids", () => {
+    expect(entries.map((entry) => entry.id)).toEqual(
+      entries.map((_, index) => `aktivitet-kb-${index + 1}`),
+    );
+  });
+});
+
+describe("near-duplicate examples", () => {
+  const examples = kb.nearDuplicateExamples;
+
+  function targetOf(matchesQuestionId: string) {
+    return kb.questions.find((item) => item.id === matchesQuestionId);
+  }
+
+  it("has exactly 3 examples with the ids duplikat-1 to duplikat-3", () => {
+    expect(examples.map((example) => example.id)).toEqual([
+      "duplikat-1",
+      "duplikat-2",
+      "duplikat-3",
+    ]);
+  });
+
+  it("points each example at a visible seeded question", () => {
+    for (const example of examples) {
+      const target = targetOf(example.matchesQuestionId);
+      expect(target, example.id).toBeDefined();
+      expect(target?.moderation, example.id).not.toBe("removed");
+    }
+  });
+
+  it("points the three examples at three different questions", () => {
+    expect(
+      new Set(examples.map((example) => example.matchesQuestionId)).size,
+    ).toBe(3);
+  });
+
+  it("words each example differently from the title of its target", () => {
+    for (const example of examples) {
+      expect(example.title, example.id).not.toBe(
+        targetOf(example.matchesQuestionId)?.title,
+      );
+    }
+  });
+
+  it("shares at least 2 content words with the title or description of its target", () => {
+    for (const example of examples) {
+      const target = targetOf(example.matchesQuestionId);
+      const shared = matchScore(
+        tokenize(`${example.title} ${example.description}`),
+        tokenize(`${target?.title} ${target?.description}`),
+      );
+      expect(shared, example.id).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("finds the target of each example among the similar questions", () => {
+    for (const example of examples) {
+      const found = similarQuestions(example.title, example.description, state);
+      expect(
+        found.map((item) => item.id),
+        example.id,
+      ).toContain(example.matchesQuestionId);
+    }
+  });
+
+  it("keeps every title within 120 characters", () => {
+    for (const example of examples) {
+      expect(example.title.length, example.id).toBeGreaterThan(0);
+      expect(example.title.length, example.id).toBeLessThanOrEqual(120);
+    }
+  });
+});
+
+describe("seeded moderation history", () => {
+  const personIds = new Set(people.map((person) => person.id));
+  const reservedQuestionIds = [
+    "sporsmal-1",
+    "sporsmal-4",
+    "sporsmal-6",
+    "sporsmal-9",
+    "sporsmal-13",
+  ];
+
+  function itemOf(targetKind: string, targetId: string) {
+    return targetKind === "question"
+      ? kb.questions.find((item) => item.id === targetId)
+      : kb.answers.find((item) => item.id === targetId);
+  }
+
+  function questionIdOfTarget(targetKind: string, targetId: string) {
+    return targetKind === "question"
+      ? targetId
+      : kb.answers.find((item) => item.id === targetId)?.questionId;
+  }
+
+  it("has an open review on an answer that is not a chatbot source", () => {
+    const sources = chatbotSourceAnswerIds();
+    const open = kb.reviews.filter(
+      (review) =>
+        review.outcome === undefined &&
+        review.targetKind === "answer" &&
+        !sources.has(review.targetId),
+    );
+    expect(open.length).toBeGreaterThanOrEqual(1);
+    for (const review of open) {
+      expect(itemOf(review.targetKind, review.targetId)?.moderation).toBe(
+        "flagged",
+      );
+    }
+  });
+
+  it("has a closed review with the outcome cleared", () => {
+    const cleared = kb.reviews.filter((review) => review.outcome === "cleared");
+    expect(cleared.length).toBeGreaterThanOrEqual(1);
+    for (const review of cleared) {
+      expect(itemOf(review.targetKind, review.targetId)?.moderation).toBe(
+        "cleared",
+      );
+    }
+  });
+
+  it("has a removed answer with a closed review removed", () => {
+    const removed = kb.answers.filter((item) => item.moderation === "removed");
+    expect(removed.length).toBeGreaterThanOrEqual(1);
+    for (const item of removed) {
+      expect(
+        kb.reviews.some(
+          (review) =>
+            review.targetKind === "answer" &&
+            review.targetId === item.id &&
+            review.outcome === "removed",
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("points every flaggedBy and reviewedBy at an existing person", () => {
+    for (const flag of kb.flags) {
+      expect(personIds.has(flag.flaggedBy)).toBe(true);
+      expect(authors).toContain(flag.flaggedBy);
+    }
+    for (const review of kb.reviews) {
+      if (review.reviewedBy !== undefined) {
+        expect(personIds.has(review.reviewedBy)).toBe(true);
+        expect(review.reviewedBy).toBe("person-15");
+      }
+    }
+  });
+
+  it("never puts a flag on the flagger's own content", () => {
+    for (const flag of kb.flags) {
+      const item = itemOf(flag.targetKind, flag.targetId);
+      expect(item, flag.id).toBeDefined();
+      expect(item?.authorId, flag.id).not.toBe(flag.flaggedBy);
+    }
+  });
+
+  it("links every flag and review to each other and to the same target", () => {
+    for (const flag of kb.flags) {
+      const review = kb.reviews.find((item) => item.id === flag.reviewId);
+      expect(review, flag.id).toBeDefined();
+      expect(review?.flagIds).toContain(flag.id);
+      expect(review?.targetKind).toBe(flag.targetKind);
+      expect(review?.targetId).toBe(flag.targetId);
+    }
+    for (const review of kb.reviews) {
+      expect(review.flagIds.length).toBeGreaterThanOrEqual(1);
+      for (const flagId of review.flagIds) {
+        expect(kb.flags.some((flag) => flag.id === flagId)).toBe(true);
+      }
+      expect(Boolean(review.outcome)).toBe(Boolean(review.reviewedBy));
+      expect(Boolean(review.outcome)).toBe(Boolean(review.reviewedAt));
+    }
+  });
+
+  it("has at most one open review for each item", () => {
+    const open = kb.reviews.filter((review) => review.outcome === undefined);
+    const keys = open.map(
+      (review) => `${review.targetKind}:${review.targetId}`,
+    );
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("uses counter ids for flags and reviews", () => {
+    kb.flags.forEach((flag, index) => {
+      expect(flag.id).toBe(`flagg-${index + 1}`);
+    });
+    kb.reviews.forEach((review, index) => {
+      expect(review.id).toBe(`vurdering-${index + 1}`);
+    });
+  });
+
+  it("flags and reviews after the content was posted and before the anchor date", () => {
+    for (const flag of kb.flags) {
+      const item = itemOf(flag.targetKind, flag.targetId);
+      expect(Date.parse(flag.at), flag.id).toBeGreaterThan(
+        Date.parse(item?.createdAt ?? ""),
+      );
+      expect(Date.parse(flag.at), flag.id).toBeLessThan(anchor);
+    }
+    for (const review of kb.reviews) {
+      if (review.reviewedAt !== undefined) {
+        expect(Date.parse(review.reviewedAt), review.id).toBeGreaterThan(
+          Date.parse(review.openedAt),
+        );
+        expect(Date.parse(review.reviewedAt), review.id).toBeLessThan(anchor);
+      }
+    }
+  });
+
+  it("keeps flags away from the questions reserved for chatbot sources", () => {
+    for (const review of kb.reviews) {
+      expect(reservedQuestionIds, review.id).not.toContain(
+        questionIdOfTarget(review.targetKind, review.targetId),
+      );
+    }
+  });
+
+  it("keeps an answer by Ola that is not a chatbot source and still current", () => {
+    const sources = chatbotSourceAnswerIds();
+    const free = kb.answers.filter(
+      (item) =>
+        item.authorId === "person-5" &&
+        !sources.has(item.id) &&
+        item.moderation === "current",
+    );
+    expect(free.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("matches each item's moderation to its latest review", () => {
+    for (const review of kb.reviews) {
+      const item = itemOf(review.targetKind, review.targetId);
+      const expected =
+        review.outcome === undefined
+          ? "flagged"
+          : review.outcome === "cleared"
+            ? "cleared"
+            : "removed";
+      expect(item?.moderation, review.id).toBe(expected);
+    }
+  });
+});
+
+describe("prepared chatbot questions", () => {
+  const prepared = kb.chatbotQuestions;
+  const withAnswer = prepared.filter((item) => item.answer !== undefined);
+  const withoutAnswer = prepared.filter((item) => item.answer === undefined);
+
+  it("has 7 questions with the ids chatbot-1 to chatbot-7", () => {
+    expect(prepared.map((item) => item.id)).toEqual([
+      "chatbot-1",
+      "chatbot-2",
+      "chatbot-3",
+      "chatbot-4",
+      "chatbot-5",
+      "chatbot-6",
+      "chatbot-7",
+    ]);
+  });
+
+  it("has at least 4 with an answer and at least 2 without", () => {
+    expect(withAnswer.length).toBeGreaterThanOrEqual(4);
+    expect(withoutAnswer.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("keeps every text within its length limit", () => {
+    for (const item of prepared) {
+      expect(item.text.length, item.id).toBeGreaterThanOrEqual(1);
+      expect(item.text.length, item.id).toBeLessThanOrEqual(200);
+      if (item.answer !== undefined) {
+        expect(item.answer.text.length, item.id).toBeGreaterThanOrEqual(1);
+        expect(item.answer.text.length, item.id).toBeLessThanOrEqual(1000);
+      }
+    }
+  });
+
+  it("writes every prepared answer as 2 to 4 sentences", () => {
+    for (const item of withAnswer) {
+      const sentences = (item.answer?.text.match(/[.!?](\s|$)/g) ?? []).length;
+      expect(sentences, item.id).toBeGreaterThanOrEqual(2);
+      expect(sentences, item.id).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it("points every source at an existing question or answer that is current or cleared", () => {
+    for (const item of withAnswer) {
+      expect(item.answer?.sourceQuestionIds.length, item.id).toBeGreaterThan(0);
+      for (const id of item.answer?.sourceQuestionIds ?? []) {
+        const found = kb.questions.find((candidate) => candidate.id === id);
+        expect(found, `${item.id} ${id}`).toBeDefined();
+        expect(["current", "cleared"], `${item.id} ${id}`).toContain(
+          found?.moderation,
+        );
+      }
+      for (const id of item.answer?.sourceAnswerIds ?? []) {
+        const found = kb.answers.find((candidate) => candidate.id === id);
+        expect(found, `${item.id} ${id}`).toBeDefined();
+        expect(["current", "cleared"], `${item.id} ${id}`).toContain(
+          found?.moderation,
+        );
+      }
+    }
+  });
+
+  it("lets every source answer belong to one of the source questions", () => {
+    for (const item of withAnswer) {
+      for (const id of item.answer?.sourceAnswerIds ?? []) {
+        const found = kb.answers.find((candidate) => candidate.id === id);
+        expect(item.answer?.sourceQuestionIds, `${item.id} ${id}`).toContain(
+          found?.questionId,
+        );
+      }
+    }
+  });
+
+  it("has no source that is the target of an open review", () => {
+    const open = kb.reviews.filter((review) => review.outcome === undefined);
+    for (const item of withAnswer) {
+      for (const review of open) {
+        const ids =
+          review.targetKind === "question"
+            ? (item.answer?.sourceQuestionIds ?? [])
+            : (item.answer?.sourceAnswerIds ?? []);
+        expect(ids, `${item.id} ${review.id}`).not.toContain(review.targetId);
+      }
+    }
+  });
+
+  it("has an answer with a source answer that Per did not write and has not flagged", () => {
+    const found = withAnswer.some((item) =>
+      (item.answer?.sourceAnswerIds ?? []).some((id) => {
+        const source = kb.answers.find((candidate) => candidate.id === id);
+        return (
+          source !== undefined &&
+          source.authorId !== "person-3" &&
+          !kb.flags.some(
+            (flag) => flag.targetId === id && flag.flaggedBy === "person-3",
+          )
+        );
+      }),
+    );
+    expect(found).toBe(true);
+  });
+
+  it("gives an answer for each prepared answer and no answer for the rest", () => {
+    for (const item of withAnswer) {
+      const response = chatbotResponse(item, state);
+      expect(response.kind, item.id).toBe("answer");
+      if (response.kind === "answer") {
+        expect(response.text, item.id).toBe(item.answer?.text);
+        expect(
+          response.sources.map((source) => source.id),
+          item.id,
+        ).toEqual(item.answer?.sourceQuestionIds);
+      }
+    }
+    for (const item of withoutAnswer) {
+      expect(chatbotResponse(item, state).kind, item.id).toBe("no-answer");
+    }
+  });
+
+  it("gives every question without an answer closest questions from the search", () => {
+    for (const item of withoutAnswer) {
+      const response = chatbotResponse(item, state);
+      if (response.kind === "no-answer") {
+        expect(
+          response.closest.map((question) => question.id),
+          item.id,
+        ).toEqual(
+          searchQuestions(item.text, state)
+            .slice(0, 3)
+            .map((question) => question.id),
+        );
+      }
+    }
+  });
+
+  it("uses each source question for only one prepared answer", () => {
+    const allSources = withAnswer.flatMap(
+      (item) => item.answer?.sourceQuestionIds ?? [],
+    );
+    expect(new Set(allSources).size).toBe(allSources.length);
+  });
+});
+
+describe("knowledge base state", () => {
+  it("passes the knowledge base schema", () => {
+    expect(knowledgeBaseStateSchema.safeParse(kb).success).toBe(true);
+  });
+});

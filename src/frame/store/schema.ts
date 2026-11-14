@@ -45,6 +45,7 @@ export const skillSchema = z.object({
 export const audienceSchema = z.object({
   personIds: z.array(idSchema),
   groups: z.array(z.string()),
+  requiredGroup: z.string().optional(),
 }) satisfies ZodType<Audience>;
 
 export const activityEntrySchema = z.object({

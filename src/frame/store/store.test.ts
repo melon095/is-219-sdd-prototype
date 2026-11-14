@@ -7,6 +7,7 @@ import type {
   DemoState,
   SystemStep,
 } from "../../domain/frame/types";
+import { knowledgeBaseStateSchema } from "../../features/knowledge-base/schema";
 import { marketplaceStateSchema } from "../../features/marketplace/schema";
 import { STATE_KEY, type StorageLike, USER_KEY } from "./persistence";
 import { buildStoredStateSchema } from "./schema";
@@ -22,6 +23,7 @@ import {
 
 const storedStateSchema = buildStoredStateSchema({
   marketplace: marketplaceStateSchema,
+  knowledgeBase: knowledgeBaseStateSchema,
 });
 
 const nowValue = "2026-11-20T09:00:00.000Z";

@@ -1,5 +1,5 @@
 import { expect, type Page } from "@playwright/test";
-import { switchUser } from "./helpers";
+import { askQuestion, questionRegion, switchUser } from "./helpers";
 
 export type Visit = { path: string; heading: string | RegExp };
 
@@ -19,6 +19,8 @@ const titles = {
   inProgress: "Video og annonser til vinterkolleksjonen",
   completed: "Annonser og synlighet for kaffeabonnementet",
   cancelled: "Julevideo til nettbutikken",
+  kbOpen: "Hvordan lager jeg et kaffeabonnement i nettbutikken?",
+  kbFlagged: "Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?",
 };
 
 async function referThroughNav(page: Page) {
@@ -30,6 +32,33 @@ async function referThroughNav(page: Page) {
     .filter({ hasText: "Sander Haugen" });
   await item.getByRole("button", { name: "Henvis fra NAV (simulert)" }).click();
   await expect(item).toHaveCount(0);
+}
+
+let removedQuestionPath = "/kunnskapsbank";
+
+async function removeQuestionThroughForum(page: Page) {
+  await switchUser(page, "Jonas Berg");
+  await askQuestion(page, {
+    title: "Hvordan sender vi pakker med zeppelin?",
+    description: "Vi vurderer zeppelin for store ordrer og lurer på prisene.",
+    topic: "Nettbutikk",
+  });
+  removedQuestionPath = new URL(page.url()).hash.slice(1);
+  await switchUser(page, "Per Hansen");
+  const question = questionRegion(page);
+  await question.getByRole("button", { name: "Flagg" }).click();
+  const flagDialog = page.getByRole("dialog", { name: "Flagg innlegget" });
+  await flagDialog.getByText("Spam", { exact: true }).click();
+  await flagDialog.getByRole("button", { name: "Send" }).click();
+  await expect(flagDialog).toBeHidden();
+  await switchUser(page, "Marte Vik");
+  await question.getByRole("button", { name: "Fjern" }).click();
+  const confirm = page.getByRole("alertdialog");
+  await confirm.getByRole("button", { name: "Fjern" }).click();
+  await expect(confirm).toBeHidden();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Spørsmålet er fjernet" }),
+  ).toBeVisible();
 }
 
 export const groups: Group[] = [
@@ -121,6 +150,57 @@ export const groups: Group[] = [
     user: "Sander Haugen",
     prepare: referThroughNav,
     visits: [{ path: "/profil", heading: "Min profil" }],
+  },
+  {
+    name: "medlem i kunnskapsbanken",
+    user: "Kari Nordmann",
+    visits: [
+      { path: "/kunnskapsbank", heading: "Kunnskapsbank" },
+      { path: "/kunnskapsbank?sok=Mailchimp", heading: "Kunnskapsbank" },
+      { path: "/kunnskapsbank/tema/tema-1", heading: "Nettbutikk" },
+      { path: "/kunnskapsbank/sporsmal/ny", heading: "Still et spørsmål" },
+      { path: "/kunnskapsbank/sporsmal/sporsmal-7", heading: titles.kbOpen },
+      {
+        path: "/kunnskapsbank/sporsmal/sporsmal-10",
+        heading: titles.kbFlagged,
+      },
+      {
+        path: "/kunnskapsbank/sporsmal/sporsmal-3/rediger",
+        heading: "Rediger spørsmål",
+      },
+      { path: "/kunnskapsbank/chatbot", heading: "Spør chatboten" },
+    ],
+  },
+  {
+    name: "ikke-medlem i kunnskapsbanken",
+    user: "Anne Lie",
+    visits: [
+      {
+        path: "/kunnskapsbank",
+        heading: "Kunnskapsbanken er for E-Waves-medlemmer",
+      },
+    ],
+  },
+  {
+    name: "administrator i kunnskapsbanken",
+    user: "Marte Vik",
+    visits: [
+      { path: "/kunnskapsbank", heading: "Kunnskapsbank" },
+      { path: "/kunnskapsbank/vurdering", heading: "Til vurdering" },
+    ],
+  },
+  {
+    name: "administrator med et fjernet spørsmål",
+    user: "Marte Vik",
+    prepare: removeQuestionThroughForum,
+    visits: [
+      {
+        get path() {
+          return removedQuestionPath;
+        },
+        heading: "Spørsmålet er fjernet",
+      },
+    ],
   },
 ];
 

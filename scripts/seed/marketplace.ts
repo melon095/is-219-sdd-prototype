@@ -5,6 +5,7 @@ import type {
   DemoState,
   Id,
 } from "../../src/domain/frame/types";
+import { emptyKnowledgeBaseState } from "../../src/domain/knowledge-base/types";
 import { marketplaceCommandHandlers } from "../../src/domain/marketplace/commands";
 import { expireOverdueOffers } from "../../src/domain/marketplace/offers";
 import type {
@@ -212,6 +213,7 @@ function createHistory(frame: FrameSeed) {
       })),
       crawlRuns: [],
     },
+    knowledgeBase: emptyKnowledgeBaseState(),
   };
   let counter = 0;
   const newId = () => {

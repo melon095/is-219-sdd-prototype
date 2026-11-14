@@ -15,6 +15,13 @@ export function canSeeEntry(
   if (isAdmin(person)) {
     return true;
   }
+  const { requiredGroup } = entry.audience;
+  if (
+    requiredGroup !== undefined &&
+    groups[requiredGroup]?.(person, state) !== true
+  ) {
+    return false;
+  }
   if (entry.audience.personIds.includes(person.id)) {
     return true;
   }

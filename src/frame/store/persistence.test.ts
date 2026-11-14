@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DemoState } from "../../domain/frame/types";
+import { emptyKnowledgeBaseState } from "../../domain/knowledge-base/types";
+import { knowledgeBaseStateSchema } from "../../features/knowledge-base/schema";
 import { marketplaceStateSchema } from "../../features/marketplace/schema";
 import {
   loadState,
@@ -15,6 +17,7 @@ import { bundledSeedId, loadSeedState } from "./seed";
 
 const storedStateSchema = buildStoredStateSchema({
   marketplace: marketplaceStateSchema,
+  knowledgeBase: knowledgeBaseStateSchema,
 });
 
 const today = new Date(2026, 10, 20, 9, 0);
@@ -140,6 +143,62 @@ describe("loadState", () => {
     const result = loadState(loadOptions(throwingStorage()));
     expect(result.storageAvailable).toBe(false);
     expect(result.state).toEqual(loadSeedState(today));
+  });
+});
+
+describe("stored activity audience", () => {
+  function storedWith(audience: {
+    personIds: string[];
+    groups: string[];
+    requiredGroup?: string;
+  }) {
+    const state = loadSeedState(today);
+    return {
+      format: 1,
+      seedId: bundledSeedId,
+      state: {
+        ...state,
+        knowledgeBase: emptyKnowledgeBaseState(),
+        frame: {
+          ...state.frame,
+          activity: [
+            {
+              id: "aktivitet-test",
+              at: "2026-11-16T10:00:00+01:00",
+              featureId: "knowledgeBase",
+              actor: "person-1",
+              text: "Test",
+              target: { route: "/kunnskapsbank" },
+              audience,
+            },
+          ],
+        },
+      },
+    };
+  }
+
+  it("keeps requiredGroup when it is stored", () => {
+    const result = storedStateSchema.safeParse(
+      storedWith({
+        personIds: ["person-1"],
+        groups: [],
+        requiredGroup: "knowledgeBase.members",
+      }),
+    );
+    expect(result.success).toBe(true);
+    expect(result.data?.state.frame.activity[0]?.audience.requiredGroup).toBe(
+      "knowledgeBase.members",
+    );
+  });
+
+  it("still accepts an entry without requiredGroup", () => {
+    const result = storedStateSchema.safeParse(
+      storedWith({ personIds: ["person-1"], groups: [] }),
+    );
+    expect(result.success).toBe(true);
+    expect(
+      result.data?.state.frame.activity[0]?.audience.requiredGroup,
+    ).toBeUndefined();
   });
 });
 

@@ -6,6 +6,7 @@ import type {
   Person,
   SystemStep,
 } from "../domain/frame/types";
+import { knowledgeBaseFeature } from "../features/knowledge-base/feature";
 import { marketplaceFeature } from "../features/marketplace/feature";
 import type { StoredState } from "../frame/store/persistence";
 import {
@@ -33,7 +34,10 @@ export type FeatureDefinition = {
   systemSteps: SystemStep[];
 };
 
-export const features: FeatureDefinition[] = [marketplaceFeature];
+export const features: FeatureDefinition[] = [
+  marketplaceFeature,
+  knowledgeBaseFeature,
+];
 
 export const allCommandHandlers: Record<string, CommandHandler> = Object.assign(
   {},

@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { emptyKnowledgeBaseState } from "../knowledge-base/types";
 import { createApplyCommand } from "./commands";
 import type {
   CommandContext,
@@ -45,6 +46,7 @@ function baseState(): DemoState {
       crawlCatalog: [],
       crawlRuns: [],
     },
+    knowledgeBase: emptyKnowledgeBaseState(),
   };
 }
 

@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "seedId": "fe3d166de42846f557a2ddc0eeb5dbb0162a745c8e3cb465a8b3cb8434f87639",
+  "seedId": "19322bc9e0c595c1bb634aa0187b6a7c377fc3f2541f9c9826ad8b5efd9a9cc4",
   "anchorDate": "2026-11-16",
   "frame": {
     "people": [
@@ -2003,6 +2003,640 @@
             "person-4"
           ],
           "groups": []
+        }
+      },
+      {
+        "id": "aktivitet-kb-1",
+        "at": "2026-10-19T09:15:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Nytt spørsmål: «Hvordan setter vi opp frakt til hele landet i nettbutikken?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-1"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-2",
+        "at": "2026-10-19T14:30:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Sørlandet Honning svarte på «Hvordan setter vi opp frakt til hele landet i nettbutikken?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-1"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-3",
+        "at": "2026-10-20T08:40:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Fjordlys Keramikk svarte på «Hvordan setter vi opp frakt til hele landet i nettbutikken?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-1"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-4",
+        "at": "2026-10-21T10:00:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Nytt spørsmål: «Hvilke betalingsmåter bør nettbutikken tilby?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-2"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-5",
+        "at": "2026-10-21T15:20:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Kvadraturen Kaffebrenneri svarte på «Hvilke betalingsmåter bør nettbutikken tilby?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-2"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-6",
+        "at": "2026-10-22T11:00:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Nytt spørsmål: «Nettbutikken er treg på mobil, hva kan vi gjøre?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-3"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-7",
+        "at": "2026-10-22T16:10:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Sørlandet Honning svarte på «Nettbutikken er treg på mobil, hva kan vi gjøre?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-3"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-8",
+        "at": "2026-10-23T09:05:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Kvadraturen Kaffebrenneri svarte på «Nettbutikken er treg på mobil, hva kan vi gjøre?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-3"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-9",
+        "at": "2026-10-23T10:20:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Nytt spørsmål: «Hvordan kan jeg bruke Claude til å skrive produkttekster?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-4"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-10",
+        "at": "2026-10-23T15:45:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Sørlandet Honning svarte på «Hvordan kan jeg bruke Claude til å skrive produkttekster?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-4"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-11",
+        "at": "2026-10-24T09:10:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Kvadraturen Kaffebrenneri svarte på «Hvordan kan jeg bruke Claude til å skrive produkttekster?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-4"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-12",
+        "at": "2026-10-24T11:15:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Nytt spørsmål: «Hvor ofte bør vi legge ut på Instagram?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-5"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-13",
+        "at": "2026-10-24T14:00:00+02:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Sørlandet Honning svarte på «Hvor ofte bør vi legge ut på Instagram?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-5"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-14",
+        "at": "2026-10-26T12:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Fjordlys Keramikk svarte på «Hvordan kan jeg bruke Claude til å skrive produkttekster?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-4"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-15",
+        "at": "2026-10-26T14:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Nytt spørsmål: «Kan Claude hjelpe meg å svare på e-poster fra kunder?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-6"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-16",
+        "at": "2026-10-27T09:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Fjordlys Keramikk svarte på «Kan Claude hjelpe meg å svare på e-poster fra kunder?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-6"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-17",
+        "at": "2026-10-27T09:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Nytt spørsmål: «Hvordan lager jeg et kaffeabonnement i nettbutikken?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-7"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-18",
+        "at": "2026-10-28T13:45:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Nytt spørsmål: «Hva gjør vi hvis kunder ikke får bestillingsbekreftelsen på e-post?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-8"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-19",
+        "at": "2026-10-28T17:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Kvadraturen Kaffebrenneri svarte på «Hva gjør vi hvis kunder ikke får bestillingsbekreftelsen på e-post?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-8"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-20",
+        "at": "2026-10-29T09:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Nytt spørsmål: «Hvordan setter vi opp et nyhetsbrev som folk faktisk leser?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-9"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-21",
+        "at": "2026-10-29T13:25:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Kvadraturen Kaffebrenneri svarte på «Hvordan setter vi opp et nyhetsbrev som folk faktisk leser?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-9"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-22",
+        "at": "2026-10-30T10:10:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Nytt spørsmål: «Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-10"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-23",
+        "at": "2026-10-30T14:40:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Fjordlys Keramikk svarte på «Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-10"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-24",
+        "at": "2026-11-02T11:20:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Nytt spørsmål: «Hvordan håndterer vi merverdiavgift ved salg til utlandet?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-11"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-25",
+        "at": "2026-11-03T08:50:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Nytt spørsmål: «Hvordan tar jeg sikkerhetskopi av produktene og kundene?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-12"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-26",
+        "at": "2026-11-05T09:40:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Nytt spørsmål: «Hvordan lærer jeg meg å bruke KI i hverdagen?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-13"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-27",
+        "at": "2026-11-05T14:20:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Fjordlys Keramikk svarte på «Hvordan lærer jeg meg å bruke KI i hverdagen?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-13"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-28",
+        "at": "2026-11-06T10:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Nytt spørsmål: «Hvordan får vi bedre produktbilder uten å leie inn fotograf?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-29",
+        "at": "2026-11-06T15:50:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-1",
+        "text": "Fjordlys Keramikk svarte på «Hvordan får vi bedre produktbilder uten å leie inn fotograf?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-30",
+        "at": "2026-11-09T09:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Nytt spørsmål: «Hvordan teller vi opp lageret uten å bruke hele dagen?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-31",
+        "at": "2026-11-09T13:15:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Fjordlys Keramikk svarte på «Hvordan teller vi opp lageret uten å bruke hele dagen?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-32",
+        "at": "2026-11-10T09:30:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-3",
+        "text": "Et innlegg i «Hvordan får vi bedre produktbilder uten å leie inn fotograf?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-3"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-33",
+        "at": "2026-11-10T10:45:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-2",
+        "text": "Nytt spørsmål: «Hva gjør vi med varer som ikke selger?»",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-16"
+        },
+        "audience": {
+          "personIds": [],
+          "groups": [
+            "knowledgeBase.members"
+          ],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-34",
+        "at": "2026-11-11T08:45:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-15",
+        "text": "Varodd har vurdert et flagget innlegg i «Hvordan får vi bedre produktbilder uten å leie inn fotograf?»: det er beholdt",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-14"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-3"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-35",
+        "at": "2026-11-11T14:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Et innlegg i «Hvordan teller vi opp lageret uten å bruke hele dagen?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [
+            "person-2",
+            "person-5"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-36",
+        "at": "2026-11-12T09:00:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-15",
+        "text": "Varodd har vurdert et flagget innlegg i «Hvordan teller vi opp lageret uten å bruke hele dagen?»: det er fjernet",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-15"
+        },
+        "audience": {
+          "personIds": [
+            "person-2",
+            "person-5"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
+        }
+      },
+      {
+        "id": "aktivitet-kb-37",
+        "at": "2026-11-12T10:15:00+01:00",
+        "featureId": "knowledgeBase",
+        "actor": "person-5",
+        "text": "Et innlegg i «Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?» er flagget og venter på vurdering",
+        "target": {
+          "route": "/kunnskapsbank/sporsmal/sporsmal-10"
+        },
+        "audience": {
+          "personIds": [
+            "person-1",
+            "person-5"
+          ],
+          "groups": [],
+          "requiredGroup": "knowledgeBase.members"
         }
       }
     ]
@@ -4319,6 +4953,496 @@
           "bedrift-5"
         ],
         "simulated": true
+      }
+    ]
+  },
+  "knowledgeBase": {
+    "topics": [
+      {
+        "id": "tema-1",
+        "name": "Nettbutikk",
+        "description": "Oppsett, produktsider, frakt og betaling i nettbutikken din."
+      },
+      {
+        "id": "tema-2",
+        "name": "Teknisk hjelp",
+        "description": "Når noe ikke virker, eller du trenger hjelp med det tekniske."
+      },
+      {
+        "id": "tema-3",
+        "name": "Kunstig intelligens",
+        "description": "Hvordan du kan bruke KI-verktøy som Claude i hverdagen i bedriften."
+      },
+      {
+        "id": "tema-4",
+        "name": "Markedsføring",
+        "description": "Sosiale medier, nyhetsbrev, bilder og andre måter å nå kundene på."
+      },
+      {
+        "id": "tema-5",
+        "name": "Drift og regnskap",
+        "description": "Regnskap, avgifter, lager og alt som holder driften i gang."
+      }
+    ],
+    "questions": [
+      {
+        "id": "sporsmal-1",
+        "topicId": "tema-1",
+        "title": "Hvordan setter vi opp frakt til hele landet i nettbutikken?",
+        "description": "Vi selger keramikk som kan gå i stykker, og vi har bare brukt Posten til nå. Vi vil tilby frakt til hele landet uten at pakkene blir for dyre. Hva har dere gjort?",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-19T09:15:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-2",
+        "topicId": "tema-1",
+        "title": "Hvilke betalingsmåter bør nettbutikken tilby?",
+        "description": "Vi har bare kortbetaling i dag, og noen kunder spør etter Vipps og faktura. Er det verdt å tilby flere betalingsmåter, og hva koster det?",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-21T10:00:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-3",
+        "topicId": "tema-2",
+        "title": "Nettbutikken er treg på mobil, hva kan vi gjøre?",
+        "description": "Siden bruker lang tid på å laste når kundene sitter på mobil. Vi har mange store bilder av keramikken. Hvor bør vi starte?",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-22T11:00:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-4",
+        "topicId": "tema-3",
+        "title": "Hvordan kan jeg bruke Claude til å skrive produkttekster?",
+        "description": "Vi har over 80 produkter i nettbutikken, og tekstene er skrevet i ulik stil. Kan Claude hjelpe oss å lage bedre tekster uten at det høres ut som en robot?",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-23T10:20:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-5",
+        "topicId": "tema-4",
+        "title": "Hvor ofte bør vi legge ut på Instagram?",
+        "description": "Vi er to som jobber i butikken, og det er vanskelig å finne tid til sosiale medier. Hvor ofte må vi legge ut for at det skal ha noen effekt?",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-24T11:15:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-6",
+        "topicId": "tema-3",
+        "title": "Kan Claude hjelpe meg å svare på e-poster fra kunder?",
+        "description": "Hver mandag bruker jeg en time på å svare kunder om leveringstid og abonnement. Kan jeg bruke Claude til å skrive svarene, og er det trygt å lime inn e-poster fra kunder?",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-26T14:30:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-7",
+        "topicId": "tema-1",
+        "title": "Hvordan lager jeg et kaffeabonnement i nettbutikken?",
+        "description": "Vi vil la kundene bestille kaffe som sendes hver måned. Jeg finner ikke en enkel måte å sette det opp på i Shopify. Er det noen som har gjort det?",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-27T09:30:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-8",
+        "topicId": "tema-2",
+        "title": "Hva gjør vi hvis kunder ikke får bestillingsbekreftelsen på e-post?",
+        "description": "Noen kunder sier at de ikke får e-post etter at de har bestilt. Vi vet ikke om den ligger i søppelpost, eller om noe er feil med oppsettet vårt.",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-28T13:45:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-9",
+        "topicId": "tema-4",
+        "title": "Hvordan setter vi opp et nyhetsbrev som folk faktisk leser?",
+        "description": "Vi har rundt 300 e-postadresser fra kunder som har meldt seg på i nettbutikken. Hva bør vi skrive om, og hvor ofte bør vi sende?",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-29T09:00:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-10",
+        "topicId": "tema-5",
+        "title": "Hvordan holder jeg orden på regnskapet som enkeltpersonforetak?",
+        "description": "Jeg fører regnskapet selv og har ikke full oversikt. Hva bør jeg gjøre hver måned for å slippe stress ved årsslutt?",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-30T10:10:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-11",
+        "topicId": "tema-5",
+        "title": "Hvordan håndterer vi merverdiavgift ved salg til utlandet?",
+        "description": "Vi har fått de første kundene i Sverige og Danmark. Må vi ta med moms på bestillingene, og hva må vi melde inn?",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-11-02T11:20:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-12",
+        "topicId": "tema-2",
+        "title": "Hvordan tar jeg sikkerhetskopi av produktene og kundene?",
+        "description": "Jeg er redd for å miste alt hvis noe går galt med nettbutikken. Hvordan kan jeg ta en kopi av produktlisten og kundelisten?",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-11-03T08:50:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-13",
+        "topicId": "tema-3",
+        "title": "Hvordan lærer jeg meg å bruke KI i hverdagen?",
+        "description": "Jeg har bare prøvd Claude noen få ganger og vet ikke helt hva jeg skal bruke det til i en liten bedrift. Hva bør jeg starte med?",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-11-05T09:40:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-14",
+        "topicId": "tema-4",
+        "title": "Hvordan får vi bedre produktbilder uten å leie inn fotograf?",
+        "description": "Vi tar bildene av kaffeposene selv med telefonen, men de ser litt kjedelige ut. Har dere tips til lys og bakgrunn?",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-11-06T10:30:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-15",
+        "topicId": "tema-5",
+        "title": "Hvordan teller vi opp lageret uten å bruke hele dagen?",
+        "description": "Vi teller kaffe og utstyr for hånd hver måned, og det tar altfor lang tid. Finnes det en enklere måte?",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-11-09T09:30:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "sporsmal-16",
+        "topicId": "tema-5",
+        "title": "Hva gjør vi med varer som ikke selger?",
+        "description": "Vi har keramikk som har stått på lager i over et år. Skal vi sette ned prisen, pakke det i bokser eller gi det bort?",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-11-10T10:45:00+01:00",
+        "moderation": "current"
+      }
+    ],
+    "answers": [
+      {
+        "id": "svar-1",
+        "questionId": "sporsmal-1",
+        "text": "Hos oss fungerer faste fraktpriser etter vekt best. Vi tilbyr gratis frakt over 600 kroner, og det gjorde at kundene la flere varer i handlekurven. Pakk glass og keramikk i bobleplast og en solid eske, så slipper du reklamasjoner.",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-19T14:30:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-2",
+        "questionId": "sporsmal-1",
+        "text": "Vi har satt opp tre fraktalternativer: hentested, pakke i postkassen og hjemlevering. Husk å legge inn riktig vekt på hvert produkt, ellers blir fraktprisen feil i kassen.",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-20T08:40:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-3",
+        "questionId": "sporsmal-2",
+        "text": "Vi la til Vipps i fjor, og nå går omtrent halvparten av salget den veien. Det koster litt mer per ordre, men færre avbryter kjøpet i kassen. Faktura har vi ikke tatt inn, fordi det gir mer jobb med purringer.",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-21T15:20:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-4",
+        "questionId": "sporsmal-3",
+        "text": "Det er nesten alltid bildene. Last opp mindre filer, for eksempel under 300 kilobyte, og bruk formatet WebP hvis temaet ditt støtter det. Test siden på PageSpeed Insights etterpå, så ser du om det hjalp.",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-22T16:10:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-5",
+        "questionId": "sporsmal-3",
+        "text": "Sjekk også hvor mange apper du har installert. Vi fjernet tre som vi ikke brukte, og siden ble merkbart raskere.",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-23T09:05:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-6",
+        "questionId": "sporsmal-4",
+        "text": "Jeg limer inn noen av tekstene mine som eksempel og ber Claude skrive i samme stil. Så gir jeg fakta om produktet: størrelse, materiale og hva det passer til. Les alltid gjennom, for Claude kan finne på detaljer som ikke stemmer.",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-23T15:45:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-7",
+        "questionId": "sporsmal-4",
+        "text": "Det hjelper å fortelle hvem som skal lese teksten. Jeg skriver for eksempel at kunden er en kaffeinteressert 40-åring som vil vite hvordan kaffen smaker. Be om tre forslag, og velg det du liker best.",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-24T09:10:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-8",
+        "questionId": "sporsmal-5",
+        "text": "Vi legger ut to ganger i uken og ellers ikke, og det fungerer fint. Det viktigste er at det er jevnt. Planlegg noen innlegg på søndag, så slipper du å tenke på det resten av uken.",
+        "authorId": "person-3",
+        "businessId": "bedrift-2",
+        "createdAt": "2026-10-24T14:00:00+02:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-9",
+        "questionId": "sporsmal-4",
+        "text": "Vi har laget en fast mal som vi limer inn hver gang, med tone, lengde og hva teksten skal inneholde. Da blir alle produkttekstene like, og vi sparer mye tid.",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-26T12:00:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-10",
+        "questionId": "sporsmal-6",
+        "text": "Det går fint til å lage utkast, men du bør ikke lime inn navn, adresser eller bestillingsnummer. Fjern persondata først. Så leser du gjennom svaret og sender det selv.",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-27T09:00:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-11",
+        "questionId": "sporsmal-8",
+        "text": "Sjekk at du sender fra en egen avsenderadresse på domenet ditt, og at SPF og DKIM er satt opp hos den som har domenet. Uten det havner mye i søppelpost. Be gjerne kundene sjekke søppelpostmappen første gang.",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-28T17:00:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-12",
+        "questionId": "sporsmal-9",
+        "text": "Send én gang i måneden, og skriv om det som skjer bak kulissene: nye produkter, hva som er på lager og en liten historie. Vi bruker Mailchimp, og gratisplanen holder lenge.",
+        "authorId": "person-5",
+        "businessId": "bedrift-4",
+        "createdAt": "2026-10-29T13:25:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-13",
+        "questionId": "sporsmal-10",
+        "text": "Sett av en time hver fredag til bilag. Ta bilde av kvitteringene med en gang og legg dem i regnskapsprogrammet. Da er det aldri mer enn en uke å ta igjen.",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-10-30T14:40:00+01:00",
+        "moderation": "flagged"
+      },
+      {
+        "id": "svar-14",
+        "questionId": "sporsmal-13",
+        "text": "Velg én oppgave du gjør ofte og synes er kjedelig, for eksempel å skrive varebeskrivelser eller svare på de samme spørsmålene fra kunder. Prøv Claude på akkurat den oppgaven i to uker før du prøver noe nytt.",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-11-05T14:20:00+01:00",
+        "moderation": "current"
+      },
+      {
+        "id": "svar-15",
+        "questionId": "sporsmal-14",
+        "text": "Sett produktet ved et stort vindu og bruk et hvitt ark som reflekterer lyset. Unngå blitsen. Vi bruker en grå bakgrunn av papp, og den gjør at keramikken skiller seg godt ut.",
+        "authorId": "person-1",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-11-06T15:50:00+01:00",
+        "moderation": "cleared"
+      },
+      {
+        "id": "svar-16",
+        "questionId": "sporsmal-15",
+        "text": "Vi teller bare de ti mest solgte varene hver uke, og resten én gang i kvartalet. Det tar en halvtime i stedet for en hel dag. Bruk et enkelt regneark med kolonner for beholdning og plukkliste.",
+        "authorId": "person-2",
+        "businessId": "bedrift-1",
+        "createdAt": "2026-11-09T13:15:00+01:00",
+        "moderation": "removed"
+      }
+    ],
+    "flags": [
+      {
+        "id": "flagg-1",
+        "reviewId": "vurdering-1",
+        "targetKind": "answer",
+        "targetId": "svar-15",
+        "flaggedBy": "person-3",
+        "reason": "incorrect",
+        "note": "Blitsen kan fungere fint hvis den spretter mot taket, så dette stemmer ikke helt.",
+        "at": "2026-11-10T09:30:00+01:00"
+      },
+      {
+        "id": "flagg-2",
+        "reviewId": "vurdering-2",
+        "targetKind": "answer",
+        "targetId": "svar-16",
+        "flaggedBy": "person-5",
+        "reason": "off-topic",
+        "at": "2026-11-11T14:00:00+01:00"
+      },
+      {
+        "id": "flagg-3",
+        "reviewId": "vurdering-3",
+        "targetKind": "answer",
+        "targetId": "svar-13",
+        "flaggedBy": "person-5",
+        "reason": "outdated",
+        "at": "2026-11-12T10:15:00+01:00"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "vurdering-1",
+        "targetKind": "answer",
+        "targetId": "svar-15",
+        "openedAt": "2026-11-10T09:30:00+01:00",
+        "flagIds": [
+          "flagg-1"
+        ],
+        "outcome": "cleared",
+        "reviewedBy": "person-15",
+        "reviewedAt": "2026-11-11T08:45:00+01:00"
+      },
+      {
+        "id": "vurdering-2",
+        "targetKind": "answer",
+        "targetId": "svar-16",
+        "openedAt": "2026-11-11T14:00:00+01:00",
+        "flagIds": [
+          "flagg-2"
+        ],
+        "outcome": "removed",
+        "reviewedBy": "person-15",
+        "reviewedAt": "2026-11-12T09:00:00+01:00"
+      },
+      {
+        "id": "vurdering-3",
+        "targetKind": "answer",
+        "targetId": "svar-13",
+        "openedAt": "2026-11-12T10:15:00+01:00",
+        "flagIds": [
+          "flagg-3"
+        ]
+      }
+    ],
+    "chatbotQuestions": [
+      {
+        "id": "chatbot-1",
+        "text": "Hvordan kan jeg bruke KI til å skrive produkttekster?",
+        "answer": {
+          "text": "Gi Claude noen av tekstene dine som eksempel, så skriver den i samme stil. Fortell hvem som skal lese teksten, og gi fakta om produktet, som størrelse og materiale. En fast mal med tone og lengde gjør at alle tekstene blir like. Les alltid gjennom teksten, for Claude kan finne på detaljer som ikke stemmer.",
+          "sourceQuestionIds": [
+            "sporsmal-4"
+          ],
+          "sourceAnswerIds": [
+            "svar-6",
+            "svar-7",
+            "svar-9"
+          ]
+        }
+      },
+      {
+        "id": "chatbot-2",
+        "text": "Kan jeg la Claude skrive svar til kundene mine på e-post?",
+        "answer": {
+          "text": "Ja, Claude kan lage utkast til svar. Fjern navn, adresser og bestillingsnummer før du limer inn e-posten. Les gjennom svaret og send det selv.",
+          "sourceQuestionIds": [
+            "sporsmal-6"
+          ],
+          "sourceAnswerIds": [
+            "svar-10"
+          ]
+        }
+      },
+      {
+        "id": "chatbot-3",
+        "text": "Hvordan får jeg flere til å lese nyhetsbrevet vårt?",
+        "answer": {
+          "text": "Send nyhetsbrevet én gang i måneden. Skriv om det som skjer bak kulissene, som nye produkter, hva som er på lager og en liten historie. Gratisplanen hos Mailchimp holder lenge.",
+          "sourceQuestionIds": [
+            "sporsmal-9"
+          ],
+          "sourceAnswerIds": [
+            "svar-12"
+          ]
+        }
+      },
+      {
+        "id": "chatbot-4",
+        "text": "Jeg vil lære meg å bruke KI i bedriften, hvor bør jeg starte?",
+        "answer": {
+          "text": "Velg én oppgave du gjør ofte og synes er kjedelig, for eksempel å skrive varebeskrivelser eller svare på de samme spørsmålene fra kunder. Prøv Claude på akkurat den oppgaven i to uker før du prøver noe nytt.",
+          "sourceQuestionIds": [
+            "sporsmal-13"
+          ],
+          "sourceAnswerIds": [
+            "svar-14"
+          ]
+        }
+      },
+      {
+        "id": "chatbot-5",
+        "text": "Hvordan kan jeg la kundene abonnere på kaffen vår?"
+      },
+      {
+        "id": "chatbot-6",
+        "text": "Må jeg ta med moms når jeg selger til kunder i Sverige?"
+      },
+      {
+        "id": "chatbot-7",
+        "text": "Hvordan søker vi om støtte til å digitalisere bedriften?"
+      }
+    ],
+    "nearDuplicateExamples": [
+      {
+        "id": "duplikat-1",
+        "title": "Hvordan sender vi keramikk billig til kunder i hele Norge?",
+        "description": "Vi har bare brukt Posten, men trenger bedre fraktpriser for pakker som kan gå i stykker. Hva anbefaler dere?",
+        "matchesQuestionId": "sporsmal-1"
+      },
+      {
+        "id": "duplikat-2",
+        "title": "Hvorfor laster siden vår så sakte på telefonen?",
+        "description": "Kundene klager over at det tar lang tid å åpne siden på mobilen. Bildene våre er ganske store.",
+        "matchesQuestionId": "sporsmal-3"
+      },
+      {
+        "id": "duplikat-3",
+        "title": "Kan Claude lage bedre tekster til produktene våre?",
+        "description": "Vi skriver alle produktbeskrivelsene selv, og det tar mye tid. Kan Claude hjelpe oss med å lage tekster som høres menneskelige ut?",
+        "matchesQuestionId": "sporsmal-4"
       }
     ]
   }

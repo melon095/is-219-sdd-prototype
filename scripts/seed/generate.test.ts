@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { knowledgeBaseStateSchema } from "../../src/features/knowledge-base/schema";
 import { marketplaceStateSchema } from "../../src/features/marketplace/schema";
 import { buildSeedFileSchema } from "../../src/frame/store/schema";
 import { buildSeedFile } from "./generate";
@@ -14,6 +15,7 @@ const seedFilePath = resolve(
 
 const seedFileSchema = buildSeedFileSchema({
   marketplace: marketplaceStateSchema,
+  knowledgeBase: knowledgeBaseStateSchema,
 });
 
 const generated = buildSeedFile();
@@ -52,6 +54,7 @@ describe("buildSeedFile", () => {
       "anchorDate",
       "frame",
       "marketplace",
+      "knowledgeBase",
     ]);
     expect(parsed.format).toBe(1);
     expect(parsed.anchorDate).toBe("2026-11-16");
