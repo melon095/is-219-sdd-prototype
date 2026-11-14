@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This repository contains the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two feature specs under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`). Work follows **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
+This repository contains the Varodd prototype app, the GitHub Spec Kit (speckit) scaffold, a filled-in constitution, and two features under `specs/` (`001-job-matching-marketplace` and `002-shared-knowledge-base`), each with its spec, plan, design documents, and tasks. Work follows **Spec-Driven Development (SDD)**: writing a feature spec, clarifying it, planning it, breaking it into tasks, and only then implementing it.
 
-Feature `001-job-matching-marketplace`, the shared frame, and feature `002-shared-knowledge-base` are built. The only open item in 002 is the manual accessibility and timing check (task T079).
+Both features and the shared frame are built and merged to `main`. The only open item is 002's manual accessibility and timing check (task T079), which needs a person with a keyboard, a screen reader, and a first-time user to time. `README.md` is the Norwegian introduction for the project group.
 
 ### Stack
 
@@ -39,7 +39,7 @@ Playwright browsers live in Playwright's own cache: `pnpm exec playwright instal
 
 ### Code layout
 
-- `src/domain/` — pure TypeScript business rules driven by commands (no React, clock, storage, DOM, or crypto). `src/domain/marketplace/permissions.ts` holds the "is this allowed" checks used by both commands and UI.
+- `src/domain/` — pure TypeScript business rules driven by commands (no React, clock, storage, DOM, or crypto). `src/domain/frame/commandHelpers.ts` holds the generic command helpers (results, validation, adding activity) that every feature uses; a feature never imports from another feature's folder. `src/domain/marketplace/permissions.ts` holds the "is this allowed" checks used by both commands and UI.
 - `src/domain/knowledge-base/` — pure TypeScript rules for feature 002: questions, answers, flagging and review, search, the simulated chatbot, and who is a member (`permissions.ts`).
 - `src/frame/` — the shared frame: design tokens, UI kit (including `SearchField`), layout (including `SubNav`), user switcher, activity feed, demo reset, store.
 - `src/features/<feature>/` — each feature's registry entry (`feature.ts`), pages and components. `src/app/features.ts` lists the features.
@@ -48,7 +48,7 @@ Playwright browsers live in Playwright's own cache: `pnpm exec playwright instal
 
 Project rules: no comments in code, interface text in Norwegian Bokmål, and colours only through the design tokens.
 
-`001-job-matching-marketplace` is built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, time debug buttons, and the shared design language taken from https://varodd.no/ (see the Design Language section of its spec and constitution principle IV). `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
+`001-job-matching-marketplace` was built first and also defines the shared frame of the whole prototype: the home page, header navigation, user switcher, activity feed, demo reset, seed data step, time debug buttons, and the shared design language taken from https://varodd.no/ (see the Design Language section of its spec and constitution principle IV). `002-shared-knowledge-base` and any later features build on that frame and reuse its businesses and simulated users. Per the constitution, all features share one codebase and one tech stack, so the stack chosen when planning 001 applies to 002 as well. Each spec has a `## Clarifications` section recording decisions made with the project owner; read it before changing a spec.
 
 ## Spec-Driven Development workflow
 
