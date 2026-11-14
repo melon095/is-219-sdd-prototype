@@ -37,11 +37,14 @@ Run from the repository root:
 
 Playwright browsers live in Playwright's own cache: `pnpm exec playwright install chromium webkit`.
 
+`playwright.config.ts` starts every test with the prototype notice already confirmed (a `storageState` with `varodd-prototype:notice` set to `true`), so the 5-second wait never slows the other tests. `tests/e2e/notice.spec.ts` clears this and starts like a first-time visitor.
+
 ### Code layout
 
 - `src/domain/` — pure TypeScript business rules driven by commands (no React, clock, storage, DOM, or crypto). `src/domain/frame/commandHelpers.ts` holds the generic command helpers (results, validation, adding activity) that every feature uses; a feature never imports from another feature's folder. `src/domain/marketplace/permissions.ts` holds the "is this allowed" checks used by both commands and UI.
 - `src/domain/knowledge-base/` — pure TypeScript rules for feature 002: questions, answers, flagging and review, search, the simulated chatbot, and who is a member (`permissions.ts`).
 - `src/frame/` — the shared frame: design tokens, UI kit (including `SearchField`), layout (including `SubNav`), user switcher, activity feed, demo reset, store.
+- `src/frame/notice/` — the prototype notice (feature 003) shown on a visitor's first visit, rendered once in `src/app/App.tsx`.
 - `src/features/<feature>/` — each feature's registry entry (`feature.ts`), pages and components. `src/app/features.ts` lists the features.
 - `src/features/knowledge-base/` — feature 002's pages (forum, topic, question, question form, chatbot, review) and components.
 - `scripts/seed/` — one seed module per feature, combined by `generate.ts`.

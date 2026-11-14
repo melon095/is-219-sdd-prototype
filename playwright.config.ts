@@ -9,6 +9,15 @@ export default defineConfig({
   },
   use: {
     baseURL: "http://localhost:4173",
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: "http://localhost:4173",
+          localStorage: [{ name: "varodd-prototype:notice", value: "true" }],
+        },
+      ],
+    },
   },
   projects: [
     {

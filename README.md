@@ -27,6 +27,9 @@ pnpm dev
 
 ## Slik bruker du demoen
 
+- Første gang du åpner nettsiden, vises en merknad om at den er en prototype og ikke er laget av
+  Varodd. Den kan ikke lukkes før det har gått fem sekunder. For å se den igjen kan du slette
+  nettstedets data i nettleseren eller åpne et privat vindu.
 - Øverst kan du bytte mellom tjenestene og bytte hvilken simulert person du er. Det du ser og kan
   gjøre, avhenger av hvem du er.
 - Forsiden viser en aktivitetsstrøm med det som har skjedd for personen du er nå.

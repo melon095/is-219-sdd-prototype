@@ -64,6 +64,7 @@ The frame builds the router, the header buttons, the home page cards, `applyComm
 - **Time debug button** (`<TimeDebugButton label=... onPress=... />`): a shared component for any object with a time-based rule (FR-033). Shown with a dashed border, a clock icon, and the visible prefix "Demo:", so it is clearly not part of the real product. Feature 001 uses it on Offered requests. Later features use the same component.
 - **Simulated label** (`<SimulatedLabel />`): the "Simulert" badge for every simulated action and result (NAV referral, crawl, and in 002 the chatbot).
 - **Footer**: "Dette er en prototype. Alle personer, bedrifter og data er oppdiktet." (FR-027).
+- **Prototype notice** (`PrototypeNotice`, added by `003-prototype-notice`): a dialog that cannot be dismissed, shown over whatever page is opened first in a browser until the visitor presses "Jeg forstår" after 5 seconds. The confirmation is a separate `localStorage` entry, so "Tilbakestill demo" does not remove it. See [003 contracts/notice.md](../../003-prototype-notice/contracts/notice.md).
 
 ## Seed data
 

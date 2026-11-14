@@ -4,10 +4,13 @@ import { emptyKnowledgeBaseState } from "../../domain/knowledge-base/types";
 import { knowledgeBaseStateSchema } from "../../features/knowledge-base/schema";
 import { marketplaceStateSchema } from "../../features/marketplace/schema";
 import {
+  loadNoticeConfirmed,
   loadState,
   loadUser,
+  NOTICE_KEY,
   STATE_KEY,
   type StorageLike,
+  saveNoticeConfirmed,
   saveState,
   saveUser,
   USER_KEY,
@@ -69,6 +72,56 @@ describe("keys", () => {
   it("uses the agreed storage keys", () => {
     expect(STATE_KEY).toBe("varodd-prototype:state");
     expect(USER_KEY).toBe("varodd-prototype:user");
+    expect(NOTICE_KEY).toBe("varodd-prototype:notice");
+  });
+});
+
+describe("loadNoticeConfirmed", () => {
+  it("is true when the stored text is true", () => {
+    expect(loadNoticeConfirmed(memoryStorage({ [NOTICE_KEY]: "true" }))).toBe(
+      true,
+    );
+  });
+
+  it("is false when nothing is stored", () => {
+    expect(loadNoticeConfirmed(memoryStorage())).toBe(false);
+  });
+
+  it.each(["false", '"true"', "1", "{"])(
+    "is false when the stored text is %s",
+    (text) => {
+      expect(loadNoticeConfirmed(memoryStorage({ [NOTICE_KEY]: text }))).toBe(
+        false,
+      );
+    },
+  );
+
+  it("is false when reading throws", () => {
+    expect(loadNoticeConfirmed(throwingStorage())).toBe(false);
+  });
+});
+
+describe("saveNoticeConfirmed", () => {
+  it("writes true under the notice key", () => {
+    const storage = memoryStorage();
+    expect(saveNoticeConfirmed(storage)).toEqual({ storageAvailable: true });
+    expect(storage.data.get(NOTICE_KEY)).toBe("true");
+  });
+
+  it("leaves the state and user entries untouched", () => {
+    const storage = memoryStorage({
+      [STATE_KEY]: "tilstand",
+      [USER_KEY]: '"person-1"',
+    });
+    saveNoticeConfirmed(storage);
+    expect(storage.data.get(STATE_KEY)).toBe("tilstand");
+    expect(storage.data.get(USER_KEY)).toBe('"person-1"');
+  });
+
+  it("never throws", () => {
+    expect(saveNoticeConfirmed(throwingStorage())).toEqual({
+      storageAvailable: false,
+    });
   });
 });
 

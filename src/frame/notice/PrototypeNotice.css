@@ -1,0 +1,12 @@
+.prototype-notice-wait {
+  min-height: calc(var(--font-size-body) * var(--line-height-body));
+  font-weight: var(--font-weight-semibold);
+}
+
+.prototype-notice-wait p {
+  margin: 0;
+}
+
+.dialog-body .prototype-notice-wait + .dialog-actions {
+  margin-top: 0;
+}

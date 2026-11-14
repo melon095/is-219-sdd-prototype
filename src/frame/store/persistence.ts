@@ -6,6 +6,8 @@ export const STATE_KEY = "varodd-prototype:state";
 
 export const USER_KEY = "varodd-prototype:user";
 
+export const NOTICE_KEY = "varodd-prototype:notice";
+
 export type StorageLike = {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
@@ -86,6 +88,16 @@ export function saveUser(
   userId: Id,
 ): { storageAvailable: boolean } {
   return writeItem(storage, USER_KEY, JSON.stringify(userId));
+}
+
+export function saveNoticeConfirmed(storage: StorageLike): {
+  storageAvailable: boolean;
+} {
+  return writeItem(storage, NOTICE_KEY, "true");
+}
+
+export function loadNoticeConfirmed(storage: StorageLike): boolean {
+  return parseJson(readItem(storage, NOTICE_KEY).value) === true;
 }
 
 export function loadState({
