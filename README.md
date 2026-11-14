@@ -12,7 +12,11 @@ ingen ekte personer og ingen ekte KI-tjeneste.
 
 ## Kjøre prototypen
 
-Du trenger [Node.js](https://nodejs.org/) 26 og [pnpm](https://pnpm.io/). Kjør fra rotmappen:
+Den enkleste måten å prøve prototypen på er den offentlige versjonen på
+https://varodd.jflottorp.no. Der trenger du ikke å installere noe.
+
+For å kjøre den på din egen maskin trenger du [Node.js](https://nodejs.org/) 26 og
+[pnpm](https://pnpm.io/). Kjør fra rotmappen:
 
 ```sh
 pnpm install
