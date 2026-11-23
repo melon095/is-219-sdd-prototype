@@ -211,7 +211,7 @@ test.describe("Eier ber om hjelp og velger en arbeider", () => {
     await switchUser(page, "Kari Nordmann");
     await openTab(page, "Kortliste");
     await candidate(page, "Lena Eriksen")
-      .getByRole("button", { name: "Gi tilbud" })
+      .getByRole("button", { name: "Tilby oppdraget" })
       .click();
     await expect(statusBadge(page, "Tilbud sendt")).toBeVisible();
 

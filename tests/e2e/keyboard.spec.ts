@@ -410,7 +410,7 @@ test.describe("Bare tastatur", () => {
     await tabTo(
       page,
       candidate(page, "Lena Eriksen").getByRole("button", {
-        name: "Gi tilbud",
+        name: "Tilby oppdraget",
       }),
     );
     await page.keyboard.press("Space");

@@ -122,7 +122,7 @@ describe("RequestPage for eier og administrator", () => {
     ).toBe(null);
     expect(
       within(candidate("Amina Yusuf")).getByRole("button", {
-        name: "Gi tilbud",
+        name: "Tilby oppdraget",
       }),
     ).toBeTruthy();
     expect(
@@ -139,7 +139,9 @@ describe("RequestPage for eier og administrator", () => {
     open("oppdrag-4", "person-15");
 
     expect(screen.getByRole("list", { name: "Kortliste" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Gi tilbud" })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Tilby oppdraget" })).toBe(
+      null,
+    );
     expect(screen.queryByRole("button", { name: "Inviter til intervju" })).toBe(
       null,
     );
@@ -156,7 +158,9 @@ describe("RequestPage for eier og administrator", () => {
         name: "Inviter til intervju",
       }),
     ).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Gi tilbud" })).toBe(null);
+    expect(screen.queryByRole("button", { name: "Tilby oppdraget" })).toBe(
+      null,
+    );
     expect(
       screen.queryByRole("button", { name: "Avvis hele kortlisten" }),
     ).toBe(null);
@@ -168,7 +172,7 @@ describe("RequestPage for eier og administrator", () => {
 
     await user.click(
       within(candidate("Lena Eriksen")).getByRole("button", {
-        name: "Gi tilbud",
+        name: "Tilby oppdraget",
       }),
     );
 
