@@ -159,7 +159,7 @@ export function ShortlistPanel({
                           )
                         }
                       >
-                        Gi tilbud
+                        Tilby oppdraget
                       </Button>
                     )}
                   </div>
